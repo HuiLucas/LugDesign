@@ -5,9 +5,13 @@
 N_lugs=1
 N_Flanges=2
 
+# FORCES
+
 Fx=381.57
 Fy=381.57
 Fz=1144.71
 Mx=719,26
 My=719,26
 Mz=0 #to be changed
+
+#-------------------------
