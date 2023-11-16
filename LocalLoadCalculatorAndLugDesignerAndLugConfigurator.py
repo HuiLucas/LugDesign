@@ -31,6 +31,7 @@ Kt_1 = #function for curve 1
 Kt_2= #for curve 2
 #....
 
+# create loop for all curves
 
 #------------------------
 #D1.13
@@ -39,3 +40,4 @@ Kbr_1 = # function for curve 1
 Kbr_2= #for curve 2
 #....
 
+#create loop for all curves
