@@ -2,6 +2,7 @@
 # loads, and then choose values for the variables of the lug such that the lug can sustain these loads (see WP4.3).
 # This Software Component will also decide between a 1-lug or 2-lug configuration.
 
+
 N_lugs=1
 N_Flanges=2
 
@@ -27,8 +28,8 @@ Abr=D*t
 #------------------------
 #D1.12
 x_1 = w/D #x variable
-Kt_1 = #function for curve 1
-Kt_2= #for curve 2
+#Kt_1 = #function for curve 1
+#Kt_2= #for curve 2
 #....
 
 # create loop for all curves
@@ -36,8 +37,8 @@ Kt_2= #for curve 2
 #------------------------
 #D1.13
 x_2 = w/D #x variable
-Kbr_1 = # function for curve 1
-Kbr_2= #for curve 2
+#Kbr_1 = # function for curve 1
+#Kbr_2= #for curve 2
 #....
 
 #create loop for all curves
