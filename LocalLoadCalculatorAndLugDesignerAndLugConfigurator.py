@@ -6,4 +6,4 @@ N_lugs=1
 N_Flanges=2
 
 Fx=381.57
-Fy=
+Fy=1
