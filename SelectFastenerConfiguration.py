@@ -18,5 +18,3 @@ def fastener_spacing_check(w,D_2,n_fast,material):
             if w < (n_fast-1)*5*D_2 + D_2 + 3*D_2:
                 return True
 
-
-while:
