@@ -32,6 +32,7 @@ x_1 = w/D #x variable
 #Kt_2= #for curve 2
 #....
 
+# create loop for all curves
 
 #------------------------
 #D1.13
@@ -40,3 +41,4 @@ x_2 = w/D #x variable
 #Kbr_2= #for curve 2
 #....
 
+#create loop for all curves
