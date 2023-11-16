@@ -25,6 +25,17 @@ At=t*(w-D)
 Abr=D*t
 
 #------------------------
+#D1.12
+x_1 = w/D #x variable
+Kt_1 = #for curve 1
+Kt_2= #for curve 2
+#....
 
-x_1 = w/D
-Kt_1 =
+
+#------------------------
+#D1.13
+x_2 = w/D #x variable
+Kbr_1 = #for curve 1
+Kbr_2= #for curve 2
+#....
+
