@@ -7,7 +7,7 @@ import random
 def assign_fastner_diameter_column(fastener_rows,fastener_diameter_upper_bound, fastner_diameter_lower_bound):
     fastener_list = [random.uniform(fastner_diameter_lower_bound, fastener_diameter_upper_bound) for _ in range(fastener_rows)]
     return fastener_list
-
+#note
 def fastener_spacing_check(w,D_2,n_fast,material):
     if material == "metal":
         if w > (n_fast-1)*2*D_2 + D_2 + 3*D_2:
