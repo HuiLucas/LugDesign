@@ -7,6 +7,9 @@ def assign_diameter_list(fastener_rows,minimum_diameter,maximum_diameter):
     diameter_list = [rnd.uniform(minimum_diameter, maximum_diameter) for _ in range(fastener_rows)]
     return diameter_list
 
+
+# this checks if given w allows for the number and size of fasteners
+#for now only the case if the fastener diameter is constant
 def fastener_spacing_check(design_object):
     if design_object.material == "metal":
         if design_object.w > (design_object.n_fast-1)*2*design_object.D2 + design_object.D2 + 3*design_object.D2:
