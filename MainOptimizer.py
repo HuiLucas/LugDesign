@@ -4,7 +4,7 @@
 import CheckBearing, CheckThermalStress, CheckPullThrough, GlobalLoadsCalculator, InputVariables, \
     LocalLoadCalculatorAndLugDesignerAndLugConfigurator, PostProcessorAndVisualizer, SelectFastener, TradeOffComperator
 
-
+import SelectFastenerConfiguration
 class DesignInstance:
     def __init__(self, h, t1, t2, t3, D1, D2, w, material):
         self.h = h
