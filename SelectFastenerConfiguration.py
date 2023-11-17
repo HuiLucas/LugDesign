@@ -2,6 +2,7 @@
 # this checks if given w allows for the number and size of fastners given constraints
 import MainOptimizer
 import random as rnd
+import numpy as np
 
 def assign_diameter_list(fastener_rows,minimum_diameter,maximum_diameter):
     diameter_list = [rnd.uniform(minimum_diameter, maximum_diameter) for _ in range(fastener_rows)]
@@ -21,3 +22,6 @@ def fastener_spacing_check(design_object):
                 return True
     return False
 print(fastener_spacing_check(MainOptimizer.initial_design))
+
+#4.5 calculating the c.g of the fasteners the input of the function
+#is a list of the different diameters from top to bottom in the vertical direction
