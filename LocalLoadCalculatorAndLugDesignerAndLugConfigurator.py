@@ -21,7 +21,8 @@ Mz=0 #to be changed
 # DF= die forging
 # P = plate 1
 Material = ['2014-T6(DF-L)','2014-T6(DF-LT)','2014-T6(P)', '7075-T6(P)', '7075-T6(DF-L)', '7075-T6(DF-LT)', '4130 Steel', '8630 Steel', '2024-T4', '356-T6 Aluminium','2024-T3']
-F_yield = [414, 414, 503, 435, 550, 324, 165, 345]
+F_yield = [414, 414, 414, 503, 503, 503,435,550,324,165,345]
+Density = [2800, 2800, 2800, 2810,2810,2810,7850,7850,2780,2670,2780]
 
 #Material Functions Lists (Kt)
 def calculate_kt(e,D,M,t):
@@ -37,20 +38,20 @@ def calculate_kt(e,D,M,t):
     c7= 1.0065-0.7188*x +0.6110*x**2 -0.3044*x**3 +0.0813*x**4 -0.0109*x**5 +0.0006*x**6
 
     if Mat==Material[0] or Mat==Material[4] or Mat==Material[6] or Mat==Material[7]:
-        curve = c1
+        kt = c1
     elif (Mat==Material[2] or Mat==Material[3]) and t<=1.27:
-        curve = c2
+        kt = c2
     elif Mat==Material[1] or Mat==Material[5]:
-        curve = c2
+        kt = c2
     elif (Mat==Material[2] or Mat==Material[3]) and t>=1.27:
-        curve = c4
+        kt = c4
     elif Mat==Material[8] or Mat==Material[10]:
-        curve = c4
+        kt = c4
     elif Mat== Material[9]:
-        curve = c7
+        kt = c7
     else:
         pass
-    return curve
+    return kt
 
 def calculate_kty(w,D,t):
     x= (6/((4/(0.5*(w-D)+D/(2*2**0.5)))+2/(0.5*(w-D))))/(D*t)
@@ -69,9 +70,6 @@ def calculate_tension_area(t,e,D):
 def calculate_bearing_area(t,D):
     A_br=D*t
     return A_br
-
-def choose_curve(Mat):
-
 
 def choose_kby(t,D,e ):
     x = e/D
