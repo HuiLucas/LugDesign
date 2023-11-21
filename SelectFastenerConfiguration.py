@@ -8,6 +8,8 @@ import numpy as np
 debug_design = DesignClass.DesignInstance(5, 2, 2, 2, 2, 2, 5, "metal")
 debug_design.minimum_diameter = 3
 debug_design.maximum_diameter = 5
+debug_design.fastener_rows = 2
+debug_design.n_fast = 4
 
 
 def assign_diameter_list(design_object):
