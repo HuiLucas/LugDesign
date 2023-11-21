@@ -6,8 +6,9 @@ import math
 import numpy as np
 
 
-debug_design = DesignClass.DesignInstance(5, 2, 2, 2, 2, 2, 20, 30,"metal",2,1)
+debug_design = DesignClass.DesignInstance(5, 2, 2, 2, 2, 20, 30,"metal")
 debug_design.minimum_diameter = 3
+debug_design.l = 2
 debug_design.maximum_diameter = 5
 debug_design.fastener_rows = 2
 debug_design.n_fast = 4

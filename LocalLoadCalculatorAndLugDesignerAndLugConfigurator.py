@@ -140,8 +140,8 @@ constraints = [
 method = 'SLSQP'
 
 # Call the minimize function
-result = minimize(objective_function, initial_guess, args=(material), method=method, constraints=constraints)
+#result = minimize(objective_function, initial_guess, args=(material), method=method, constraints=constraints)
 
 # Print the result
-print("Optimized variables:", result.x)
-print("Minimum value of the objective function:", result.fun)
+#print("Optimized variables:", result.x)
+#print("Minimum value of the objective function:", result.fun)
