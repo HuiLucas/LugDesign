@@ -20,8 +20,8 @@ Mz=0 #to be changed
 # Material List:
 # DF= die forging
 # P = plate 1
-Material = ['2014-T6(DF)', '7075-T6', '4130 Steel', '8630 Steel', '2024-T4', 'AZ91C-T6', '356-T6 Aluminium','2024-T3','2014-T6(P)']
-F_yield = [414, 503, 435, 550, 324, 145, 165, 345, 414]
+Material = ['2014-T6(DF-L)','2014-T6(DF-LT)','2014-T6(P)', '7075-T6(P)', '7075-T6(DF-L)', '7075-T6(DF-LT)', '4130 Steel', '8630 Steel', '2024-T4', 'AZ91C-T6', '356-T6 Aluminium','2024-T3']
+F_yield = [414, 414, 503, 435, 550, 324, 145, 165, 345]
 
 #Material Functions Lists (Kt)
 def calculate_kt(e,D,M):
