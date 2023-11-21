@@ -127,7 +127,7 @@ def principal_constraint(variables):
     A_br = calculate_bearing_area(t,D)
     for i in Material:
         if i == material:
-            Fy = F_yield[i]
+            Fy = F_yield[Material.index(i)]
             break
     return (Fy/(calculate_kt(e,D,material,t) * Fy * A_t))**1.6 + (Fz/(choose_kby(t,D,e) * A_br * Fy))**1.6 - 1
 
