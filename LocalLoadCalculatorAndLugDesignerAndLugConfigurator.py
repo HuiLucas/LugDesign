@@ -52,6 +52,10 @@ def calculate_kt(e,D,M,t):
         pass
     return curve
 
+def calculate_kty(w,D,t):
+    x= (6/((4/(0.5*(w-D)+D/(2*2**0.5)))+2/(0.5*(w-D))))/(D*t)
+    curve= -0.0074 + 1.384*x - 0.5613*x**2 + 1.46159*x**3 - 2.6979*x**4 + 1.912*x**5 -0.4626*x**6
+    return curve
 
 def calculate_vol(t,e,D):
     volume = pi()*(e-D/2)^2*t
