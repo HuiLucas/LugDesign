@@ -53,21 +53,13 @@ def calculate_kt(e,D,M,t):
     return curve
 
 
-    else:
-        pass
-
-    return curve
-
-
-
-
-
 def calculate_vol(t,e,D):
     volume = pi()*(e-D/2)^2*t
     return volume
 
 def calculate_tension_area(t,e,D):
-    A_t= t*(w-D)
+    W = 2*e
+    A_t= t*(W-D)
     return A_t
 
 def calculate_bearing_area(t,D):
