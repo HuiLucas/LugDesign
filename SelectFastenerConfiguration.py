@@ -1,10 +1,11 @@
 # This software component will select the fastener configuration according to WP4.4.
 # this checks if given w allows for the number and size of fastners given constraints
-import MainOptimizer
+import DesignClass
 import random as rnd
 import numpy as np
 
-debug_design = MainOptimizer.DesignInstance(5, 2, 2, 2, 2, 2, 5, "metal")
+
+debug_design = DesignClass.DesignInstance(5, 2, 2, 2, 2, 2, 5, "metal")
 debug_design.minimum_diameter = 3
 debug_design.maximum_diameter = 5
 
