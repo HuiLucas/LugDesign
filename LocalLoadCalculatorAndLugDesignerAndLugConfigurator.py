@@ -61,7 +61,7 @@ def calculate_kty(w,D,t):
     return curve
 
 def calculate_vol(t,e,D):
-    volume = math.pi()*(e-D/2)^2*t
+    volume = math.pi*(e-D/2)**2*t
     return volume
 
 def calculate_tension_area(t,e,D):
@@ -111,7 +111,7 @@ def objective_function(variables):
     volume = calculate_vol(t,e,D)
     for i in Material:
         if i == material:
-            rho = Density[i]
+            rho = Density[Material.index(i)]
             break
     m = rho * volume
     return m
@@ -119,17 +119,17 @@ def volume_constraint(variables):
     e, t, D = variables
     return calculate_vol(t,e,D)
 
-def principal_constraint(variables, Fy, Fz, material):
+def principal_constraint(variables):
     e, t, D = variables
-    K_t = calculate_kt(e,D,material,t)
-    K_ty = choose_kby(t,D,e)
+    #K_t = calculate_kt(e,D,material,t)
+    #K_ty = choose_kby(t,D,e)
     A_t = calculate_tension_area(t,e,D)
     A_br = calculate_bearing_area(t,D)
     for i in Material:
         if i == material:
             Fy = F_yield[i]
             break
-    return (Fy/(K_t * Fy * A_t))**1.6 + (Fz/(K_ty * A_br * Fy))**1.6 - 1
+    return (Fy/(calculate_kt(e,D,material,t) * Fy * A_t))**1.6 + (Fz/(choose_kby(t,D,e) * A_br * Fy))**1.6 - 1
 
 constraints = [
     {'type': 'ineq', 'fun': volume_constraint},
@@ -137,7 +137,7 @@ constraints = [
 ]
 
 # Choose an optimization method
-method = 'Nelder-Mead'
+method = 'SLSQP'
 
 # Call the minimize function
 result = minimize(objective_function, initial_guess, method=method, constraints=constraints)
