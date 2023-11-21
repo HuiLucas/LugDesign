@@ -8,7 +8,7 @@ N_Flanges=2
 
 # FORCES
 
-Fx=381.57
+#Fx=381.57
 Fy=381.57
 Fz=1144.71
 Mx=719,26
@@ -17,28 +17,15 @@ Mz=0 #to be changed
 
 #-------------------------
 
-t=1
-w=1
-D=1
-e=1
+def calculate_vol(t,e,D):
+    volume = pi()*(e-D/2)^2*t
+    return volume
 
-At=t*(w-D)
-Abr=D*t
+def calculate_tension_area(t,e,D):
+    A_t= t*(w-D)
+    return A_t
 
-#------------------------
-#D1.12
-x_1 = w/D #x variable
-#Kt_1 = #function for curve 1
-#Kt_2= #for curve 2
-#....
+def calculate_bearing_area(t,D):
+    A_br=D*t
+    return A_br
 
-# create loop for all curves
-
-#------------------------
-#D1.13
-x_2 = w/D #x variable
-#Kbr_1 = # function for curve 1
-#Kbr_2= #for curve 2
-#....
-
-#create loop for all curves
