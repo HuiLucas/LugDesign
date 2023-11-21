@@ -37,20 +37,20 @@ def calculate_kt(e,D,M,t):
     c7= 1.0065-0.7188*x +0.6110*x**2 -0.3044*x**3 +0.0813*x**4 -0.0109*x**5 +0.0006*x**6
 
     if Mat==Material[0] or Mat==Material[4] or Mat==Material[6] or Mat==Material[7]:
-        curve = c1
+        kt = c1
     elif (Mat==Material[2] or Mat==Material[3]) and t<=1.27:
-        curve = c2
+        kt = c2
     elif Mat==Material[1] or Mat==Material[5]:
-        curve = c2
+        kt = c2
     elif (Mat==Material[2] or Mat==Material[3]) and t>=1.27:
-        curve = c4
+        kt = c4
     elif Mat==Material[8] or Mat==Material[10]:
-        curve = c4
+        kt = c4
     elif Mat== Material[9]:
-        curve = c7
+        kt = c7
     else:
         pass
-    return curve
+    return kt
 
 
 def calculate_vol(t,e,D):
