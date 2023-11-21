@@ -4,6 +4,7 @@
 
 import numpy as np
 from scipy.optimize import minimize
+import math
 
 N_lugs=1
 N_Flanges=2
@@ -60,7 +61,7 @@ def calculate_kty(w,D,t):
     return curve
 
 def calculate_vol(t,e,D):
-    volume = np.pi()*(e-D/2)^2*t
+    volume = math.pi()*(e-D/2)^2*t
     return volume
 
 def calculate_tension_area(t,e,D):
@@ -118,7 +119,7 @@ def volume_constraint(variables):
     e, t, D = variables
     return calculate_vol(t,e,D)
 
-def principal_constraint(variables, Fy, Fz):
+def principal_constraint(variables, Fy, Fz, material):
     e, t, D = variables
     K_t = calculate_kt(e,D,material,t)
     K_ty = choose_kby(t,D,e)
