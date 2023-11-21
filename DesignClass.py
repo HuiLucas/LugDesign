@@ -9,3 +9,8 @@ class DesignInstance:
         self.l = l #length of backplate
         self.w = w
         self.material = material
+
+class Load:
+    def __init__(self, F_x, F_z):
+        self.F_x = F_x
+        self.F_z = F_z
