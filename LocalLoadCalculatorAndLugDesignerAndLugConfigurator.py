@@ -11,7 +11,7 @@ N_Flanges=2
 
 # FORCES
 
-#Fx=381.57
+Fx=381.57
 Fy=381.57
 Fz=1144.71
 Mx=719,26
@@ -106,7 +106,7 @@ material = '2014-T6(DF-L)'
 #e=radius outer flange, t=thickness, D=diameter of the inner circle, material
 
 ### ATTENTION: optimise the density and the yield strength
-def objective_function(variables):
+def objective_function(variables, material = material):
     e, t, D = variables
     volume = calculate_vol(t,e,D)
     for i in Material:
@@ -119,7 +119,7 @@ def volume_constraint(variables):
     e, t, D = variables
     return calculate_vol(t,e,D)
 
-def principal_constraint(variables):
+def principal_constraint(variables, material = material):
     e, t, D = variables
     #K_t = calculate_kt(e,D,material,t)
     #K_ty = choose_kby(t,D,e)
@@ -140,7 +140,7 @@ constraints = [
 method = 'SLSQP'
 
 # Call the minimize function
-result = minimize(objective_function, initial_guess, method=method, constraints=constraints)
+result = minimize(objective_function, initial_guess, args=(material), method=method, constraints=constraints)
 
 # Print the result
 print("Optimized variables:", result.x)
