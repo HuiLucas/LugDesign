@@ -67,9 +67,6 @@ def calculate_bearing_area(t,D):
     A_br=D*t
     return A_br
 
-def choose_curve(Mat):
-
-
 def choose_kby(t,D,e ):
     x = e/D
     if t/D >= 0.6 :
