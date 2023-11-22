@@ -1,5 +1,5 @@
 class DesignInstance:
-    def __init__(self, h, t1, t2, t3, D1, D2, w, material):
+    def __init__(self, h, t1, t2, t3, D1, D2, w, material, n_fast):
         self.h = h
         self.t1 = t1
         self.t2 = t2
@@ -9,6 +9,7 @@ class DesignInstance:
         #self.l = l #length of backplate
         self.w = w
         self.material = material
+        self.n_fast = n_fast
 
 class Load:
     def __init__(self, F_x, F_z):
