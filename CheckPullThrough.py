@@ -9,4 +9,4 @@ def check_pull_through(design_object):
     failure = True
     return failure
 
-print(check_pull_through(debug_design))
+#print(check_pull_through(debug_design))
