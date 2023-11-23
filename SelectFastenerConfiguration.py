@@ -1,5 +1,5 @@
 # This software component will select the fastener configuration according to WP4.4.
-# this checks if given w allows for the number and size of fastners given constraints
+# this checks if given w allows for the number and size of fasteners given constraints
 import DesignClass
 import random as rnd
 import math
