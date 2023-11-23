@@ -16,6 +16,12 @@ class DesignInstance:
         self.D2_list=D2_list
         self.yieldstress=yieldstress
 class Load:
-    def __init__(self, F_x, F_z):
+    def __init__(self, F_x, F_y, F_z, M_x, M_y, M_z):
         self.F_x = F_x
+        self.F_y = F_y
         self.F_z = F_z
+        self.M_x = M_x
+        self.M_y = M_y
+        self.M_z = M_z
+
+    Launch_loads=Load(346.9,346.9,1040.7,653.9,653.9)
