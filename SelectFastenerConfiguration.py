@@ -6,14 +6,9 @@ import math
 import numpy as np
 
 
-debug_design = DesignClass.DesignInstance(2,2,2,22,2,2,2,2,2,100,
-                                          2,2,[(3,3),(6,3)],[1,1])
-#(x-coord),(z-coord)
+debug_design = DesignClass.DesignInstance(2,2,2,2,2,100,"metal",10,100,10,10,[(3,3),(6,3),],[1,1])
 
-def assign_diameter_list(design_object):
-    diameter_list = [rnd.uniform(design_object.minimum_diameter, design_object.maximum_diameter) for _ in
-                     range(design_object.fastener_rows)]
-    return diameter_list
+#calculate center of gravity given diamter size list and list of coordinates [((x-coord),(z-coord)]
 
 def calculate_centroid(design_object):
     np_D2_list = np.array(design_object.D2_list)
@@ -27,8 +22,7 @@ def calculate_centroid(design_object):
     return (centroid_x,centroid_z)
 
 
-# this checks if given w allows for the number and size of fasteners
-# for now only the case if the fastener diameter is constant
+#check wether spacing constraints detailed in 4.4 are met, inputs are list of coordinates and list of diameter sizes
 def fastener_spacing_check(design_object):
     np_D2_list = np.array(design_object.D2_list)
     np_hole_coordinate_list = np.array(design_object.hole_coordinate_list)
@@ -41,12 +35,12 @@ def fastener_spacing_check(design_object):
         lower_limit = 4 * np.max(np_D2_list)
         upper_limit = 5 * np.max(np_D2_list)
 
-    for i in range(len(design_object.diameter_properties)):
-        for k in range(i + 1, len(design_object.diameter_properties)):
-            distance_x = design_object.diameter_properties[i][0] - design_object.diameter_properties[k][0]
-            distance_y = design_object.diameter_properties[i][1] - design_object.diameter_properties[k][1]
-            r = math.sqrt(distance_x ** 2 + distance_y ** 2)
-            if i != k and not lower_limit <= r <= upper_limit:
+    for i in range(len(np_D2_list)):
+        for k in range(i + 1, len(np_D2_list)):
+            distance_x = np_hole_coordinate_list[i][0] - np_hole_coordinate_list[k][0]
+            distance_y = np_hole_coordinate_list[i][1] - np_hole_coordinate_list[k][1]
+            distance = math.sqrt(distance_x ** 2 + distance_y ** 2)
+            if i != k and not lower_limit <= distance <= upper_limit:
                 return False
 
     for i in range(len(np_D2_list)):
@@ -57,8 +51,6 @@ def fastener_spacing_check(design_object):
     return True
 
 
-print(calculate_centroid(debug_design))
 
 
-# 4.5 calculating the c.g of the fasteners the input of the function
 
