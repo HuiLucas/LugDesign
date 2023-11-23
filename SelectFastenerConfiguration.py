@@ -46,7 +46,7 @@ def fastener_spacing_check(design_object):
     return True
 
 print(fastener_spacing_check(debug_design))
-
+#
 
 
 
