@@ -102,11 +102,11 @@ def choose_kby(t,D,e):
 #Optimisation for each material and compare the options
 #intial guesses for '2014-T6(DF-L)':
 dictionnary = []
-for i in range(10, 200, 5):
+for i in range(10, 50, 5):
     e = i * 10**(-3)
-    for j in range(5, 50, 1):
+    for j in range(5, 30, 1):
         t = j*10**(-3)
-        for k in range(10, 200, 5):
+        for k in range(10, 90, 5):
             D = k*10**(-3)
             initial_guess = [e, t, D]
             material = '2014-T6(DF-L)'
@@ -150,10 +150,10 @@ for i in range(10, 200, 5):
             method = 'SLSQP'
 
             # Call the minimize function
-            result = minimize(objective_function, initial_guess, method=method, constraints=constraints, options={'disp': True}, tol=1e-1)
+            result = minimize(objective_function, initial_guess, method=method, constraints=constraints, options={'disp': True}, tol=1e-2)
 
             # Print the result
-            if result.success:
+            if result.success == True and result.x.all() <= 0.9:
                 dictionnary.append([result.x,result.fun])
                 #print("Optimization converged successfully.")
                 #print("Optimized variables:", result.x)
