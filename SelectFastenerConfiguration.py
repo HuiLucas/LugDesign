@@ -8,7 +8,7 @@ import numpy as np
 
 debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(-30, -80), (20, 80), (-20, 60), (20, -70)], D2_list=[10, 5, 9, 8])
+                                            hole_coordinate_list=[(2,2),(4,2)], D2_list=[1,1])
 debug_design.l = 2
 debug_design.maximum_diameter = 5
 debug_design.fastener_rows = 2
@@ -30,7 +30,7 @@ def calculate_centroid(design_object):
 
     return (centroid_x,centroid_z)
 
-
+print(calculate_centroid(debug_design))
 # this checks if given w allows for the number and size of fasteners
 # for now only the case if the fastener diameter is constant
 def fastener_spacing_check(design_object):
