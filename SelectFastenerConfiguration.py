@@ -61,4 +61,4 @@ print(calculate_centroid(debug_design))
 
 
 # 4.5 calculating the c.g of the fasteners the input of the function
-# is a list of the different diameters from top to bottom in the vertical direction
+
