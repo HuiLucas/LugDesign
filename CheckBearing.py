@@ -2,7 +2,7 @@ import DesignClass as dc
 import numpy as np
 debug_design = dc.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 5, 9, 8])
+                                            hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 5, 9, 8], yieldstrength=83)
 debug_design.l=2
 debug_design.minimum_diameter = 3
 debug_design.maximum_diameter = 5
