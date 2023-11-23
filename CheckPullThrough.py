@@ -20,7 +20,9 @@ def calculate_centroid(design_object):
 
 def check_pull_through(design_object):
 # design_object.hole_coordinate_list, design_object.D2_list
+    n_fast=len(design_object.hole_coordinate_list)
     F_y = 346.9
-    return F_y
+    F_yi=(F_y/n_fast)
+    return F_yi
 
-print(calculate_centroid(debug_design_1),check_pull_through(True) )
+print(calculate_centroid(debug_design_1),check_pull_through(debug_design_1) )
