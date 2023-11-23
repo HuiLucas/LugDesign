@@ -25,20 +25,23 @@ def check_pull_through(design_object):
     F_yi=(F_y/n_fast)
     return F_yi
 
-print(check_pull_through(debug_design))
+print(check_pull_through(debug_design_1))
 
 
 def check_shear(Fyi,Dfo, design_object):
-    Dfi = np.array(design_object.D2_list)
-    shear = Fyi / (np.pi * Dfo * (design_object.t2 + design_object.t3))
-    sigma_y = Fyi/(np.pi *(1/4) * (Dfo**2-Dfi**2))
-    shearmax = np.sqrt((design_object.yieldstregth**2 - sigma_y**2)/3)
-    if shear < shearmax:
-        return True
-    else:
-        return False
+    for i in range(len(design_object.D2_list)):
+        Dfi = design_object.D2_list[i]
+        shear = Fyi / (np.pi * Dfo * (design_object.t2 + design_object.t3))
+        print(shear)
+        sigma_y = Fyi/(np.pi *(1/4) * (Dfo**2-Dfi**2))
+        shearmax = np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
+        if shear < shearmax:
+            continue
+        else:
+            return i
+    return True
 
-print(check_shear(30,10,debug_design))
+
 
 
 
