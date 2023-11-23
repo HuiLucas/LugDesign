@@ -6,53 +6,43 @@ import math
 import numpy as np
 
 
-debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
-                                            length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(2,2),(4,2)], D2_list=[1,1])
-debug_design.l = 2
-debug_design.maximum_diameter = 5
-debug_design.fastener_rows = 2
-debug_design.n_fast = 4
-#diameter list  = [[x-coord,z-coord,diameter],.......,nth hole]
-debug_design.diameter_properties = np.array([[3,3,1],[6,3,1]])
-
-def assign_diameter_list(design_object):
-    diameter_list = [rnd.uniform(design_object.minimum_diameter, design_object.maximum_diameter) for _ in
-                     range(design_object.fastener_rows)]
-    return diameter_list
+debug_design = DesignClass.DesignInstance(2,2,2,2,2,6,"metal",10,6,10,10,[(3,3),(6,3),],[2,2])
 
 
-print(calculate_centroid(debug_design))
-# this checks if given w allows for the number and size of fasteners
-# for now only the case if the fastener diameter is constant
+
+#check wether spacing constraints detailed in 4.4 are met, inputs are list of coordinates and list of diameter sizes
 def fastener_spacing_check(design_object):
+    np_D2_list = np.array(design_object.D2_list)
+    np_hole_coordinate_list = np.array(design_object.hole_coordinate_list)
+
     if design_object.material == "metal":
-        lower_limit = 2 * np.max(design_object.diameter_properties[:,2])
-        upper_limit = 3 * np.max(design_object.diameter_properties[:,2])
+        lower_limit = 2 * np.max(np_D2_list)
+        upper_limit = 3 * np.max(np_D2_list)
 
     elif design_object.material == "composite":
-        lower_limit = 4 * np.max(design_object.diameter_properties[:, 2])
-        upper_limit = 5 * np.max(design_object.diameter_properties[:, 2])
+        lower_limit = 4 * np.max(np_D2_list)
+        upper_limit = 5 * np.max(np_D2_list)
 
-    for i in range(len(design_object.diameter_properties)):
-        for k in range(i + 1, len(design_object.diameter_properties)):
-            distance_x = design_object.diameter_properties[i][0] - design_object.diameter_properties[k][0]
-            distance_y = design_object.diameter_properties[i][1] - design_object.diameter_properties[k][1]
-            r = math.sqrt(distance_x ** 2 + distance_y ** 2)
-            if i != k and not lower_limit <= r <= upper_limit:
+    for i in range(len(np_D2_list)):
+        if not np_hole_coordinate_list[i,0] > 2 * np_D2_list[i] or design_object.length - np_hole_coordinate_list[i,0] > 2 * np_D2_list[i]:
+            if np_hole_coordinate_list[i,0] - 2 * np_D2_list[i] <= 0:
+                return False , i , np_hole_coordinate_list[i,0] - 2 * np_D2_list[i]
+            elif design_object.length - np_hole_coordinate_list[i,0] - 2 * np_D2_list[i] <=0:
+                return False , i , np_hole_coordinate_list[i,0]- 2 * np_D2_list[i] <= 0
+        if not np_hole_coordinate_list[i,1] >= 2 * np_D2_list[i] or design_object.w - np_hole_coordinate_list[i,0] >= 2 * np_D2_list[i]:
+            if np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <= 0:
+                return False , i , np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <=0
+            elif design_object.length - np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <=0:
+                return False , i , np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <= 0
+
+    for i in range(len(np_D2_list)):
+        for k in range(i + 1, len(np_D2_list)):
+            distance_x = np_hole_coordinate_list[i][0] - np_hole_coordinate_list[k][0]
+            distance_y = np_hole_coordinate_list[i][1] - np_hole_coordinate_list[k][1]
+            distance = math.sqrt(distance_x ** 2 + distance_y ** 2)
+            if i != k and not lower_limit <= distance <= upper_limit:
                 return False
-
-
-    for i in design_object.diameter_properties:
-        if not i[0] >= 2 * i[2] and design_object.l - i[0] >= 2 * i[2]:
-                if not i[1] >= 2 * i[2] and design_object.w - i[1] >= 2*i[2]:
-                    return False
 
     return True
 
-
 print(fastener_spacing_check(debug_design))
-
-
-# 4.5 calculating the c.g of the fasteners the input of the function
-# is a list of the different diameters from top to bottom in the vertical direction
