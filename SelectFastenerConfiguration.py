@@ -6,15 +6,9 @@ import math
 import numpy as np
 
 
-debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
-                                            length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(-30, -80), (20, 80), (-20, 60), (20, -70)], D2_list=[10, 5, 9, 8])
-debug_design.l = 2
-debug_design.maximum_diameter = 5
-debug_design.fastener_rows = 2
-debug_design.n_fast = 4
-#diameter list  = [[x-coord,z-coord,diameter],.......,nth hole]
-debug_design.diameter_properties = np.array([[3,3,1],[6,3,1]])
+debug_design = DesignClass.DesignInstance(2,2,2,22,2,2,2,2,2,100,
+                                          2,2,[(3,3),(6,3)],[1,1])
+#(x-coord),(z-coord)
 
 def assign_diameter_list(design_object):
     diameter_list = [rnd.uniform(design_object.minimum_diameter, design_object.maximum_diameter) for _ in
@@ -22,9 +16,11 @@ def assign_diameter_list(design_object):
     return diameter_list
 
 def calculate_centroid(design_object):
-    holes_area = np.pi * design_object.diameter_properties[:,2] ** 2 / 4
-    weighted_sum_z = np.sum(design_object.diameter_properties[: , 1]*holes_area)
-    weighted_sum_x = np.sum(design_object.diameter_properties[:, 0] * holes_area)
+    np_D2_list = np.array(design_object.D2_list)
+    np_hole_coordinate_list = np.array(design_object.hole_coordinate_list)
+    holes_area = np.pi * np_D2_list ** 2 / 4
+    weighted_sum_z = np.sum(np_hole_coordinate_list[: , 1]* holes_area)
+    weighted_sum_x = np.sum(np_hole_coordinate_list[:, 0] * holes_area)
     centroid_x = weighted_sum_x / np.sum(holes_area)
     centroid_z = weighted_sum_z / np.sum(holes_area)
 
@@ -34,13 +30,16 @@ def calculate_centroid(design_object):
 # this checks if given w allows for the number and size of fasteners
 # for now only the case if the fastener diameter is constant
 def fastener_spacing_check(design_object):
+    np_D2_list = np.array(design_object.D2_list)
+    np_hole_coordinate_list = np.array(design_object.hole_coordinate_list)
+
     if design_object.material == "metal":
-        lower_limit = 2 * np.max(design_object.diameter_properties[:,2])
-        upper_limit = 3 * np.max(design_object.diameter_properties[:,2])
+        lower_limit = 2 * np.max(np_D2_list)
+        upper_limit = 3 * np.max(np_D2_list)
 
     elif design_object.material == "composite":
-        lower_limit = 4 * np.max(design_object.diameter_properties[:, 2])
-        upper_limit = 5 * np.max(design_object.diameter_properties[:, 2])
+        lower_limit = 4 * np.max(np_D2_list)
+        upper_limit = 5 * np.max(np_D2_list)
 
     for i in range(len(design_object.diameter_properties)):
         for k in range(i + 1, len(design_object.diameter_properties)):
@@ -50,16 +49,15 @@ def fastener_spacing_check(design_object):
             if i != k and not lower_limit <= r <= upper_limit:
                 return False
 
-
-    for i in design_object.diameter_properties:
-        if not i[0] >= 2 * i[2] and design_object.l - i[0] >= 2 * i[2]:
-                if not i[1] >= 2 * i[2] and design_object.w - i[1] >= 2*i[2]:
+    for i in range(len(np_D2_list)):
+        if not np_hole_coordinate_list[i,0] > 2 * np_D2_list[i] and design_object.length - np_hole_coordinate_list[i,0] > 2 * np_D2_list[i]:
+                if not np_hole_coordinate_list[i,1] >= 2 * np_D2_list[i] and design_object.w - np_hole_coordinate_list[i,0] >= 2 * np_D2_list[i]:
                     return False
 
     return True
 
 
-print(fastener_spacing_check(debug_design))
+print(calculate_centroid(debug_design))
 
 
 # 4.5 calculating the c.g of the fasteners the input of the function
