@@ -21,7 +21,7 @@ Mz=0 #to be changed
 #-------------------------
 # Material List:
 # DF= die forging
-# P = plate 1
+# P = plate
 Material = ['2014-T6(DF-L)','2014-T6(DF-LT)','2014-T6(P)', '7075-T6(P)', '7075-T6(DF-L)', '7075-T6(DF-LT)', '4130 Steel', '8630 Steel', '2024-T4', '356-T6 Aluminium','2024-T3']
 F_yield = [414, 414, 414, 503, 503, 503,435,550,324,165,345]
 Density = [2800, 2800, 2800, 2810,2810,2810,7850,7850,2780,2670,2780]
@@ -101,11 +101,14 @@ def choose_kby(t,D,e ):
 
 #Optimisation for each material and compare the options
 #intial guesses for '2014-T6(DF-L)':
-initial_guess = [0.01, 0.005, 0.009]
+initial_guess = [0.05, 0.01, 0.02]
 material = '2014-T6(DF-L)'
 #e=radius outer flange, t=thickness, D=diameter of the inner circle, material
 
-### ATTENTION: optimise the density and the yield strength
+K_t = calculate_kt(initial_guess[0],initial_guess[1],material,initial_guess[2])
+K_ty = choose_kby(initial_guess[2],initial_guess[1],initial_guess[0])
+
+### ATTENTION: optimise the mass and the yield strength
 def objective_function(variables, material = material):
     e, t, D = variables
     volume = calculate_vol(t,e,D)
@@ -119,7 +122,7 @@ def volume_constraint(variables):
     e, t, D = variables
     return calculate_vol(t,e,D)
 
-def principal_constraint(variables, material = material):
+def principal_constraint(variables):
     e, t, D = variables
     #K_t = calculate_kt(e,D,material,t)
     #K_ty = choose_kby(t,D,e)
@@ -129,7 +132,7 @@ def principal_constraint(variables, material = material):
         if i == material:
             Fy = F_yield[Material.index(i)]
             break
-    return (Fy/(calculate_kt(e,D,material,t) * Fy * A_t))**1.6 + (Fz/(choose_kby(t,D,e) * A_br * Fy))**1.6 - 1
+    return (Fy/(K_t * Fy * A_t))**1.6 + (Fz/(K_ty * A_br * Fy))**1.6 - 1
 
 constraints = [
     {'type': 'ineq', 'fun': volume_constraint},
@@ -140,8 +143,14 @@ constraints = [
 method = 'SLSQP'
 
 # Call the minimize function
-#result = minimize(objective_function, initial_guess, args=(material), method=method, constraints=constraints)
+result = minimize(objective_function, initial_guess, method=method, constraints=constraints, options={'disp': True}, tol=1e-6)
 
 # Print the result
-#print("Optimized variables:", result.x)
-#print("Minimum value of the objective function:", result.fun)
+if result.success:
+    print("Optimization converged successfully.")
+    print("Optimized variables:", result.x)
+    print("Minimum value of the objective function:", result.fun)
+else:
+    print("Optimization did not converge. Check the result message for more information.")
+    print("Message:", result.message)
+#comment
