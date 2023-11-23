@@ -1,5 +1,5 @@
 class DesignInstance:
-    def __init__(self, h, t1, t2, t3, D1, w, material, n_fast, length, offset, flange_height, hole_coordinate_list, D2_list,yieldstrength):
+    def __init__(self, h, t1, t2, t3, D1, w, material, n_fast, length, offset, flange_height, hole_coordinate_list, D2_list, yieldstrength):
         self.h = h
         self.t1 = t1
         self.t2 = t2
@@ -23,5 +23,3 @@ class Load:
         self.M_x = M_x
         self.M_y = M_y
         self.M_z = M_z
-
-    Launch_loads=Load(346.9,346.9,1040.7,653.9,653.9,0)
