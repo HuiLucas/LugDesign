@@ -102,9 +102,9 @@ def choose_kby(t,D,e):
 #Optimisation for each material and compare the options
 #intial guesses for '2014-T6(DF-L)':
 dictionnary = []
-for i in range(100, 1000, 1):
+for i in range(10, 500, 1):
     e = i * 10**(-3)
-    initial_guess = [e, 0.1, 0.15]
+    initial_guess = [e, 0.05, 0.01]
     material = '2014-T6(DF-L)'
     #e=radius outer flange, t=thickness, D=diameter of the inner circle, material
 
@@ -158,4 +158,14 @@ for i in range(100, 1000, 1):
         pass
         #print("Optimization did not converge. Check the result message for more information.")
         #print("Message:", result.message)
+
+min_mass = 20
+optimized_configuration = [0, 0, 0]
+for i in range(len(dictionnary)):
+    if dictionnary[i][0] <= min_mass:
+        min_mass = dictionnary[i]
+        optimized_configuration = dictionnary[0]
+    else:
+        pass
 print(dictionnary)
+print(optimized_configuration)
