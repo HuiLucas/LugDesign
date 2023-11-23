@@ -4,8 +4,7 @@ import DesignClass
 
 debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 5, 9, 8], yieldstrength=83)
-                                            hole_coordinate_list=[(0, 80), (30, 80), (30, 80), (30, 80)], D2_list=[10, 10, 10, 10])
+                                            hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 5, 9, 8], yieldstrength=83))
 
 debug_loads=DesignClass.Launch_loads
 def calculate_centroid(design_object):
@@ -21,7 +20,7 @@ def calculate_centroid(design_object):
 
 def check_pull_through(design_object):
 # design_object.hole_coordinate_list, design_object.D2_list
-    F_axial=
+    F_axial=debug_loads()
     return
 
 print(check_pull_through(debug_design_1),calculate_centroid(debug_design_1),debug_loads )

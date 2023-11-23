@@ -24,4 +24,4 @@ class Load:
         self.M_y = M_y
         self.M_z = M_z
 
-    Launch_loads=Load(346.9,346.9,1040.7,653.9,653.9)
+    Launch_loads=Load(346.9,346.9,1040.7,653.9,653.9,0)
