@@ -1,5 +1,5 @@
 class DesignInstance:
-    def __init__(self, h, t1, t2, t3, D1, w, material, n_fast, length, offset, flange_height, hole_coordinate_list, D2_list,yieldstrength):
+    def __init__(self, h, t1, t2, t3, D1, w, material, n_fast, length, offset, flange_height, hole_coordinate_list, D2_list, yieldstrength):
         self.h = h
         self.t1 = t1
         self.t2 = t2
