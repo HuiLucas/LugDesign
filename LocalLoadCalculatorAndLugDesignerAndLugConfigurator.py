@@ -11,9 +11,9 @@ N_Flanges=2
 
 # FORCES
 
-Fx=381.57
-Fy=381.57
-Fz=1144.71
+Fx=381.57/N_Flanges
+Fy=381.57/N_Flanges
+Fz=1144.71/N_Flanges
 Mx=719,26
 My=719,26
 Mz=0 #to be changed
@@ -102,9 +102,9 @@ def choose_kby(t,D,e):
 #Optimisation for each material and compare the options
 #intial guesses for '2014-T6(DF-L)':
 dictionnary = []
-for i in range(5, 100, 1):
+for i in range(100, 1000, 1):
     e = i * 10**(-3)
-    initial_guess = [e, 0.003, 0.02]
+    initial_guess = [e, 0.1, 0.15]
     material = '2014-T6(DF-L)'
     #e=radius outer flange, t=thickness, D=diameter of the inner circle, material
 
@@ -150,7 +150,7 @@ for i in range(5, 100, 1):
 
     # Print the result
     if result.success:
-        dictionnary.append("for" + material + "it converges for " + result.x + "and the minimum value of the objective function is " + result.fun)
+        dictionnary.append([result.x,result.fun])
         #print("Optimization converged successfully.")
         #print("Optimized variables:", result.x)
         #print("Minimum value of the objective function:", result.fun)
