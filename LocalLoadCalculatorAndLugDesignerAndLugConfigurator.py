@@ -101,7 +101,7 @@ def choose_kby(t,D,e):
 
 #Optimisation for each material and compare the options
 #intial guesses for '2014-T6(DF-L)':
-initial_guess = [0.05, 0.03, 0.01]
+initial_guess = [0.03, 0.02, 0.005]
 material = '2014-T6(DF-LT)'
 #e=radius outer flange, t=thickness, D=diameter of the inner circle, material
 
