@@ -1,6 +1,6 @@
 import DesignClass as dc
 import numpy as np
-debug_design_2 = dc.DesignInstance(30, 5, 10, 2, 10,12, 80,40,"metal",100,20, [(2, 2), (4, 2)], [1,1])
+debug_design_2 = dc.DesignInstance(30, 5, 10, 2, 10,12, 80,40,"metal",100,20, [(2, 2), (4, 2)], [1,1],0)
 debug_design_2.minimum_diameter = 3
 debug_design_2.maximum_diameter = 5
 debug_design_2.fastener_rows = 2
