@@ -6,8 +6,8 @@ debug_design.minimum_diameter = 3
 debug_design.maximum_diameter = 5
 debug_design.fastener_rows = 2
 debug_design.n_fast = 4
-#hole_coordinate_list = [(2,3), (4,4), (6,6)]
-#D2_list = [4, 5, 6]
+#hole_coordinate_list = [(-30, -80), (20, 80), (-20, 60), (20, -70)]
+#D2_list = [10, 5, 9, 8]
 debug_design.diameter_properties = np.array([[3,3,1],[6,3,1]])
 
 trial_loads = dc.Load(100,1000)
