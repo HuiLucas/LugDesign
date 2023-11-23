@@ -14,6 +14,8 @@ debug_design.maximum_diameter = 5
 debug_design.fastener_rows = 2
 debug_design.n_fast = 4
 #diameter list  = [[x-coord,z-coord,diameter],.......,nth hole]
+#hole_coordinate_list = [(-30, -80), (20, 80), (-20, 60), (20, -70)]
+#D2_list = [10, 5, 9, 8]
 debug_design.diameter_properties = np.array([[3,3,1],[6,3,1]])
 
 def assign_diameter_list(design_object):
