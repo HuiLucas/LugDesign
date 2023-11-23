@@ -1,5 +1,5 @@
 class DesignInstance:
-    def __init__(self, h, t1, t2, t3, D1, D2, w, material, n_fast, length, offset, flange_height, list_of_hole_center_coords):
+    def __init__(self, h, t1, t2, t3, D1, D2, w, material, n_fast, length, offset, flange_height, hole_coordinate_list, D2_list):
         self.h = h
         self.t1 = t1
         self.t2 = t2
@@ -13,8 +13,8 @@ class DesignInstance:
         self.length = length
         self.offset = offset
         self.flange_height = flange_height
-        self.list_of_hole_center_coords = list_of_hole_center_coords
-
+        self.hole_coordinate_list = hole_coordinate_list
+        self.D2_list=D2_list
 class Load:
     def __init__(self, F_x, F_z):
         self.F_x = F_x

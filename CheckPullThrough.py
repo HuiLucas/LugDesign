@@ -2,7 +2,9 @@
 import DesignClass
 
 
-debug_design = DesignClass.DesignInstance(30, 5, 10, 2, 10,12, 80,"metal",4,100,20,80, [(-20, -30), (20, 30), (-10, 30), (20, -20)])
+debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
+                                            length=200, offset=20,flange_height=80, \
+                                            hole_coordinate_list=[(-30, -80), (20, 80), (-20, 60), (20, -70)], D2_list=[10, 5, 9, 8])
 def check_pull_through(design_object):
     failure = True
     return failure
