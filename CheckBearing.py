@@ -14,6 +14,7 @@ debug_design.diameter_properties = np.array([[3,3,1],[6,3,1]])
 
 trial_loads = dc.Load(100,1000)
 
+#calculate center of gravity given diamter size list and list of coordinates [((x-coord),(z-coord)]#
 def calculate_centroid(design_object):
     np_D2_list = np.array(design_object.D2_list)
     np_hole_coordinate_list = np.array(design_object.hole_coordinate_list)
