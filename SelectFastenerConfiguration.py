@@ -8,7 +8,7 @@ import numpy as np
 
 debug_design = DesignClass.DesignInstance(2,2,2,2,2,100,"metal",10,100,10,10,[(3,3),(6,3),],[1,1])
 
-#calculate center of gravity given diamter size list and list of coordinates [((x-coord),(z-coord)]
+#calculate center of gravity given diamter size list and list of coordinates [((x-coord),(z-coord)]#
 
 def calculate_centroid(design_object):
     np_D2_list = np.array(design_object.D2_list)
