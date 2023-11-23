@@ -6,7 +6,7 @@ import math
 import numpy as np
 
 
-debug_design = DesignClass.DesignInstance(2,2,2,2,2,100,"metal",10,100,10,10,[(3,3),(6,3),],[1,1])
+debug_design = DesignClass.DesignInstance(2,2,2,2,2,6,"metal",10,6,10,10,[(3,3),(6,3),],[2,2])
 
 
 
@@ -24,6 +24,18 @@ def fastener_spacing_check(design_object):
         upper_limit = 5 * np.max(np_D2_list)
 
     for i in range(len(np_D2_list)):
+        if not np_hole_coordinate_list[i,0] > 2 * np_D2_list[i] or design_object.length - np_hole_coordinate_list[i,0] > 2 * np_D2_list[i]:
+            if np_hole_coordinate_list[i,0] - 2 * np_D2_list[i] <= 0:
+                return False , i , np_hole_coordinate_list[i,0] - 2 * np_D2_list[i]
+            elif design_object.length - np_hole_coordinate_list[i,0] - 2 * np_D2_list[i] <=0:
+                return False , i , np_hole_coordinate_list[i,0]- 2 * np_D2_list[i] <= 0
+        if not np_hole_coordinate_list[i,1] >= 2 * np_D2_list[i] or design_object.w - np_hole_coordinate_list[i,0] >= 2 * np_D2_list[i]:
+            if np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <= 0:
+                return False , i , np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <=0
+            elif design_object.length - np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <=0:
+                return False , i , np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <= 0
+
+    for i in range(len(np_D2_list)):
         for k in range(i + 1, len(np_D2_list)):
             distance_x = np_hole_coordinate_list[i][0] - np_hole_coordinate_list[k][0]
             distance_y = np_hole_coordinate_list[i][1] - np_hole_coordinate_list[k][1]
@@ -31,13 +43,9 @@ def fastener_spacing_check(design_object):
             if i != k and not lower_limit <= distance <= upper_limit:
                 return False
 
-    for i in range(len(np_D2_list)):
-        if not np_hole_coordinate_list[i,0] > 2 * np_D2_list[i] and design_object.length - np_hole_coordinate_list[i,0] > 2 * np_D2_list[i]:
-                if not np_hole_coordinate_list[i,1] >= 2 * np_D2_list[i] and design_object.w - np_hole_coordinate_list[i,0] >= 2 * np_D2_list[i]:
-                    return False
-
     return True
 
+print(fastener_spacing_check(debug_design))
 
 
 
