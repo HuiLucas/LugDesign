@@ -6,7 +6,9 @@ import math
 import numpy as np
 
 
-debug_design = DesignClass.DesignInstance(2,2,2,2,2,6,"metal",10,6,10,10,[(3,3),(6,3),],[2,2])
+debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
+                                            length=200, offset=20,flange_height=80, \
+                                            hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 5, 9, 8], yieldstrength=83)
 
 #check wether spacing constraints detailed in 4.4 are met, inputs are list of coordinates and list of diameter sizes
 def fastener_spacing_check(design_object):
