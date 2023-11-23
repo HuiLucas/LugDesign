@@ -21,14 +21,6 @@ def assign_diameter_list(design_object):
                      range(design_object.fastener_rows)]
     return diameter_list
 
-def calculate_centroid(design_object):
-    holes_area = np.pi * design_object.diameter_properties[:,2] ** 2 / 4
-    weighted_sum_z = np.sum(design_object.diameter_properties[: , 1]*holes_area)
-    weighted_sum_x = np.sum(design_object.diameter_properties[:, 0] * holes_area)
-    centroid_x = weighted_sum_x / np.sum(holes_area)
-    centroid_z = weighted_sum_z / np.sum(holes_area)
-
-    return (centroid_x,centroid_z)
 
 print(calculate_centroid(debug_design))
 # this checks if given w allows for the number and size of fasteners
