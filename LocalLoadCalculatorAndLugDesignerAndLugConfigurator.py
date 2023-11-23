@@ -102,60 +102,65 @@ def choose_kby(t,D,e):
 #Optimisation for each material and compare the options
 #intial guesses for '2014-T6(DF-L)':
 dictionnary = []
-for i in range(100, 1000, 1):
+for i in range(10, 200, 5):
     e = i * 10**(-3)
-    initial_guess = [e, 0.1, 0.15]
-    material = '2014-T6(DF-L)'
-    #e=radius outer flange, t=thickness, D=diameter of the inner circle, material
+    for j in range(5, 50, 1):
+        t = j*10**(-3)
+        for k in range(10, 200, 5):
+            D = k*10**(-3)
+            initial_guess = [e, t, D]
+            material = '2014-T6(DF-L)'
+            #e=radius outer flange, t=thickness, D=diameter of the inner circle, material
 
-    K_t = calculate_kt(initial_guess[0],initial_guess[1],material,initial_guess[2])
-    K_ty = choose_kby(initial_guess[2],initial_guess[1],initial_guess[0])
+            K_t = calculate_kt(initial_guess[0],initial_guess[1],material,initial_guess[2])
+            K_ty = choose_kby(initial_guess[2],initial_guess[1],initial_guess[0])
 
-    ### ATTENTION: optimise the mass and the yield strength
-    def objective_function(variables, material = material):
-        e, t, D = variables
-        volume = calculate_vol(t,e,D)
-        for i in Material:
-            if i == material:
-                rho = Density[Material.index(i)]
-                break
-        m = rho * volume
-        return m
-    def volume_constraint(variables):
-        e, t, D = variables
-        return calculate_vol(t,e,D)
+            ### ATTENTION: optimise the mass and the yield strength
+            def objective_function(variables, material = material):
+                e, t, D = variables
+                volume = calculate_vol(t,e,D)
+                for i in Material:
+                    if i == material:
+                        rho = Density[Material.index(i)]
+                        break
+                m = rho * volume
+                return m
+            def volume_constraint(variables):
+                e, t, D = variables
+                return calculate_vol(t,e,D)
 
-    def principal_constraint(variables):
-        e, t, D = variables
-        #K_t = calculate_kt(e,D,material,t)
-        #K_ty = choose_kby(t,D,e)
-        A_t = calculate_tension_area(t,e,D)
-        A_br = calculate_bearing_area(t,D)
-        for i in Material:
-            if i == material:
-                Fy = F_yield[Material.index(i)]
-                break
-        return (Fy/(K_t * Fy * A_t))**1.6 + (Fz/(K_ty * A_br * Fy))**1.6 - 1
+            def principal_constraint(variables):
+                e, t, D = variables
+                #K_t = calculate_kt(e,D,material,t)
+                #K_ty = choose_kby(t,D,e)
+                A_t = calculate_tension_area(t,e,D)
+                A_br = calculate_bearing_area(t,D)
+                for i in Material:
+                    if i == material:
+                        Fy = F_yield[Material.index(i)]
+                        break
+                return (Fy/(K_t * Fy * A_t))**1.6 + (Fz/(K_ty * A_br * Fy))**1.6 - 1
 
-    constraints = [
-        {'type': 'ineq', 'fun': volume_constraint},
-        {'type': 'eq', 'fun': principal_constraint}
-    ]
+            constraints = [
+                {'type': 'ineq', 'fun': volume_constraint},
+                {'type': 'eq', 'fun': principal_constraint}
+            ]
 
-    # Choose an optimization method
-    method = 'SLSQP'
+            # Choose an optimization method
+            method = 'SLSQP'
 
-    # Call the minimize function
-    result = minimize(objective_function, initial_guess, method=method, constraints=constraints, options={'disp': True}, tol=1e-6)
+            # Call the minimize function
+            result = minimize(objective_function, initial_guess, method=method, constraints=constraints, options={'disp': True}, tol=1e-1)
 
-    # Print the result
-    if result.success:
-        dictionnary.append([result.x,result.fun])
-        #print("Optimization converged successfully.")
-        #print("Optimized variables:", result.x)
-        #print("Minimum value of the objective function:", result.fun)
-    else:
-        pass
-        #print("Optimization did not converge. Check the result message for more information.")
-        #print("Message:", result.message)
+            # Print the result
+            if result.success:
+                dictionnary.append([result.x,result.fun])
+                #print("Optimization converged successfully.")
+                #print("Optimized variables:", result.x)
+                #print("Minimum value of the objective function:", result.fun)
+            else:
+                pass
+                #print("Optimization did not converge. Check the result message for more information.")
+                #print("Message:", result.message)
+
 print(dictionnary)
