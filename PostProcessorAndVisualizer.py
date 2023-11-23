@@ -8,16 +8,19 @@ from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 
 def Visualize(design_object):
-
-    # make the base
+    for i in range(len(design_object.hole_coordinate_list)):
+        a = design_object.hole_coordinate_list[i][0]
+        design_object.hole_coordinate_list[i] = (
+        design_object.hole_coordinate_list[i][1] - design_object.w / 2, a - design_object.length / 2)
+        # make the base
     result = (
         cq.Workplane("XY")
-        .box(design_object.w, design_object.length, design_object.t2)
-        .faces(">Z")
-        .workplane()
-        .pushPoints(design_object.list_of_hole_center_coords)
-        .hole(design_object.D2)
+        .box(design_object.w, design_object.length, design_object.t2).faces(">Z").workplane().tag("noholes")
     )
+
+    for i in range(len(design_object.D2_list)):
+        result = result.workplaneFromTagged("noholes").pushPoints(design_object.hole_coordinate_list[i:i + 1]).hole(
+            design_object.D2_list[i])
 
     if design_object.w <= design_object.flange_height:
         filletrad = design_object.w / 2
@@ -27,16 +30,20 @@ def Visualize(design_object):
         offset=-design_object.offset
     )  # workplane is offset from the object surface
     result = result.union(
-        cq.Workplane("XZ").box(design_object.w, design_object.flange_height + filletrad, design_object.t1, centered=[True, False, True]).edges(
+        cq.Workplane("XZ").box(design_object.w, design_object.flange_height + filletrad, design_object.t1,
+                               centered=[True, False, True]).edges(
             "|Y").fillet(filletrad - 0.01).translate((0, 0, +design_object.t2 / 2 - filletrad)).center(0,
-                                                                                                -filletrad + design_object.t2 / 2).rect(
-            design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(design_object.D1).cutThruAll().translate(
+                                                                                                       -filletrad + design_object.t2 / 2).rect(
+            design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
+            design_object.D1).cutThruAll().translate(
             (0, design_object.w / 2 - design_object.offset, 0)))
     result = result.union(
-        cq.Workplane("XZ").box(design_object.w, design_object.flange_height + filletrad, design_object.t1, centered=[True, False, True]).edges(
+        cq.Workplane("XZ").box(design_object.w, design_object.flange_height + filletrad, design_object.t1,
+                               centered=[True, False, True]).edges(
             "|Y").fillet(filletrad - 0.01).translate((0, 0, +design_object.t2 / 2 - filletrad)).center(0,
-                                                                                                -filletrad + design_object.t2 / 2).rect(
-            design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(design_object.D1).cutThruAll().translate(
+                                                                                                       -filletrad + design_object.t2 / 2).rect(
+            design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
+            design_object.D1).cutThruAll().translate(
             (0, design_object.w / 2 - design_object.offset - design_object.h, 0)))
     # Export
     cq.exporters.export(result, "result.stl")
