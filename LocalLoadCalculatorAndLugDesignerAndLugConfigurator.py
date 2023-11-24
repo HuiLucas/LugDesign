@@ -116,11 +116,11 @@ def choose_kby(t, D, e):
 # Optimisation for each material and compare the options
 # intial guesses for '2014-T6(DF-L)':
 dictionnary = []
-for i in range(10, 50, 5):
+for i in range(10, 500, 5):
     e = i * 10 ** (-3)
-    for j in range(5, 30, 1):
+    for j in range(1, 50, 1):
         t = j * 10 ** (-3)
-        for k in range(10, 90, 5):
+        for k in range(10, 500, 5):
             D = k * 10 ** (-3)
             initial_guess = [e, t, D]
             material = '4130 Steel'
@@ -137,7 +137,6 @@ for i in range(10, 50, 5):
                 for i in Material:
                     if i == material:
                         rho = Density[Material.index(i)]
-                        break
                 m = rho * volume
                 return m
 
@@ -156,23 +155,38 @@ for i in range(10, 50, 5):
                 for i in Material:
                     if i == material:
                         Fy = F_yield[Material.index(i)]
-                        break
                 return (Fy / (K_t * Fy * A_t)) ** 1.6 + (Fz / (K_ty * A_br * Fy)) ** 1.6 - 1
             def constraint_thickness(variables):
                 e,t,D=variables
-                return -t + 0.3
+                return -t + 0.05
+            def constraint_thickness_bigger_zero(variables):
+                e,t,D=variables
+                return t
             def constraint_outer_radius(variables):
                 e,t,D=variables
                 return -e+0.2
+            def constraint_outer_radius_bigger_zero(variables):
+                e,t,D=variables
+                return e
             def constraint_inner_diameter(variables):
                 e,t,D= variables
                 return  -D+0.39
+            def constraint_inner_diameter_bigger_zero(variables):
+                e,t,D= variables
+                return  D
+            def constraint_dimension(variables):
+                e, t, D = variables
+                return e-D/2
             constraints = [
                 {'type': 'ineq', 'fun': volume_constraint},
                 {'type': 'eq', 'fun': principal_constraint},
                 {'type': 'ineq', 'fun': constraint_thickness},
+                {'type': 'ineq', 'fun': constraint_thickness_bigger_zero},
                 {'type': 'ineq', 'fun': constraint_outer_radius},
-                {'type': 'ineq', 'fun': constraint_inner_diameter}
+                {'type': 'ineq', 'fun': constraint_outer_radius_bigger_zero},
+                {'type': 'ineq', 'fun': constraint_inner_diameter},
+                {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
+                {'type': 'ineq', 'fun': constraint_dimension}
             ]
 
             # Choose an optimization method
@@ -180,10 +194,10 @@ for i in range(10, 50, 5):
 
             # Call the minimize function
             result = minimize(objective_function, initial_guess, method=method, constraints=constraints,
-                              options={'disp': True}, tol=1)
+                              options={'disp': True}, tol=60)
 
             # Print the result
-            if result.success == True:
+            if result.success == True and result.fun <= 15:
                 dictionnary.append([result.x, result.fun])
                 # print("Optimization converged successfully.")
                 # print("Optimized variables:", result.x)
