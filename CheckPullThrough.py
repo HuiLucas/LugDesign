@@ -28,7 +28,8 @@ def check_pull_through(design_object):
 print(check_pull_through(debug_design_1))
 
 
-def check_shear(Fyi,Dfo, design_object):
+def check_shear(Fyi,Dfo, design_object): #checks pullout shear, is smaller than max we can decrease thickness,
+    #if bigger we have to increase it, the function returns values of the Dinner for wich shear is bigger than shearmax
     for i in range(len(design_object.D2_list)):
         Dfi = design_object.D2_list[i]
         shear = Fyi / (np.pi * Dfo * (design_object.t2 + design_object.t3))
@@ -39,7 +40,9 @@ def check_shear(Fyi,Dfo, design_object):
             continue
         else:
             return i
-    return True
+
+
+
 
 
 
