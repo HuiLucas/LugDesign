@@ -1,6 +1,8 @@
 import DesignClass as dc
 import numpy as np
-debug_design_2 = dc.DesignInstance(30, 5, 1, 2, 10,12, 80,40,"metal",100,20, [(2, 2), (4, 3),(6,8)], [1,2,3],500)
+debug_design_2 = dc.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
+                                            length=200, offset=20,flange_height=80, \
+                                            hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 5, 9, 8], yieldstrength=83)
 debug_design_2.minimum_diameter = 3
 debug_design_2.maximum_diameter = 5
 debug_design_2.fastener_rows = 2
