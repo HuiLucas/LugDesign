@@ -13,15 +13,18 @@ debug_design3 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80,
 
 N_lugs = 1
 N_Flanges = 2
+M_S = 0.3
 
 # FORCES
 
 Fx = 381.57 / (N_Flanges*N_lugs)
 Fy = 381.57 / (N_Flanges*N_lugs)
 Fz = 1144.71 / (N_Flanges*N_lugs)
-Mx = 719, 26
-My = 719, 26
+Mx = 719.26
+My = 719.26
 Mz = 0  # to be changed
+#Fz = 1144.71 / (N_Flanges*N_lugs) + My/(h*N_lugs)
+
 
 # -------------------------
 # Material List:
@@ -164,7 +167,7 @@ for material in Material:
                     for i in Material:
                         if i == material:
                             sigma_y = sigma_yield[Material.index(i)]
-                    return (Fy / (K_t * sigma_y * A_t)) ** 1.6 + (Fz / (K_ty * A_br * sigma_y)) ** 1.6 - 1
+                    return ((Fy / (K_t * sigma_y * A_t)) ** 1.6 + (Fz / (K_ty * A_br * sigma_y)) ** 1.6)**(-0.625) - 1 - M_S
                 def constraint_thickness(variables):
                     e,t,D=variables
                     return -t + 0.05
