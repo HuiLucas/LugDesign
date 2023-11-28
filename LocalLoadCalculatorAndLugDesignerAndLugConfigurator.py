@@ -11,7 +11,7 @@ debug_design3 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80,
                                             length=200, offset=20,flange_height=80, \
                                             hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 5, 9, 8], yieldstrength=83)
 
-N_lugs = 2
+N_lugs = 1
 N_Flanges = 2
 
 # FORCES
@@ -29,7 +29,7 @@ Mz = 0  # to be changed
 # P = plate
 Material = ['2014-T6(DF-L)', '2014-T6(DF-LT)', '2014-T6(P)', '7075-T6(P)', '7075-T6(DF-L)', '7075-T6(DF-LT)',
             '4130 Steel', '8630 Steel', '2024-T4', '356-T6 Aluminium', '2024-T3']
-F_yield = [414, 414, 414, 503, 503, 503, 435, 550, 324, 165, 345]
+sigma_yield = [414, 414, 414, 503, 503, 503, 435, 550, 324, 165, 345]
 Density = [2800, 2800, 2800, 2810, 2810, 2810, 7850, 7850, 2780, 2670, 2780]
 
 
@@ -159,8 +159,8 @@ for i in range(10, 500, 5):
                 A_br = calculate_bearing_area(t, D)
                 for i in Material:
                     if i == material:
-                        Fy = F_yield[Material.index(i)]
-                return (Fy / (K_t * Fy * A_t)) ** 1.6 + (Fz / (K_ty * A_br * Fy)) ** 1.6 - 1
+                        sigma_y = sigma_yield[Material.index(i)]
+                return (Fy / (K_t * sigma_y * A_t)) ** 1.6 + (Fz / (K_ty * A_br * sigma_y)) ** 1.6 - 1
             def constraint_thickness(variables):
                 e,t,D=variables
                 return -t + 0.05
