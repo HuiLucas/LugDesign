@@ -13,17 +13,16 @@ debug_design3 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80,
 
 N_lugs = 1
 N_Flanges = 2
+#to be changed
 M_S = 1.25*1.1 -1
 
-# FORCES
-
-Fx = 381.57 / (N_Flanges*N_lugs)
-Fy = 381.57 / (N_Flanges*N_lugs)
-Fz = 1144.71 / (N_Flanges*N_lugs)
-Mx = 719.26
-My = 719.26
+# FORCES with safety factor of 1.25
+Fx = 433.6 / (N_Flanges*N_lugs)
+Fy = 433.6 / (N_Flanges*N_lugs)
+Fz = 1300.81 / (N_Flanges*N_lugs)
+Mx = 817.34
+My = 817.34
 Mz = 0  # to be changed
-#Fz = 1144.71 / (N_Flanges*N_lugs) + My/(h*N_lugs)
 
 
 # -------------------------
@@ -129,15 +128,15 @@ for material in Material:
     for i in Material:
         if i == material:
             sigma_y = sigma_yield[Material.index(i)]
-    for i in range(10, 500, 20):
+    for i in range(10, 500, 50):
         e = i * 10 ** (-3)
-        for j in range(1, 50, 5):
+        for j in range(1, 50, 10):
             t = j * 10 ** (-3)
-            for k in range(10, 500, 20):
+            for k in range(10, 500, 50):
                 D = k * 10 ** (-3)
-                for l in range(10, 900, 50):
+                for l in range(10, 900, 100):
                     h = l * 10 ** (-3)
-                    for m in range(10, 2000, 100):
+                    for m in range(10, 2000, 250):
                         if N_lugs == 1:
                             distance=1
                         else:
