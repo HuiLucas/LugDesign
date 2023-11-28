@@ -8,7 +8,7 @@ debug_design_1 = DesignClass.DesignInstance(h=0.030, t1=0.005, t2=0.010, t3=0.00
                                             D2_list=[0.010, 0.005, 0.009, 0.008], yieldstrength=83*10^9, N_lugs=2, N_Flanges=2)
 
 
-def calculate_centroid(design_object): #calculates centroid of fasteners
+def calculate_centroid1(design_object): #calculates centroid of fasteners
     np_D2_list = np.array(design_object.D2_list)
     np_hole_coordinate_list = np.array(design_object.hole_coordinate_list)
     holes_area = np.pi * np_D2_list ** 2 / 4
@@ -24,11 +24,11 @@ def check_pull_through(design_object):  #Calculates the total force on each fast
     # between the respective fastener and the c.g. of the fasteners)
 
     n_fast=len(design_object.hole_coordinate_list)
-    F_y = 346.9
-    M_x = 719.26
+    F_y = 433.60
+    M_x = 817.34
     Sum_A_r = 0
     F_yi = []
-    centroid=calculate_centroid(design_object)
+    centroid=calculate_centroid1(design_object)
     for i in range (len(design_object.hole_coordinate_list)):
         D_z=design_object.hole_coordinate_list[i][1]-centroid[0]
         Sum_A_r+=(np.pi*0.25*design_object.D2_list[i]**2)*(D_z**2)
@@ -37,7 +37,6 @@ def check_pull_through(design_object):  #Calculates the total force on each fast
         F_yi.append((F_y/n_fast)+(M_x*np.pi*0.25*design_object.D2_list[i]**(2)*D_z)/(Sum_A_r))
     return F_yi
 
-#print(check_pull_through(debug_design_1))
 Fyi=check_pull_through(debug_design_1)
 
 def check_shear(design_object): #checks pullout shear, if smaller than max we can decrease thickness,
@@ -52,6 +51,7 @@ def check_shear(design_object): #checks pullout shear, if smaller than max we ca
             if not shear < shearmax:
                 return False , "increase_thickness", Dfi
         return True
+
 print(check_shear(debug_design_1))
 
 
