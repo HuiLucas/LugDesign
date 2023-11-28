@@ -15,7 +15,7 @@ class DesignInstance:
         self.hole_coordinate_list = hole_coordinate_list
         self.D2_list=D2_list
         self.yieldstrength=yieldstrength
-        self.N_lugs.N_lugs = N_lugs
+        self.N_lugs = N_lugs
         self.N_Flanges = N_Flanges
 class Load:
     def __init__(self, F_x, F_y, F_z, M_x, M_y, M_z):
