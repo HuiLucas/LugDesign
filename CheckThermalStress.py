@@ -1,7 +1,7 @@
 # This software component will check the given input design for Thermal Stress Failure.
 
 materials = [
-    {'material': '2014-T6(DF-L)', 'thermal_expansion_coefficient': 23 ,'elastic module': },
+    {'material': '2014-T6(DF-L)', 'thermal_expansion_coefficient': 23 ,'elastic module':1 },
     {'material': '2014-T6(DF-LT)', 'thermal_expansion_coefficient': 23},
     {'material': '2014-T6(P)', 'thermal_expansion_coefficient': 23},
     {'material': '7075-T6(P)', 'thermal_expansion_coefficient': 23},
