@@ -198,6 +198,12 @@ for material in Material:
                         e, t, D, h = variables
                         return h
 
+                    def moment_x_constraint(variables):
+                        e,t,D,h = variables
+                        sigma = (Mx*e)/((t*(2*e)**3)/12)-sigma_y
+                        return sigma
+
+
                     constraints = [
                         {'type': 'ineq', 'fun': volume_constraint},
                         {'type': 'eq', 'fun': principal_constraint},
@@ -208,7 +214,8 @@ for material in Material:
                         {'type': 'ineq', 'fun': constraint_inner_diameter},
                         {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
                         {'type': 'ineq', 'fun': constraint_dimension},
-                        {'type': 'ineq', 'fun': constraint_inter_flange_distance}
+                        {'type': 'ineq', 'fun': constraint_inter_flange_distance},
+                        {'type': 'ineq', 'fun': moment_x_constraint}
                     ]
 
                     # Choose an optimization method
