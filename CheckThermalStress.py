@@ -18,6 +18,7 @@ materials = [
 # aluminum https://ntrs.nasa.gov/api/citations/19720023885/downloads/19720023885.pdf
 #
 
+
 def thermal_stress_calculation(design_object, lower_temp , ref_temp , phi_list , materials):
     temp_diff = math.abs(ref_temp - lower_temp)
     np_d2_list = np.array(design_object.D2_list)
