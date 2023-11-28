@@ -36,7 +36,7 @@ def fastener_spacing_check(design_object):
             elif design_object.length - np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <=0:
                 return False , i , design_object.length - np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] , "WidthMarginError"
     #lower limit and upper limit are calculated based on the material and the for loop checks wether the center to
-    #center constraint complies.
+    #center constraint complies..
     for i in range(len(np_D2_list)):
         for k in range(i + 1, len(np_D2_list)):
             distance_x = np_hole_coordinate_list[i][0] - np_hole_coordinate_list[k][0]
