@@ -50,7 +50,7 @@ def check_shear(design_object): #checks pullout shear, if smaller than max we ca
             sigma_y = Fyi[i]/(np.pi *(1/4) * (Dfo**2-Dfi**2))
             shearmax = np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
             if not shear < shearmax:
-                return False , "increse_thickness", Dfi
+                return False , "increase_thickness", Dfi
         return True
 print(check_shear(debug_design_1))
 
