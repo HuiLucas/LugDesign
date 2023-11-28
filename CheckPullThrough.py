@@ -29,18 +29,20 @@ def check_pull_through(design_object):
 print(check_pull_through(debug_design_1))
 
 
-def check_shear(Fyi,Dfo, design_object): #checks pullout shear, is smaller than max we can decrease thickness,
+def check_shear(Fyi, design_object): #checks pullout shear, if smaller than max we can decrease thickness,
     #if bigger we have to increase it, the function returns values of the Dinner for wich shear is bigger than shearmax
-    for i in range(len(design_object.D2_list)):
-        Dfi = design_object.D2_list[i]
-        shear = Fyi / (np.pi * Dfo * (design_object.t2 + design_object.t3))
-        print(shear)
-        sigma_y = Fyi/(np.pi *(1/4) * (Dfo**2-Dfi**2))
-        shearmax = np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
-        if shear < shearmax:
-            continue
-        else:
-            return i
+    #Dfo is the outer diameter of the bolt.
+        for i in range(len(design_object.D2_list)):
+            Dfi = design_object.D2_list[i]
+            Dfo = 1.8 * Dfi
+            shear = Fyi / (np.pi * Dfo * (design_object.t2 + design_object.t3))
+            sigma_y = Fyi/(np.pi *(1/4) * (Dfo**2-Dfi**2))
+            shearmax = np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
+            if not shear < shearmax:
+                return False , "increse_thickness", Dfi
+
+        return True
+
 
 
 
