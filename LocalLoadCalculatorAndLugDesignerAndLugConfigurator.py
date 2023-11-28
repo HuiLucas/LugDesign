@@ -188,7 +188,7 @@ for material in Material:
                         e,t,D,h= variables
                         return  -D+0.39
                     def constraint_inner_diameter_bigger_zero(variables):
-                        e,t,D,h,distance= variables
+                        e,t,D,h= variables
                         return  D
                     def constraint_dimension(variables):
                         e, t, D, h = variables
