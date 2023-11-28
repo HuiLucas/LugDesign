@@ -139,6 +139,41 @@ def LugOptimizer(design_object, Load_object):
                 K_ty = choose_kby(initial_guess[2], initial_guess[1], initial_guess[0])
     
 
+
+            # Choose an optimization method
+            method = 'SLSQP'
+
+            # Call the minimize function
+            result = minimize(objective_function, initial_guess, method=method, constraints=constraints,
+                              options={'disp': True}, tol=0.1)
+
+            # Print the result
+            if result.success == True and 0.01 <= result.fun <= 0.9:
+                dictionnary.append([result.x, result.fun])
+                # print("Optimization converged successfully.")
+                # print("Optimized variables:", result.x)
+                # print("Minimum value of the objective function:", result.fun)
+            else:
+                pass
+                #print("Optimization did not converge. Check the result message for more information.")
+                #print("Message:", result.message)
+    # Initialize variables to store the best configuration and its mass
+    best_configuration = None
+    min_mass = float('inf')
+    # Iterate through the configurations
+    for config in dictionnary:
+        dimensions, mass = config
+
+        # Check if the current mass is smaller than the current minimum
+        if mass < min_mass:
+            min_mass = mass
+            best_configuration = config
+
+    # Print the best configuration
+    print("Best Configuration:", best_configuration)
+    print(dictionnary)
+
+
 ### ATTENTION: optimise the mass and the yield strength
 def objective_function(variables, material=material):
     e, t, D = variables
@@ -197,36 +232,3 @@ constraints = [
     {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
     {'type': 'ineq', 'fun': constraint_dimension}
 ]
-
-            # Choose an optimization method
-            method = 'SLSQP'
-
-            # Call the minimize function
-            result = minimize(objective_function, initial_guess, method=method, constraints=constraints,
-                              options={'disp': True}, tol=0.1)
-
-            # Print the result
-            if result.success == True and 0.01 <= result.fun <= 0.9:
-                dictionnary.append([result.x, result.fun])
-                # print("Optimization converged successfully.")
-                # print("Optimized variables:", result.x)
-                # print("Minimum value of the objective function:", result.fun)
-            else:
-                pass
-                #print("Optimization did not converge. Check the result message for more information.")
-                #print("Message:", result.message)
-# Initialize variables to store the best configuration and its mass
-best_configuration = None
-min_mass = float('inf')
-# Iterate through the configurations
-for config in dictionnary:
-    dimensions, mass = config
-
-    # Check if the current mass is smaller than the current minimum
-    if mass < min_mass:
-        min_mass = mass
-        best_configuration = config
-
-# Print the best configuration
-print("Best Configuration:", best_configuration)
-print(dictionnary)
