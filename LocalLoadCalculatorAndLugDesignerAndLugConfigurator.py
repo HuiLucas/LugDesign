@@ -13,7 +13,7 @@ debug_design3 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80,
 
 N_lugs = 1
 N_Flanges = 2
-M_S = 0.3
+M_S = 1.25*1.1 -1
 
 # FORCES
 
@@ -135,108 +135,127 @@ for material in Material:
             t = j * 10 ** (-3)
             for k in range(10, 500, 20):
                 D = k * 10 ** (-3)
-                initial_guess = [e, t, D]
-                # e=radius outer flange, t=thickness, D=diameter of the inner circle, material
+                for l in range(10, 900, 50):
+                    h = l * 10 ** (-3)
+                    for m in range(10, 2000, 100):
+                        if N_lugs == 1:
+                            distance=1
+                        else:
+                            distance = m * 10 **(-3)
+                        initial_guess = [e, t, D, h, distance]
+                        # e=radius outer flange, t=thickness, D=diameter of the inner circle, material
 
-                K_t = calculate_kt(initial_guess[0], initial_guess[1], material, initial_guess[2])
-                K_ty = choose_kby(initial_guess[2], initial_guess[1], initial_guess[0])
-
-
-                ### ATTENTION: optimise the mass and the yield strength
-                def objective_function(variables, material=material):
-                    e, t, D = variables
-                    volume = calculate_vol(t, e, D)
-                    for i in Material:
-                        if i == material:
-                            rho = Density[Material.index(i)]
-                    m = rho * volume
-                    return m
+                        K_t = calculate_kt(initial_guess[0], initial_guess[1], material, initial_guess[2])
+                        K_ty = choose_kby(initial_guess[2], initial_guess[1], initial_guess[0])
 
 
-                def volume_constraint(variables):
-                    e, t, D = variables
-                    return calculate_vol(t, e, D)
+                        ### ATTENTION: optimise the mass and the yield strength
+                        def objective_function(variables, material=material):
+                            e, t, D, h, distance= variables
+                            volume = calculate_vol(t, e, D)
+                            for i in Material:
+                                if i == material:
+                                    rho = Density[Material.index(i)]
+                            m = rho * volume
+                            return m
 
+                        def volume_constraint(variables):
+                            e, t, D, h, distance = variables
+                            return calculate_vol(t, e, D)
 
-                def principal_constraint(variables):
-                    e, t, D = variables
-                    # K_t = calculate_kt(e,D,material,t)
-                    # K_ty = choose_kby(t,D,e)
-                    A_t = calculate_tension_area(t, e, D)
-                    A_br = calculate_bearing_area(t, D)
-                    for i in Material:
-                        if i == material:
-                            sigma_y = sigma_yield[Material.index(i)]
-                    return ((Fy / (K_t * sigma_y * A_t)) ** 1.6 + (Fz / (K_ty * A_br * sigma_y)) ** 1.6)**(-0.625) - 1 - M_S
-                def constraint_thickness(variables):
-                    e,t,D=variables
-                    return -t + 0.05
-                def constraint_thickness_bigger_zero(variables):
-                    e,t,D=variables
-                    return t
-                def constraint_outer_radius(variables):
-                    e,t,D=variables
-                    return -e+0.2
-                def constraint_outer_radius_bigger_zero(variables):
-                    e,t,D=variables
-                    return e
-                def constraint_inner_diameter(variables):
-                    e,t,D= variables
-                    return  -D+0.39
-                def constraint_inner_diameter_bigger_zero(variables):
-                    e,t,D= variables
-                    return  D
-                def constraint_dimension(variables):
-                    e, t, D = variables
-                    return e-D/2 -0.005
-                constraints = [
-                    {'type': 'ineq', 'fun': volume_constraint},
-                    {'type': 'eq', 'fun': principal_constraint},
-                    {'type': 'ineq', 'fun': constraint_thickness},
-                    {'type': 'ineq', 'fun': constraint_thickness_bigger_zero},
-                    {'type': 'ineq', 'fun': constraint_outer_radius},
-                    {'type': 'ineq', 'fun': constraint_outer_radius_bigger_zero},
-                    {'type': 'ineq', 'fun': constraint_inner_diameter},
-                    {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
-                    {'type': 'ineq', 'fun': constraint_dimension}
-                ]
+                        def principal_constraint(variables):
+                            e, t, D, h, distance= variables
+                            # K_t = calculate_kt(e,D,material,t)
+                            # K_ty = choose_kby(t,D,e)
+                            A_t = calculate_tension_area(t, e, D)
+                            A_br = calculate_bearing_area(t, D)
+                            for i in Material:
+                                if i == material:
+                                    sigma_y = sigma_yield[Material.index(i)]
+                            if N_lugs == 2:
+                                force_couple_y = My/(distance*N_Flanges)
+                            else:
+                                force_couple_y = My/h
+                            return ((Fy / (K_t * sigma_y * A_t)) ** 1.6 + ((Fz + force_couple_y)/ (K_ty * A_br * sigma_y)) ** 1.6)**(-0.625) - 1 - M_S
+                        def constraint_thickness(variables):
+                            e,t,D,h, distance =variables
+                            return -t + 0.05
+                        def constraint_thickness_bigger_zero(variables):
+                            e,t,D,h,distance =variables
+                            return t
+                        def constraint_outer_radius(variables):
+                            e,t,D,h,distance=variables
+                            return -e+0.2
+                        def constraint_outer_radius_bigger_zero(variables):
+                            e,t,D,h,distance =variables
+                            return e
+                        def constraint_inner_diameter(variables):
+                            e,t,D,h,distance= variables
+                            return  -D+0.39
+                        def constraint_inner_diameter_bigger_zero(variables):
+                            e,t,D,h,distance= variables
+                            return  D
+                        def constraint_dimension(variables):
+                            e, t, D, h, distance = variables
+                            return e-D/2 -0.005
 
-                # Choose an optimization method
-                method = 'SLSQP'
+                        def constraint_inter_flange_distance(variables):
+                            e, t, D, h, distance = variables
+                            return h
+                        def constraint_inter_lug_distance_min(variables):
+                            e, t, D, h, distance = variables
+                            return distance - 0.02
+                        def constraint_inter_lug_distance_max(variables):
+                            e, t, D, h, distance = variables
+                            return - distance + 2
+                        constraints = [
+                            {'type': 'ineq', 'fun': volume_constraint},
+                            {'type': 'eq', 'fun': principal_constraint},
+                            {'type': 'ineq', 'fun': constraint_thickness},
+                            {'type': 'ineq', 'fun': constraint_thickness_bigger_zero},
+                            {'type': 'ineq', 'fun': constraint_outer_radius},
+                            {'type': 'ineq', 'fun': constraint_outer_radius_bigger_zero},
+                            {'type': 'ineq', 'fun': constraint_inner_diameter},
+                            {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
+                            {'type': 'ineq', 'fun': constraint_dimension},
+                            {'type': 'ineq', 'fun': constraint_inter_flange_distance},
+                            {'type': 'ineq', 'fun': constraint_inter_lug_distance_min},
+                            {'type': 'ineq', 'fun': constraint_inter_lug_distance_max}
+                        ]
 
-                # Call the minimize function
-                result = minimize(objective_function, initial_guess, method=method, constraints=constraints,
-                                  options={'disp': True}, tol=0.001)
+                        # Choose an optimization method
+                        method = 'SLSQP'
 
-                # Print the result
-                if result.success == True and 0.01 <= result.fun <= 0.9:
-                    dictionnary.append([result.x, result.fun])
-                    # print("Optimization converged successfully.")
-                    # print("Optimized variables:", result.x)
-                    # print("Minimum value of the objective function:", result.fun)
-                else:
-                    pass
-                    #print("Optimization did not converge. Check the result message for more information.")
-                    #print("Message:", result.message)
-    # Initialize variables to store the best configuration and its mass
-    best_configuration = None
-    min_mass = float('inf')
-    # Iterate through the configurations
-    for config in dictionnary:
-        dimensions, mass = config
+                        # Call the minimize function
+                        result = minimize(objective_function, initial_guess, method=method, constraints=constraints,
+                                          options={'disp': True}, tol=0.001)
 
-        # Check if the current mass is smaller than the current minimum
-        if mass < min_mass:
-            min_mass = mass
-            best_configuration = config
+                        # Print the result
+                        if result.success == True and 0.01 <= result.fun <= 0.9:
+                            dictionnary.append([result.x, result.fun])
+                            # print("Optimization converged successfully.")
+                            # print("Optimized variables:", result.x)
+                            # print("Minimum value of the objective function:", result.fun)
+                        else:
+                            pass
+                            #print("Optimization did not converge. Check the result message for more information.")
+                            #print("Message:", result.message)
+            # Initialize variables to store the best configuration and its mass
+            best_configuration = None
+            min_mass = float('inf')
+            # Iterate through the configurations
+            for config in dictionnary:
+                dimensions, mass = config
 
-    material_best_configuration_dictionnary.append((material,best_configuration))
-    design_array.append(DesignClass.DesignInstance(h=30, t1=best_configuration[0][1], t2=10, t3=2, D1=best_configuration[0][2], \
-                                                   w=2*best_configuration[0][0], material=material, n_fast=4, length=200, \
-                                                   offset=20,flange_height=80,hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], \
-                                                   D2_list=[10, 5, 9, 8], yieldstrength=sigma_y,N_lugs=1,N_Flanges=2))
+                # Check if the current mass is smaller than the current minimum
+                if mass < min_mass:
+                    min_mass = mass
+                    best_configuration = config
+
+            material_best_configuration_dictionnary.append((material,best_configuration))
+            #design_array.append(DesignClass.DesignInstance(h=30, t1=best_configuration[0][1], t2=10, t3=2, D1=best_configuration[0][2], \
+                                                           #w=2*best_configuration[0][0], material=material, n_fast=4, length=200, \
+                                                           #offset=20,flange_height=80,hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], \
+                                                           #D2_list=[10, 5, 9, 8], yieldstrength=sigma_y,N_lugs=1,N_Flanges=2))
 
 print(material_best_configuration_dictionnary)
-
-
-
