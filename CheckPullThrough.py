@@ -30,7 +30,7 @@ print(check_pull_through(debug_design_1))
 
 def check_shear(Fyi,Dfo, design_object): #checks pullout shear, if smaller than max we can decrease thickness,
     #if bigger we have to increase it, the function returns values of the Dinner for wich shear is bigger than shearmax
-    #Dfo is the outer diameter of the bolt
+    #Dfo is the outer diameter of the bolt.
     if Dfo < max(design_object.D2_list):
         return False, "outer diameter too small"
     else:
