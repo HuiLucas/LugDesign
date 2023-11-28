@@ -40,7 +40,7 @@ def check_shear(Fyi, design_object): #checks pullout shear, if smaller than max 
             if not shear < shearmax:
                 return False , "increse_thickness", Dfi
 
-    return True
+        return True
 
 
 
