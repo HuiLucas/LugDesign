@@ -16,10 +16,7 @@ debug_design3 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80,
 debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
 
-Material = ['2014-T6(DF-L)', '2014-T6(DF-LT)', '2014-T6(P)', '7075-T6(P)', '7075-T6(DF-L)', '7075-T6(DF-LT)',
-            '4130 Steel', '8630 Steel', '2024-T4', '356-T6 Aluminium', '2024-T3']
-sigma_yield = [414, 414, 414, 503, 503, 503, 435, 550, 324, 165, 345]
-Density = [2800, 2800, 2800, 2810, 2810, 2810, 7850, 7850, 2780, 2670, 2780]
+
 
 
 # -------------------------
@@ -271,4 +268,3 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
 
     print(material_best_configuration_dictionnary)
 
-Optimize_Lug(Material, sigma_yield,Density,debug_design3, debug_loads, False)
