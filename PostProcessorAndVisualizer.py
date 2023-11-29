@@ -35,7 +35,7 @@ def Visualize(design_object):
             "|Y").fillet(filletrad - 0.01).translate((0, 0, +design_object.t2 / 2 - filletrad)).center(0,
                                                                                                        -filletrad + design_object.t2 / 2).rect(
             design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
-            design_object.D1).cutThruAll().translate(
+            design_object.D1/2).cutThruAll().translate(
             (0, design_object.w / 2 - design_object.offset, 0)))
     result = result.union(
         cq.Workplane("XZ").box(design_object.w, design_object.flange_height + filletrad, design_object.t1,
@@ -43,7 +43,7 @@ def Visualize(design_object):
             "|Y").fillet(filletrad - 0.01).translate((0, 0, +design_object.t2 / 2 - filletrad)).center(0,
                                                                                                        -filletrad + design_object.t2 / 2).rect(
             design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
-            design_object.D1).cutThruAll().translate(
+            design_object.D1/2).cutThruAll().translate(
             (0, design_object.w / 2 - design_object.offset - design_object.h, 0)))
     # Export
     cq.exporters.export(result, "result.stl")

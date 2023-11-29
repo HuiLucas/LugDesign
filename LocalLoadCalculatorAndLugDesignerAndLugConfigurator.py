@@ -10,7 +10,7 @@ import InputVariables
 
 debug_design3 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], \
+                                            hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
                                            D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=1,N_Flanges=2)
 
 debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
@@ -117,9 +117,9 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
     N_lugs = design_object.N_lugs
     N_Flanges = design_object.N_Flanges
     if high_accuracy == True:
-        [i_step, j_step, k_step,l_step] = [20, 5, 20, 50]
+        [i_step, j_step, k_step,l_step, Material_List] = [20, 5, 20, 50, Material_In2]
     else:
-        [i_step, j_step, k_step, l_step] = [40, 10, 40, 100]
+        [i_step, j_step, k_step, l_step, Material_List] = [40, 10, 40, 100, Material_In2[0:3]]
     if design_object.Dist_between_lugs == 0:
         design_object.Dist_between_lugs = 1
         distance = design_object.Dist_between_lugs
@@ -137,7 +137,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
     # Optimisation for each material and compare the options
     # intial guesses for '2014-T6(DF-L)':
     dictionnary = []
-    for material in Material_In2[0:3]:
+    for material in Material_List:
         for i in Material_In2:
             if i == material:
                 sigma_y = Sigma_In[Material_In2.index(i)]
@@ -261,10 +261,12 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                     best_configuration = config
 
             material_best_configuration_dictionnary.append((material,best_configuration))
-            #design_array.append(DesignClass.DesignInstance(h=30, t1=best_configuration[0][1], t2=10, t3=2, D1=best_configuration[0][2], \
-                                                           #w=2*best_configuration[0][0], material=material, n_fast=4, length=200, \
-                                                           #offset=20,flange_height=80,hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], \
-                                                           #D2_list=[10, 5, 9, 8], yieldstrength=sigma_y,N_lugs=1,N_Flanges=2))
+        design_array.append(DesignClass.DesignInstance(h=30, t1=1000*best_configuration[0][1], t2=10, t3=2, D1=1000*best_configuration[0][2], \
+                                                           w=2*1000*best_configuration[0][0], material=material, n_fast=4, length=200, \
+                                                           offset=20,flange_height=80,hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
+                                                           D2_list=[10, 5, 9, 8], yieldstrength=sigma_y,N_lugs=1,N_Flanges=2)) #convert meters to millimeters
 
     print(material_best_configuration_dictionnary)
+    return design_array
+
 
