@@ -11,11 +11,11 @@ def Visualize(design_object):
     for i in range(len(design_object.hole_coordinate_list)):
         a = design_object.hole_coordinate_list[i][0]
         design_object.hole_coordinate_list[i] = (
-        design_object.hole_coordinate_list[i][1] - design_object.w / 2, a - design_object.length / 2)
+        design_object.hole_coordinate_list[i][1] - design_object.bottomplatewidth / 2, a - design_object.length / 2)
         # make the base
     result = (
         cq.Workplane("XY")
-        .box(design_object.w, design_object.length, design_object.t2).faces(">Z").workplane().tag("noholes")
+        .box(design_object.bottomplatewidth, design_object.length, design_object.t2).faces(">Z").workplane().tag("noholes")
     )
 
     for i in range(len(design_object.D2_list)):

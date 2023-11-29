@@ -18,10 +18,9 @@ out1 = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVar
                                                                  InputVariables.sigma_yield,InputVariables.Density,\
                                                                  initial_design, loads_with_SF, False)[0]
 print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material)
-#print(SelectFastenerConfiguration.fastener_spacing_check(initial_design))
-#print("hello")
-
-
-PostProcessorAndVisualizer.Visualize(out1)
+out1.bottomplatewidth = out1.w
+out2 = SelectFastenerConfiguration.Optimize_holes(out1, False)
+#PostProcessorAndVisualizer.Visualize(initial_design)
+PostProcessorAndVisualizer.Visualize(out2)
 
 

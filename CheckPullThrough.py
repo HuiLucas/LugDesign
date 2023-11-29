@@ -1,3 +1,17 @@
+# Please add the following: as output return True/False for whether the input design passes the pull through check, and if it does not, add an additional output
+# that says one of the following: "x needs to increase", "y needs to increase", "x needs to decrease", "y needs to decrease", "Diameter needs to increase", "Diameter can decrease"
+# as well as the index i that corresponds to the hole that this advice applies to. Only one advice about one hole needs to be returned
+# at a time; the function can be run again to get advices for the other holes.
+
+
+
+
+
+
+
+
+
+
 # This software component will check the given input design for Pull Through Failure.
 import DesignClass
 import numpy as np
