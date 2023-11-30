@@ -8,7 +8,7 @@ import DesignClass as dc
 import numpy as np
 debug_design_2 = dc.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=40, material="metal", n_fast=4, \
                                             length=80, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(20, 10), (20, 30), (10, 20), (30, 30)], \
+                                            hole_coordinate_list=[(20, 10), (20, 30), (60, 10), (60, 30)], \
                                            D2_list=[6, 6, 6, 6], yieldstrength=83,N_lugs=1,N_Flanges=2)
 # debug_design_2.minimum_diameter = 3
 # debug_design_2.maximum_diameter = 5
@@ -84,7 +84,7 @@ print(get_in_plane_loads(debug_design_2, debug_loads))
 print(calculate_centroid(debug_design_2))
 print(get_F_in_plane_My(debug_design_2, debug_loads))
 
-def check_bearing_stress(design_object, load_object2):
+def check_bearing_stress(design_object, load_object2,thermal_force):
 
     M_y = get_in_plane_loads(design_object, load_object2)[2]
     S = np.sum(((np.array(design_object.hole_coordinate_list)[:, 0] - centroid_x) ** 2 + (np.array(design_object.hole_coordinate_list)[:, 1] - centroid_z) ** 2) * np.pi * np.array(design_object.D2_list) ** 2 / 4) / (1000 ** 4)
@@ -95,13 +95,13 @@ def check_bearing_stress(design_object, load_object2):
         distance_z_1 = design_object.hole_coordinate_list[i][1] - centroid_z
         r = np.sqrt(distance_x_1 ** 2 + distance_z_1 ** 2)/1000
         A = (np.pi * design_object.D2_list[i] ** 2 / 4)/(1000**2)
-        P = np.sqrt(get_in_plane_loads(design_object, load_object2)[0]**2 + get_in_plane_loads(design_object, load_object2)[1]**2 + (M_y * A * r / S)**2)
+        P = np.sqrt(get_in_plane_loads(design_object, load_object2)[0]**2 + get_in_plane_loads(design_object, load_object2)[1]**2 + (M_y * A * r / S)**2 + thermal_force[i]**2)
         sigma = (P / (design_object.D2_list[i] * design_object.t2))
         sigma0.append(sigma)
         print(sigma)
     if np.max(sigma0) < design_object.yieldstrength:
         print("Bearing Stress Check Pass")
 
-check_bearing_stress(debug_design_2, debug_loads)
+check_bearing_stress(debug_design_2, debug_loads,[1533.2328,    383.3082,   1241.918568,  981.268992])
 
 

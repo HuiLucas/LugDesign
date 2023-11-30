@@ -21,10 +21,10 @@ import DesignClass
 # 356-T6 Aluminium https://www.matweb.com/search/datasheet_print.aspx?matguid=d524d6bf305c4ce99414cabd1c7ed070
 # 2024-T3 https://asm.matweb.com/search/SpecificMaterial.asp?bassnum=ma2024t3
 
-debug_design_2 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
-                                            length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
-                                           D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=1,N_Flanges=2)
+debug_design_2 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=40, material="metal", n_fast=4, \
+                                            length=80, offset=20,flange_height=80, \
+                                            hole_coordinate_list=[(20, 10), (20, 30), (60, 10), (60, 30)], \
+                                           D2_list=[6, 6, 6, 6], yieldstrength=83,N_lugs=1,N_Flanges=2)
 
 def thermal_stress_calculation(design_object, upper_temp , lower_temp, ref_temp , phi_list , materials_fastener_dictionary, materials_lug_dictionary , material_fastener , material_wall):
     temp_diff_upper = upper_temp - ref_temp
