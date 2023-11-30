@@ -37,7 +37,6 @@ materials = [
 def thermal_stress_calculation(design_object, lower_temp , ref_temp , phi_list , materials , material_fastener , material_wall):
     temp_diff = abs(ref_temp - lower_temp)
     np_d2_list = np.array(design_object.D2_list)
-    np_phi_list = np.
     for materials in materials:
         if materials["material"] == material_wall:
             material_wall_coeff = materials['thermal_coefficient']
