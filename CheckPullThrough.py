@@ -50,8 +50,8 @@ def check_pullthrough(design_object): #checks pullout shear, if smaller than max
         for i in range(len(design_object.D2_list)):
             Dfi = design_object.D2_list[i]
             Dfo = 1.8 * Dfi
-            shear = Fyi[i] / (np.pi * Dfo * (design_object.t2 + design_object.t3))
-            sigma_y = Fyi[i]/(np.pi *(1/4) * (Dfo**2-Dfi**2))
+            shear = Fyi[i] / (np.pi * (Dfo/1000) * ((design_object.t2 + design_object.t3)/1000))
+            sigma_y = Fyi[i]/(np.pi *(1/4) * ((Dfo/1000)**2-(Dfi/1000)**2))
             shearmax = np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
             if not shear < shearmax:
                 return False , "increase_thickness"
