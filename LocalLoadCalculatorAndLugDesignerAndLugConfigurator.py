@@ -199,12 +199,12 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                             A_br = calculate_bearing_area(t, D)
                             for i in Material_In2:
                                 if i == material:
-                                    sigma_y = Sigma_In[Material_In2.index(i)]
+                                    sigma_y = Sigma_In[Material_In2.index(i)] *1.1 #SF for materials
                             if N_lugs == 2:
                                 force_couple_y = My/(distance*N_Flanges)
                             else:
                                 force_couple_y = My/h
-                            return ((Fy / (K_t * sigma_y * A_t)) ** 1.6 + ((Fz + force_couple_y)/ (K_ty * A_br * sigma_y)) ** 1.6)**(-0.625) - 1 - M_S
+                            return ((Fx / (K_t * sigma_y * A_t)) ** 1.6 + ((Fz + force_couple_y)/ (K_ty * A_br * sigma_y)) ** 1.6)**(-0.625) - 1 - M_S
                         def constraint_thickness(variables):
                             e,t,D,h =variables
                             return -t + 0.05
@@ -237,7 +237,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
 
                         def moment_x_constraint(variables):
                             e,t,D,h = variables
-                            sigma = (Mx*e)/((t*(2*e)**3)/12)-sigma_y
+                            sigma = (Mx*e)/((t*(2*e)**3)/12)-sigma_y*1.1
                             return sigma
 
 
@@ -308,4 +308,5 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
 
     print(material_best_configuration_dictionnary)
     return design_array
+
 
