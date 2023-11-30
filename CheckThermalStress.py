@@ -1,4 +1,5 @@
 # This software component will check the given input design for Thermal Stress Failure.
+import numpy as np
 
 materials = [
     {'material': '2014-T6(DF-L)', 'thermal_expansion_coefficient': 23 ,'elastic module': 73.1 },
@@ -33,9 +34,17 @@ materials = [
 # 2024-T3 https://asm.matweb.com/search/SpecificMaterial.asp?bassnum=ma2024t3
 
 
-def thermal_stress_calculation(design_object, lower_temp , ref_temp , phi_list , materials):
-    temp_diff = math.abs(ref_temp - lower_temp)
+def thermal_stress_calculation(design_object, lower_temp , ref_temp , phi_list , materials , material_fastener , material_wall):
+    temp_diff = abs(ref_temp - lower_temp)
     np_d2_list = np.array(design_object.D2_list)
-    #np_phi_list = np.
-    #thermal_force = np_d2_list ** 2 / 4 * temp_diff *
+    np_phi_list = np.
+    for materials in materials:
+        if materials["material"] == material_wall:
+            material_wall_coeff = materials['thermal_coefficient']
+        if materials["material"] == material_fastener:
+            material_fastener_stiffness = materials['elastic module']
+            material_fastener_coeff = materials['thermal_coefficient']
+    # units of thermal coefficient should be in micro(10^-6) and elasitic modulus in mega (10^9)
+    thermal_force = np_d2_list ** 2 / 4 * temp_diff * abs(material_fastener_coeff-material_wall_coeff) * (1-phi_list) * material_fastener_stiffness *1000
+    return thermal_force
 
