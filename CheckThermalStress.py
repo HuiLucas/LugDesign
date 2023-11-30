@@ -1,19 +1,7 @@
 # This software component will check the given input design for Thermal Stress Failure.
 import numpy as np
-
-materials = [
-    {'material': '2014-T6(DF-L)', 'thermal_expansion_coefficient': 23 ,'elastic module': 73.1 },
-    {'material': '2014-T6(DF-LT)', 'thermal_expansion_coefficient': 23,'elastic module': 73.1},
-    {'material': '2014-T6(P)', 'thermal_expansion_coefficient': 23,'elastic module': 73.1},
-    {'material': '7075-T6(P)', 'thermal_expansion_coefficient': 23.4,'elastic module': 71.7},
-    {'material': '7075-T6(DF-L)', 'thermal_expansion_coefficient': 23.4,'elastic module': 71.7},
-    {'material': '7075-T6(DF-LT)', 'thermal_expansion_coefficient': 23.4,'elastic module': 71.7},
-    {'material': '4130 Steel', 'thermal_expansion_coefficient': 11.1,'elastic module': 205},
-    {'material': '8630 Steel', 'thermal_expansion_coefficient': 11.3,'elastic module': 200},
-    {'material': '2024-T4', 'thermal_expansion_coefficient': 23.2,'elastic module': 73.1},
-    {'material': '356-T6 Aluminium', 'thermal_expansion_coefficient': 23.8,'elastic module': 72.4},
-    {'material': '2024-T3', 'thermal_expansion_coefficient': 21.6,'elastic module': 73.1}
-]
+import InputVariables
+import DesignClass
 
 # assumption is that for the temperature the coefficient remains linear . mention limitation
 # aluminum https://ntrs.nasa.gov/api/citations/19720023885/downloads/19720023885.pdf
@@ -33,17 +21,30 @@ materials = [
 # 356-T6 Aluminium https://www.matweb.com/search/datasheet_print.aspx?matguid=d524d6bf305c4ce99414cabd1c7ed070
 # 2024-T3 https://asm.matweb.com/search/SpecificMaterial.asp?bassnum=ma2024t3
 
+debug_design_2 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
+                                            length=200, offset=20,flange_height=80, \
+                                            hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
+                                           D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=1,N_Flanges=2)
 
-def thermal_stress_calculation(design_object, lower_temp , ref_temp , phi_list , materials , material_fastener , material_wall):
-    temp_diff = abs(ref_temp - lower_temp)
+def thermal_stress_calculation(design_object, upper_temp , lower_temp, ref_temp , phi_list , materials_fastener_dictionary, materials_lug_dictionary , material_fastener , material_wall):
+    temp_diff_upper = upper_temp - ref_temp
+    temp_diff_lower = ref_temp - lower_temp
     np_d2_list = np.array(design_object.D2_list)
-    for materials in materials:
-        if materials["material"] == material_wall:
-            material_wall_coeff = materials['thermal_coefficient']
-        if materials["material"] == material_fastener:
-            material_fastener_stiffness = materials['elastic module']
-            material_fastener_coeff = materials['thermal_coefficient']
+    np_phi_list = np.array(phi_list)
+    for materials in materials_lug_dictionary:
+        if materials.get("material") == material_wall:
+            material_wall_coeff = materials.get('thermal_expansion_coefficient')
+    for materials in materials_fastener_dictionary:
+        if materials.get("Material") == material_fastener:
+            material_fastener_stiffness = float(materials.get("Youngs Modulus (GPa)"))
+            material_fastener_coeff = float(materials.get("Thermal Expansion (10^-6)/K"))
     # units of thermal coefficient should be in micro(10^-6) and elasitic modulus in mega (10^9)
-    thermal_force = np_d2_list ** 2 / 4 * temp_diff * abs(material_fastener_coeff-material_wall_coeff) * (1-phi_list) * material_fastener_stiffness *1000
-    return thermal_force
+    print(material_fastener_coeff , "fast"),print(material_wall_coeff , "wall")
+    thermal_force_upper = (np_d2_list/1000) ** 2 / 4 * 3 * temp_diff_upper * (material_fastener_coeff - material_wall_coeff) * (1-np_phi_list) * material_fastener_stiffness * 1000
+    thermal_force_lower = (np_d2_list/1000) ** 2 / 4 * 3 * temp_diff_lower * (material_fastener_coeff - material_wall_coeff) * (1-np_phi_list) * material_fastener_stiffness * 1000 * -1
+
+    return thermal_force_upper , thermal_force_lower
+
+print(InputVariables.materials_fasteners)
+print(thermal_stress_calculation(debug_design_2,150,-90,15,[0.04,0.04,0.04,0.04],InputVariables.materials_fasteners, InputVariables.materials_lug ,'Aluminium 7075','2014-T6(DF-L)'))
 
