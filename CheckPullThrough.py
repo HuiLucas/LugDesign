@@ -5,13 +5,6 @@
 
 
 
-
-
-
-
-
-
-
 # This software component will check the given input design for Pull Through Failure.
 import DesignClass
 import numpy as np
@@ -20,7 +13,6 @@ debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80
                                             length=200, offset=20,flange_height=80, \
                                             hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
                                            D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=1,N_Flanges=2)
-
 
 def calculate_centroid1(design_object): #calculates centroid of fasteners
     np_D2_list = np.array(design_object.D2_list)
@@ -52,8 +44,7 @@ def check_pull_through(design_object):  #Calculates the total force on each fast
     return F_yi
 
 Fyi=check_pull_through(debug_design_1)
-
-def check_pullthorugh(design_object): #checks pullout shear, if smaller than max we can decrease thickness,
+def check_pullthrough(design_object): #checks pullout shear, if smaller than max we can decrease thickness,
     #if bigger we have to increase it, the function returns values of the Dinner for wich shear is bigger than shearmax
     #Dfo is the outer diameter of the bolt.
         for i in range(len(design_object.D2_list)):
@@ -66,7 +57,7 @@ def check_pullthorugh(design_object): #checks pullout shear, if smaller than max
                 return False , "increase_thickness"
         return True
 
-print(check_shear(debug_design_1))
+print(check_pullthrough(debug_design_1))
 
 # diameter head and shank diameter ratio is 1.8
 #print(calculate_centroid(debug_design_1),check_pull_through(debug_design_1) )
