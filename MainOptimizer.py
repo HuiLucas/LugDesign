@@ -12,7 +12,7 @@ import SelectFastenerConfiguration
 initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
                                             hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
-                                           D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=1,N_Flanges=2)
+                                           D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=2,N_Flanges=2)
 loads_with_SF = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 out1 = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVariables.Material, \
                                                                  InputVariables.sigma_yield,InputVariables.Density,\
