@@ -295,16 +295,11 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
             material_best_configuration_dictionnary.append((material,best_configuration))
 
         #Check of the height of the flange limited by the Fy = 433:
-        height_flange = 0
-
-        Mz = Fy * height_flange * 10 **(-3)
+        # if stress is exceeding the yield stress = fail
         MMOI = ((2*best_configuration[0][0])**3 *(best_configuration[0][1]))/12
         if MMOI == 0:
-            MMOI= 0.0001
-        #if stress is exceeding the yield stress = fail
-        distance_to_the_shaft = height_flange - best_configuration[0][0]
-        sigma = (Mz * distance_to_the_shaft)/MMOI
-
+            MMOI = 0.0001
+        height_flange = best_configuration[0][0] + np.sqrt((MMOI*sigma_y*1.5)/Fy)
         design_array.append(DesignClass.DesignInstance(h=1000*best_configuration[0][3], t1=1000*best_configuration[0][1], t2=10, t3=2, D1=1000*best_configuration[0][2], \
                                                            w=2*1000*best_configuration[0][0], material=material, n_fast=4, length=200, \
                                                            offset=20,flange_height=80,hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
