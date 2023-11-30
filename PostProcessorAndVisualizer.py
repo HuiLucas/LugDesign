@@ -1,13 +1,14 @@
 # This software component will return the results and provide a visualization in a graph. (maybe use the Inkscape
 # package to make a 3-view)
 import cadquery as cq
+import DesignClass
 #import cadquery.cqgi as cqgi
 
 from stl import mesh
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 
-def Visualize(design_object):
+def Visualize(design_object, move_y=0):
     for i in range(len(design_object.hole_coordinate_list)):
         a = design_object.hole_coordinate_list[i][0]
         design_object.hole_coordinate_list[i] = (
@@ -45,6 +46,8 @@ def Visualize(design_object):
             design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
             design_object.D1/2).cutThruAll().translate(
             (0, design_object.w / 2 - design_object.offset - design_object.h, 0)))
+    if design_object.N_lugs == 2:
+        result = result.union(result.translate((0,move_y, 0)))
     # Export
     cq.exporters.export(result, "result.stl")
     cq.exporters.export(result.section(), "result.dxf")
@@ -73,3 +76,15 @@ def Visualize(design_object):
     axes3.auto_scale_xyz(scale, scale, scale)
     # Show the plot to the screen
     pyplot.show()
+
+def Visualize2(design_object):
+    Visualize(design_object)
+    if design_object.N_lugs == 2:
+        Visualize(design_object, move_y=design_object.Dist_between_lugs)
+
+debug_design4 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
+                                            length=200, offset=20,flange_height=80, \
+                                            hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
+                                           D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=2,N_Flanges=2)
+debug_design4.Dist_between_lugs = 300
+Visualize2(debug_design4)
