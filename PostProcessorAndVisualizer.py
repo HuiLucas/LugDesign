@@ -4,9 +4,11 @@ import cadquery as cq
 import DesignClass
 #import cadquery.cqgi as cqgi
 
+
 from stl import mesh
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
+
 
 def Visualize(design_object, move_y=0):
     for i in range(len(design_object.hole_coordinate_list)):

@@ -7,6 +7,7 @@ from scipy.optimize import minimize
 import math
 import DesignClass
 import InputVariables
+from numba import jit
 
 debug_design3 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
@@ -24,61 +25,80 @@ debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 # DF= die forging
 # P = plate
 
+@jit(nopython=True)
+def calculate_ci(i, x):
+    if i ==1:
+        return 0.8534 + 0.2891 * x - 0.1511 * x ** 2 - 0.0035 * x ** 3 + 0.0174 * x ** 4 - 0.0038 * x ** 5 + 0.0002 * x ** 6
+    elif i==2:
+        return 1.5030 - 1.5054 * x + 1.7453 * x ** 2 - 0.9890 * x ** 3 + 0.2838 * x ** 4 - 0.0390 * x ** 5 + 0.0020 * x ** 6
+    elif i ==3:
+        return 0.6270 + 0.9428 * x - 0.8837 * x ** 2 + 0.3900 * x ** 3 - 0.0928 * x ** 4 + 0.0115 * x ** 5 - 0.0005 * x ** 6
+    elif i ==4:
+        return 0.9083 + 0.3195 * x - 0.2985 * x ** 2 + 0.0912 * x ** 3 - 0.0121 * x ** 4 + 0.0006 * x ** 5
+    elif i==5:
+        return 0.6115 + 1.4003 * x - 1.6563 * x ** 2 + 0.8517 * x ** 3 - 0.2273 * x ** 4 + 0.0306 * x ** 5 - 0.0016 * x ** 6
+    elif i==6:
+        return 0.7625 + 1.1900 * x - 1.5365 * x ** 2 + 0.7699 * x ** 3 - 0.1987 * x ** 4 + 0.0258 * x ** 5 - 0.0013 * x ** 6
+    elif i ==7:
+        return 1.0065 - 0.7188 * x + 0.6110 * x ** 2 - 0.3044 * x ** 3 + 0.0813 * x ** 4 - 0.0109 * x ** 5 + 0.0006 * x ** 6
+    else:
+        return 0
 
 
 # Material Functions Lists (Kt)
+
 def calculate_kt(e, D, M, t, Material_In):
     W = 2 * e
     x = W / D
     Mat = M
-    c1 = 0.8534 + 0.2891 * x - 0.1511 * x ** 2 - 0.0035 * x ** 3 + 0.0174 * x ** 4 - 0.0038 * x ** 5 + 0.0002 * x ** 6
-    c2 = 1.5030 - 1.5054 * x + 1.7453 * x ** 2 - 0.9890 * x ** 3 + 0.2838 * x ** 4 - 0.0390 * x ** 5 + 0.0020 * x ** 6
-    c3 = 0.6270 + 0.9428 * x - 0.8837 * x ** 2 + 0.3900 * x ** 3 - 0.0928 * x ** 4 + 0.0115 * x ** 5 - 0.0005 * x ** 6
-    c4 = 0.9083 + 0.3195 * x - 0.2985 * x ** 2 + 0.0912 * x ** 3 - 0.0121 * x ** 4 + 0.0006 * x ** 5
-    c5 = 0.6115 + 1.4003 * x - 1.6563 * x ** 2 + 0.8517 * x ** 3 - 0.2273 * x ** 4 + 0.0306 * x ** 5 - 0.0016 * x ** 6
-    c6 = 0.7625 + 1.1900 * x - 1.5365 * x ** 2 + 0.7699 * x ** 3 - 0.1987 * x ** 4 + 0.0258 * x ** 5 - 0.0013 * x ** 6
-    c7 = 1.0065 - 0.7188 * x + 0.6110 * x ** 2 - 0.3044 * x ** 3 + 0.0813 * x ** 4 - 0.0109 * x ** 5 + 0.0006 * x ** 6
+    #c1 = 0.8534 + 0.2891 * x - 0.1511 * x ** 2 - 0.0035 * x ** 3 + 0.0174 * x ** 4 - 0.0038 * x ** 5 + 0.0002 * x ** 6
+    #c2 = 1.5030 - 1.5054 * x + 1.7453 * x ** 2 - 0.9890 * x ** 3 + 0.2838 * x ** 4 - 0.0390 * x ** 5 + 0.0020 * x ** 6
+    #c3 = 0.6270 + 0.9428 * x - 0.8837 * x ** 2 + 0.3900 * x ** 3 - 0.0928 * x ** 4 + 0.0115 * x ** 5 - 0.0005 * x ** 6
+    #c4 = 0.9083 + 0.3195 * x - 0.2985 * x ** 2 + 0.0912 * x ** 3 - 0.0121 * x ** 4 + 0.0006 * x ** 5
+    #c5 = 0.6115 + 1.4003 * x - 1.6563 * x ** 2 + 0.8517 * x ** 3 - 0.2273 * x ** 4 + 0.0306 * x ** 5 - 0.0016 * x ** 6
+    #c6 = 0.7625 + 1.1900 * x - 1.5365 * x ** 2 + 0.7699 * x ** 3 - 0.1987 * x ** 4 + 0.0258 * x ** 5 - 0.0013 * x ** 6
+    #c7 = 1.0065 - 0.7188 * x + 0.6110 * x ** 2 - 0.3044 * x ** 3 + 0.0813 * x ** 4 - 0.0109 * x ** 5 + 0.0006 * x ** 6
 
     if Mat == Material_In[0] or Mat == Material_In[4] or Mat == Material_In[6] or Mat == Material_In[7]:
-        kt = c1
+        kt = calculate_ci(1,x)
     elif (Mat == Material_In[2] or Mat == Material_In[3]) and t <= 1.27:
-        kt = c2
+        kt = calculate_ci(2,x)
     elif Mat == Material_In[1] or Mat == Material_In[5]:
-        kt = c2
+        kt = calculate_ci(2,x)
     elif (Mat == Material_In[2] or Mat == Material_In[3]) and t >= 1.27:
-        kt = c4
+        kt = calculate_ci(4,x)
     elif Mat == Material_In[8] or Mat == Material_In[10]:
-        kt = c4
+        kt = calculate_ci(4,x)
     elif Mat == Material_In[9]:
-        kt = c7
+        kt = calculate_ci(7,x)
     else:
         kt = 0
         pass
     return kt
 
-
+@jit(nopython=True)
 def calculate_kty(w, D, t):
     x = (6 / ((4 / (0.5 * (w - D) + D / (2 * 2 ** 0.5))*t) + 2 / (0.5 * (w - D))*t)) / (D * t)
     curve = -0.0074 + 1.384 * x - 0.5613 * x ** 2 + 1.46159 * x ** 3 - 2.6979 * x ** 4 + 1.912 * x ** 5 - 0.4626 * x ** 6
     return curve
 
-
+@jit(nopython=True)
 def calculate_vol(t, e, D):
     volume = math.pi * (e** 2 - (D / 2) ** 2) * t
     return volume
 
-
+@jit(nopython=True)
 def calculate_tension_area(t, e, D):
     W = 2 * e
     A_t = t * (W - D)
     return A_t
 
-
+@jit(nopython=True)
 def calculate_bearing_area(t, D):
     A_br = D * t
     return A_br
 
-
+@jit(nopython=True)
 def choose_kby(t, D, e):
     x = e / D
     if t / D > 0.4:
