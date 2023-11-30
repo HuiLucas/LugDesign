@@ -64,7 +64,7 @@ def check_pullthorugh(design_object): #checks pullout shear, if smaller than max
             shearmax = np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
             if not shear < shearmax:
                 return False , "increase_thickness"
-        return True , "decrease_thickness"
+        return True
 
 print(check_shear(debug_design_1))
 
