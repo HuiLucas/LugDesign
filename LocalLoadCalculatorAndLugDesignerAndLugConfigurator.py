@@ -141,7 +141,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
     else:
         [i_step, j_step, k_step, l_step, Material_List] = [40, 10, 40, 100, Material_In2[0:1]]
     if design_object.Dist_between_lugs == 0:
-        design_object.Dist_between_lugs = 1
+        design_object.Dist_between_lugs = 0.5
         distance = design_object.Dist_between_lugs
     else:
         distance = design_object.Dist_between_lugs
@@ -199,12 +199,12 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                             A_br = calculate_bearing_area(t, D)
                             for i in Material_In2:
                                 if i == material:
-                                    sigma_y = Sigma_In[Material_In2.index(i)]
+                                    sigma_y = Sigma_In[Material_In2.index(i)]*1.1 #SF for material porperties
                             if N_lugs == 2:
                                 force_couple_y = My/(distance*N_Flanges)
                             else:
                                 force_couple_y = My/h
-                            return ((Fy / (K_t * sigma_y * A_t)) ** 1.6 + ((Fz + force_couple_y)/ (K_ty * A_br * sigma_y)) ** 1.6)**(-0.625) - 1 - M_S
+                            return ((Fx / (K_t * sigma_y* A_t)) ** 1.6 + ((Fz + force_couple_y)/ (K_ty * A_br * sigma_y)) ** 1.6)**(-0.625) - 1 - M_S
                         def constraint_thickness(variables):
                             e,t,D,h =variables
                             return -t + 0.05
@@ -222,7 +222,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                             return  -D+0.39
                         def constraint_inner_diameter_bigger_zero(variables):
                             e,t,D,h= variables
-                            return  D-0.0001
+                            return  D-0.005
                         def constraint_dimension(variables):
                             e, t, D, h = variables
                             return e-D/2 -0.005
@@ -237,9 +237,12 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
 
                         def moment_x_constraint(variables):
                             e,t,D,h = variables
-                            sigma = (Mx*e)/((t*(2*e)**3)/12)-sigma_y
+                            sigma = (Mx*e)/((t*(2*e)**3)/12)-sigma_y*1.1
                             return sigma
 
+                        def thickness_over_diameter_lower_limit(variables):
+                            e,t,D,h = variables
+                            return - e/t + 10
 
 
                         constraints = [
@@ -254,7 +257,8 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                             {'type': 'ineq', 'fun': constraint_dimension},
                             {'type': 'ineq', 'fun': constraint_inter_flange_distance},
                             {'type': 'ineq', 'fun': constraint_inter_flange_distance_max},
-                            {'type': 'ineq', 'fun': moment_x_constraint}
+                            {'type': 'ineq', 'fun': moment_x_constraint},
+                            {'type': 'ineq', 'fun': thickness_over_diameter_lower_limit}
                         ]
 
                         # Choose an optimization method
@@ -291,19 +295,19 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
             material_best_configuration_dictionnary.append((material,best_configuration))
 
         #Check of the height of the flange limited by the Fy = 433:
-        height_flange = 0
-
-        Mz = Fy * height_flange * 10 **(-3)
+        # if stress is exceeding the yield stress = fail
         MMOI = ((2*best_configuration[0][0])**3 *(best_configuration[0][1]))/12
         if MMOI == 0:
-            MMOI== 0.0001
-        #if stress is exceeding the yield stress = fail
-        distance_to_the_shaft = height_flange - best_configuration[0][0]
-        sigma = (Mz * distance_to_the_shaft)/MMOI
+            MMOI = 0.0001
 
+        height_flange = best_configuration[0][0] + np.sqrt((MMOI*sigma_y*1.1)/Fy)
+        if height_flange <= 3*best_configuration[0][0]:
+            height_flange = 3*best_configuration[0][0]
+            required_MMOI = (Fy * (height_flange - best_configuration[0][0])**2)/(sigma_y*1.1)
+            best_configuration[0][1] = required_MMOI*12/(2*(best_configuration[0][0])**(1/3))
         design_array.append(DesignClass.DesignInstance(h=1000*best_configuration[0][3], t1=1000*best_configuration[0][1], t2=10, t3=2, D1=1000*best_configuration[0][2], \
                                                            w=2*1000*best_configuration[0][0], material=material, n_fast=4, length=200, \
-                                                           offset=20,flange_height=80,hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
+                                                           offset=20,flange_height=1000*height_flange,hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
                                                            D2_list=[10, 5, 9, 8], yieldstrength=sigma_y,N_lugs=design_object.N_lugs,N_Flanges=design_object.N_Flanges, Dist_between_lugs=design_object.Dist_between_lugs*1000)) #convert meters to millimeters
 
     print(material_best_configuration_dictionnary)

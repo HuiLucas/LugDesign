@@ -17,7 +17,7 @@ loads_with_SF = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 out1 = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVariables.Material, \
                                                                  InputVariables.sigma_yield,InputVariables.Density,\
                                                                  initial_design, loads_with_SF, False)[0]
-print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material)
+print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
 out1.bottomplatewidth = out1.w
 out2 = SelectFastenerConfiguration.Optimize_holes(out1, False)
 #PostProcessorAndVisualizer.Visualize(initial_design)
