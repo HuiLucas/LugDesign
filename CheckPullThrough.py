@@ -30,7 +30,7 @@ def fast_pull_force(design_object):  #Calculates the total force on each fastene
 
     n_fast=len(design_object.hole_coordinate_list)
     F_y = 433.60
-    M_x = 817.34
+    M_x = 100000#817.34
     Sum_A_r2 = 0
     F_yi = []
     centroid=calculate_centroid1(design_object)
