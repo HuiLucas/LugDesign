@@ -29,6 +29,7 @@ def Visualize(design_object, move_y=0):
         filletrad = design_object.w / 2
     else:
         filletrad = design_object.flange_height / 2
+    print(filletrad)
     result = result.faces("<Y").workplane(
         offset=-design_object.offset
     )  # workplane is offset from the object surface
