@@ -6,89 +6,99 @@ import numpy as np
 from scipy.optimize import minimize
 import math
 import DesignClass
+import InputVariables
+from numba import jit
 
 debug_design3 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=1,N_Flanges=2)
+                                            hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
+                                           D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=1,N_Flanges=2)
 
-N_lugs = 1
-N_Flanges = 2
-M_S = 0.3
+debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
-# FORCES
 
-Fx = 381.57 / (N_Flanges*N_lugs)
-Fy = 381.57 / (N_Flanges*N_lugs)
-Fz = 1144.71 / (N_Flanges*N_lugs)
-Mx = 719.26
-My = 719.26
-Mz = 0  # to be changed
-#Fz = 1144.71 / (N_Flanges*N_lugs) + My/(h*N_lugs)
+
 
 
 # -------------------------
 # Material List:
 # DF= die forging
 # P = plate
-Material = ['2014-T6(DF-L)', '2014-T6(DF-LT)', '2014-T6(P)', '7075-T6(P)', '7075-T6(DF-L)', '7075-T6(DF-LT)',
-            '4130 Steel', '8630 Steel', '2024-T4', '356-T6 Aluminium', '2024-T3']
-sigma_yield = [414, 414, 414, 503, 503, 503, 435, 550, 324, 165, 345]
-Density = [2800, 2800, 2800, 2810, 2810, 2810, 7850, 7850, 2780, 2670, 2780]
-material_best_configuration_dictionnary=[]
-design_array = []
+
+@jit(nopython=True)
+def calculate_ci(i, x):
+    if i ==1:
+        return 0.8534 + 0.2891 * x - 0.1511 * x ** 2 - 0.0035 * x ** 3 + 0.0174 * x ** 4 - 0.0038 * x ** 5 + 0.0002 * x ** 6
+    elif i==2:
+        return 1.5030 - 1.5054 * x + 1.7453 * x ** 2 - 0.9890 * x ** 3 + 0.2838 * x ** 4 - 0.0390 * x ** 5 + 0.0020 * x ** 6
+    elif i ==3:
+        return 0.6270 + 0.9428 * x - 0.8837 * x ** 2 + 0.3900 * x ** 3 - 0.0928 * x ** 4 + 0.0115 * x ** 5 - 0.0005 * x ** 6
+    elif i ==4:
+        return 0.9083 + 0.3195 * x - 0.2985 * x ** 2 + 0.0912 * x ** 3 - 0.0121 * x ** 4 + 0.0006 * x ** 5
+    elif i==5:
+        return 0.6115 + 1.4003 * x - 1.6563 * x ** 2 + 0.8517 * x ** 3 - 0.2273 * x ** 4 + 0.0306 * x ** 5 - 0.0016 * x ** 6
+    elif i==6:
+        return 0.7625 + 1.1900 * x - 1.5365 * x ** 2 + 0.7699 * x ** 3 - 0.1987 * x ** 4 + 0.0258 * x ** 5 - 0.0013 * x ** 6
+    elif i ==7:
+        return 1.0065 - 0.7188 * x + 0.6110 * x ** 2 - 0.3044 * x ** 3 + 0.0813 * x ** 4 - 0.0109 * x ** 5 + 0.0006 * x ** 6
+    else:
+        return 0
+
 
 # Material Functions Lists (Kt)
-def calculate_kt(e, D, M, t):
+
+def calculate_kt(e, D, M, t, Material_In):
     W = 2 * e
     x = W / D
     Mat = M
-    c1 = 0.8534 + 0.2891 * x - 0.1511 * x ** 2 - 0.0035 * x ** 3 + 0.0174 * x ** 4 - 0.0038 * x ** 5 + 0.0002 * x ** 6
-    c2 = 1.5030 - 1.5054 * x + 1.7453 * x ** 2 - 0.9890 * x ** 3 + 0.2838 * x ** 4 - 0.0390 * x ** 5 + 0.0020 * x ** 6
-    c3 = 0.6270 + 0.9428 * x - 0.8837 * x ** 2 + 0.3900 * x ** 3 - 0.0928 * x ** 4 + 0.0115 * x ** 5 - 0.0005 * x ** 6
-    c4 = 0.9083 + 0.3195 * x - 0.2985 * x ** 2 + 0.0912 * x ** 3 - 0.0121 * x ** 4 + 0.0006 * x ** 5
-    c5 = 0.6115 + 1.4003 * x - 1.6563 * x ** 2 + 0.8517 * x ** 3 - 0.2273 * x ** 4 + 0.0306 * x ** 5 - 0.0016 * x ** 6
-    c6 = 0.7625 + 1.1900 * x - 1.5365 * x ** 2 + 0.7699 * x ** 3 - 0.1987 * x ** 4 + 0.0258 * x ** 5 - 0.0013 * x ** 6
-    c7 = 1.0065 - 0.7188 * x + 0.6110 * x ** 2 - 0.3044 * x ** 3 + 0.0813 * x ** 4 - 0.0109 * x ** 5 + 0.0006 * x ** 6
+    #c1 = 0.8534 + 0.2891 * x - 0.1511 * x ** 2 - 0.0035 * x ** 3 + 0.0174 * x ** 4 - 0.0038 * x ** 5 + 0.0002 * x ** 6
+    #c2 = 1.5030 - 1.5054 * x + 1.7453 * x ** 2 - 0.9890 * x ** 3 + 0.2838 * x ** 4 - 0.0390 * x ** 5 + 0.0020 * x ** 6
+    #c3 = 0.6270 + 0.9428 * x - 0.8837 * x ** 2 + 0.3900 * x ** 3 - 0.0928 * x ** 4 + 0.0115 * x ** 5 - 0.0005 * x ** 6
+    #c4 = 0.9083 + 0.3195 * x - 0.2985 * x ** 2 + 0.0912 * x ** 3 - 0.0121 * x ** 4 + 0.0006 * x ** 5
+    #c5 = 0.6115 + 1.4003 * x - 1.6563 * x ** 2 + 0.8517 * x ** 3 - 0.2273 * x ** 4 + 0.0306 * x ** 5 - 0.0016 * x ** 6
+    #c6 = 0.7625 + 1.1900 * x - 1.5365 * x ** 2 + 0.7699 * x ** 3 - 0.1987 * x ** 4 + 0.0258 * x ** 5 - 0.0013 * x ** 6
+    #c7 = 1.0065 - 0.7188 * x + 0.6110 * x ** 2 - 0.3044 * x ** 3 + 0.0813 * x ** 4 - 0.0109 * x ** 5 + 0.0006 * x ** 6
 
-    if Mat == Material[0] or Mat == Material[4] or Mat == Material[6] or Mat == Material[7]:
-        kt = c1
-    elif (Mat == Material[2] or Mat == Material[3]) and t <= 1.27:
-        kt = c2
-    elif Mat == Material[1] or Mat == Material[5]:
-        kt = c2
-    elif (Mat == Material[2] or Mat == Material[3]) and t >= 1.27:
-        kt = c4
-    elif Mat == Material[8] or Mat == Material[10]:
-        kt = c4
-    elif Mat == Material[9]:
-        kt = c7
+    if Mat == Material_In[0] or Mat == Material_In[4] or Mat == Material_In[6] or Mat == Material_In[7]:
+        kt = calculate_ci(1,x)
+    elif (Mat == Material_In[2] or Mat == Material_In[3]) and t <= 1.27:
+        kt = calculate_ci(2,x)
+    elif Mat == Material_In[1] or Mat == Material_In[5]:
+        kt = calculate_ci(2,x)
+    elif (Mat == Material_In[2] or Mat == Material_In[3]) and t >= 1.27:
+        kt = calculate_ci(4,x)
+    elif Mat == Material_In[8] or Mat == Material_In[10]:
+        kt = calculate_ci(4,x)
+    elif Mat == Material_In[9]:
+        kt = calculate_ci(7,x)
     else:
+        kt = 0
         pass
     return kt
 
-
+@jit(nopython=True)
 def calculate_kty(w, D, t):
     x = (6 / ((4 / (0.5 * (w - D) + D / (2 * 2 ** 0.5))*t) + 2 / (0.5 * (w - D))*t)) / (D * t)
     curve = -0.0074 + 1.384 * x - 0.5613 * x ** 2 + 1.46159 * x ** 3 - 2.6979 * x ** 4 + 1.912 * x ** 5 - 0.4626 * x ** 6
     return curve
 
-
+@jit(nopython=True)
 def calculate_vol(t, e, D):
     volume = math.pi * (e** 2 - (D / 2) ** 2) * t
     return volume
 
-
+@jit(nopython=True)
 def calculate_tension_area(t, e, D):
     W = 2 * e
     A_t = t * (W - D)
     return A_t
 
-
+@jit(nopython=True)
 def calculate_bearing_area(t, D):
     A_br = D * t
     return A_br
 
-
+@jit(nopython=True)
 def choose_kby(t, D, e):
     x = e / D
     if t / D > 0.4:
@@ -121,122 +131,162 @@ def choose_kby(t, D, e):
 
     return kby
 
+def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, high_accuracy):
+    # to be changed
+    M_S = 1.25 * 1.1 - 1
+    N_lugs = design_object.N_lugs
+    N_Flanges = design_object.N_Flanges
+    if high_accuracy == True:
+        [i_step, j_step, k_step,l_step, Material_List] = [20, 5, 20, 50, Material_In2]
+    else:
+        [i_step, j_step, k_step, l_step, Material_List] = [40, 10, 40, 100, Material_In2[0:3]]
+    if design_object.Dist_between_lugs == 0:
+        design_object.Dist_between_lugs = 1
+        distance = design_object.Dist_between_lugs
+    else:
+        distance = design_object.Dist_between_lugs
+    # FORCES with safety factor of 1.25
+    Fx = design_loads.F_x / (N_Flanges * N_lugs)
+    Fy = design_loads.F_y / (N_Flanges * N_lugs)
+    Fz = design_loads.F_z / (N_Flanges * N_lugs)
+    Mx = design_loads.M_x
+    My = design_loads.M_y
+    Mz = design_loads.M_z  # to be changed
+    material_best_configuration_dictionnary = []
+    design_array = []
+    # Optimisation for each material and compare the options
+    # intial guesses for '2014-T6(DF-L)':
+    dictionnary = []
+    for material in Material_List:
+        for i in Material_In2:
+            if i == material:
+                sigma_y = Sigma_In[Material_In2.index(i)]
+        for i in range(10, 500, i_step):
+            e = i * 10 ** (-3)
+            for j in range(1, 50, j_step):
+                t = j * 10 ** (-3)
+                print("Progress:",round((i/500+j/500)*100/1.062,1), "Material:", material, flush=True)
+                for k in range(10, 500, k_step):
+                    D = k * 10 ** (-3)
+                    for l in range(10, 900, l_step):
+                        h = l * 10 ** (-3)
+                        initial_guess = [e, t, D, h]
+                        # e=radius outer flange, t=thickness, D=diameter of the inner circle, material
 
-# Optimisation for each material and compare the options
-# intial guesses for '2014-T6(DF-L)':
-dictionnary = []
-for material in Material:
-    for i in Material:
-        if i == material:
-            sigma_y = sigma_yield[Material.index(i)]
-    for i in range(10, 500, 20):
-        e = i * 10 ** (-3)
-        for j in range(1, 50, 5):
-            t = j * 10 ** (-3)
-            for k in range(10, 500, 20):
-                D = k * 10 ** (-3)
-                initial_guess = [e, t, D]
-                # e=radius outer flange, t=thickness, D=diameter of the inner circle, material
-
-                K_t = calculate_kt(initial_guess[0], initial_guess[1], material, initial_guess[2])
-                K_ty = choose_kby(initial_guess[2], initial_guess[1], initial_guess[0])
+                        K_t = calculate_kt(initial_guess[0], initial_guess[1], material, initial_guess[2], Material_In2)
+                        K_ty = choose_kby(initial_guess[2], initial_guess[1], initial_guess[0])
 
 
-                ### ATTENTION: optimise the mass and the yield strength
-                def objective_function(variables, material=material):
-                    e, t, D = variables
-                    volume = calculate_vol(t, e, D)
-                    for i in Material:
-                        if i == material:
-                            rho = Density[Material.index(i)]
-                    m = rho * volume
-                    return m
+                        ### ATTENTION: optimise the mass and the yield strength
+                        def objective_function(variables, material=material):
+                            e, t, D, h= variables
+                            volume = calculate_vol(t, e, D)
+                            for i in Material_In2:
+                                if i == material:
+                                    rho = Density_In[Material_In2.index(i)]
+                            m = rho * volume
+                            return m
+
+                        def volume_constraint(variables):
+                            e, t, D, h = variables
+                            return calculate_vol(t, e, D)
+
+                        def principal_constraint(variables):
+                            e, t, D, h = variables
+                            # K_t = calculate_kt(e,D,material,t)
+                            # K_ty = choose_kby(t,D,e)
+                            A_t = calculate_tension_area(t, e, D)
+                            A_br = calculate_bearing_area(t, D)
+                            for i in Material_In2:
+                                if i == material:
+                                    sigma_y = Sigma_In[Material_In2.index(i)]
+                            if N_lugs == 2:
+                                force_couple_y = My/(distance*N_Flanges)
+                            else:
+                                force_couple_y = My/h
+                            return ((Fy / (K_t * sigma_y * A_t)) ** 1.6 + ((Fz + force_couple_y)/ (K_ty * A_br * sigma_y)) ** 1.6)**(-0.625) - 1 - M_S
+                        def constraint_thickness(variables):
+                            e,t,D,h =variables
+                            return -t + 0.05
+                        def constraint_thickness_bigger_zero(variables):
+                            e,t,D,h =variables
+                            return t
+                        def constraint_outer_radius(variables):
+                            e,t,D,h=variables
+                            return -e+0.2
+                        def constraint_outer_radius_bigger_zero(variables):
+                            e,t,D,h =variables
+                            return e
+                        def constraint_inner_diameter(variables):
+                            e,t,D,h= variables
+                            return  -D+0.39
+                        def constraint_inner_diameter_bigger_zero(variables):
+                            e,t,D,h= variables
+                            return  D
+                        def constraint_dimension(variables):
+                            e, t, D, h = variables
+                            return e-D/2 -0.005
+
+                        def constraint_inter_flange_distance(variables):
+                            e, t, D, h = variables
+                            return h
+
+                        def moment_x_constraint(variables):
+                            e,t,D,h = variables
+                            sigma = (Mx*e)/((t*(2*e)**3)/12)-sigma_y
+                            return sigma
 
 
-                def volume_constraint(variables):
-                    e, t, D = variables
-                    return calculate_vol(t, e, D)
+                        constraints = [
+                            {'type': 'ineq', 'fun': volume_constraint},
+                            {'type': 'eq', 'fun': principal_constraint},
+                            {'type': 'ineq', 'fun': constraint_thickness},
+                            {'type': 'ineq', 'fun': constraint_thickness_bigger_zero},
+                            {'type': 'ineq', 'fun': constraint_outer_radius},
+                            {'type': 'ineq', 'fun': constraint_outer_radius_bigger_zero},
+                            {'type': 'ineq', 'fun': constraint_inner_diameter},
+                            {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
+                            {'type': 'ineq', 'fun': constraint_dimension},
+                            {'type': 'ineq', 'fun': constraint_inter_flange_distance},
+                            {'type': 'ineq', 'fun': moment_x_constraint}
+                        ]
 
+                        # Choose an optimization method
+                        method = 'SLSQP'
 
-                def principal_constraint(variables):
-                    e, t, D = variables
-                    # K_t = calculate_kt(e,D,material,t)
-                    # K_ty = choose_kby(t,D,e)
-                    A_t = calculate_tension_area(t, e, D)
-                    A_br = calculate_bearing_area(t, D)
-                    for i in Material:
-                        if i == material:
-                            sigma_y = sigma_yield[Material.index(i)]
-                    return ((Fy / (K_t * sigma_y * A_t)) ** 1.6 + (Fz / (K_ty * A_br * sigma_y)) ** 1.6)**(-0.625) - 1 - M_S
-                def constraint_thickness(variables):
-                    e,t,D=variables
-                    return -t + 0.05
-                def constraint_thickness_bigger_zero(variables):
-                    e,t,D=variables
-                    return t
-                def constraint_outer_radius(variables):
-                    e,t,D=variables
-                    return -e+0.2
-                def constraint_outer_radius_bigger_zero(variables):
-                    e,t,D=variables
-                    return e
-                def constraint_inner_diameter(variables):
-                    e,t,D= variables
-                    return  -D+0.39
-                def constraint_inner_diameter_bigger_zero(variables):
-                    e,t,D= variables
-                    return  D
-                def constraint_dimension(variables):
-                    e, t, D = variables
-                    return e-D/2 -0.005
-                constraints = [
-                    {'type': 'ineq', 'fun': volume_constraint},
-                    {'type': 'eq', 'fun': principal_constraint},
-                    {'type': 'ineq', 'fun': constraint_thickness},
-                    {'type': 'ineq', 'fun': constraint_thickness_bigger_zero},
-                    {'type': 'ineq', 'fun': constraint_outer_radius},
-                    {'type': 'ineq', 'fun': constraint_outer_radius_bigger_zero},
-                    {'type': 'ineq', 'fun': constraint_inner_diameter},
-                    {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
-                    {'type': 'ineq', 'fun': constraint_dimension}
-                ]
+                        # Call the minimize function (Turning of display makes it WAY faster as printing takes a lot of memory)
+                        result = minimize(objective_function, initial_guess, method=method, constraints=constraints,
+                                          options={'disp': False}, tol=0.01)
 
-                # Choose an optimization method
-                method = 'SLSQP'
+                        # Print the result
+                        if result.success == True and 0.01 <= result.fun <= 0.9:
+                            dictionnary.append([result.x, result.fun])
+                            # print("Optimization converged successfully.")
+                            # print("Optimized variables:", result.x)
+                            # print("Minimum value of the objective function:", result.fun)
+                        else:
+                            pass
+                            #print("Optimization did not converge. Check the result message for more information.")
+                            #print("Message:", result.message)
+            # Initialize variables to store the best configuration and its mass
+            best_configuration = None
+            min_mass = float('inf')
+            # Iterate through the configurations
+            for config in dictionnary:
+                dimensions, mass = config
 
-                # Call the minimize function
-                result = minimize(objective_function, initial_guess, method=method, constraints=constraints,
-                                  options={'disp': True}, tol=0.001)
+                # Check if the current mass is smaller than the current minimum
+                if mass < min_mass:
+                    min_mass = mass
+                    best_configuration = config
 
-                # Print the result
-                if result.success == True and 0.01 <= result.fun <= 0.9:
-                    dictionnary.append([result.x, result.fun])
-                    # print("Optimization converged successfully.")
-                    # print("Optimized variables:", result.x)
-                    # print("Minimum value of the objective function:", result.fun)
-                else:
-                    pass
-                    #print("Optimization did not converge. Check the result message for more information.")
-                    #print("Message:", result.message)
-    # Initialize variables to store the best configuration and its mass
-    best_configuration = None
-    min_mass = float('inf')
-    # Iterate through the configurations
-    for config in dictionnary:
-        dimensions, mass = config
+            material_best_configuration_dictionnary.append((material,best_configuration))
+        design_array.append(DesignClass.DesignInstance(h=30, t1=1000*best_configuration[0][1], t2=10, t3=2, D1=1000*best_configuration[0][2], \
+                                                           w=2*1000*best_configuration[0][0], material=material, n_fast=4, length=200, \
+                                                           offset=20,flange_height=80,hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
+                                                           D2_list=[10, 5, 9, 8], yieldstrength=sigma_y,N_lugs=1,N_Flanges=2)) #convert meters to millimeters
 
-        # Check if the current mass is smaller than the current minimum
-        if mass < min_mass:
-            min_mass = mass
-            best_configuration = config
-
-    material_best_configuration_dictionnary.append((material,best_configuration))
-    design_array.append(DesignClass.DesignInstance(h=30, t1=best_configuration[0][1], t2=10, t3=2, D1=best_configuration[0][2], \
-                                                   w=2*best_configuration[0][0], material=material, n_fast=4, length=200, \
-                                                   offset=20,flange_height=80,hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], \
-                                                   D2_list=[10, 5, 9, 8], yieldstrength=sigma_y,N_lugs=1,N_Flanges=2))
-
-print(material_best_configuration_dictionnary)
-
+    print(material_best_configuration_dictionnary)
+    return design_array
 
 
