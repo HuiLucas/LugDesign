@@ -3,7 +3,7 @@ import math
 import numpy as np
 import DesignClass
 
-debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=4, t3=2, D1=10, w=80, material="metal", n_fast=4,length=200, offset=20, flange_height=80, hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 5, 9, 8], yieldstrength=83, N_lugs=1, N_Flanges=1)
+debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=4, t3=2, D1=10, w=80, material="metal", n_fast=4,length=200, offset=20, flange_height=80, hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 10, 10, 10], yieldstrength=83, N_lugs=1, N_Flanges=1)
 
 
 
@@ -47,11 +47,11 @@ def get_youngs_modulus(material_name):
 selected_material_fastener = "Titanium (Grade 5)"
 
 
-debug_design.Ea = get_youngs_modulus("Aluminium 7075")
+debug_design.Ea = get_youngs_modulus("Aluminium 7075") * 10 ** 9
 debug_design.L_h_sub_type = "Hexagon head"
 debug_design.L_eng_sub_type = "Nut-Tightened"
-debug_design.Eb = get_youngs_modulus(selected_material_fastener)
-debug_design.En = get_youngs_modulus(selected_material_fastener)
+debug_design.Eb = get_youngs_modulus(selected_material_fastener) * 10 ** 9
+debug_design.En = get_youngs_modulus(selected_material_fastener) * 10 ** 9
 debug_design.L = [1, 2,2, 1]  # shank length
 debug_design.D = [10, 5, 9, 8]  # shank diameter
 
@@ -60,7 +60,7 @@ def calculate_attached_parts_compliance(design_object):
     delta_a = []
     t = design_object.t2 + design_object.t3
     for i in range(len(design_object.D2_list)):
-        delta_a_value = (4 * t) / (design_object.Ea * math.pi * ((1.8*design_object.D2_list[i]) ** 2 - design_object.D2_list[i] ** 2))
+        delta_a_value = (4 * t/1000) / (design_object.Ea * math.pi * ((1.8*design_object.D2_list[i]/1000) ** 2 - (design_object.D2_list[i]/1000) ** 2))
         delta_a.append(delta_a_value)
     return delta_a
 
@@ -70,8 +70,8 @@ def calculate_fastener_compliance(L_h_sub_type, L_eng_sub_type, design_object):
     P = []
 
     for i in range(len(design_object.L)):
-        A = math.pi * design_object.D[i] ** 2 / 4
-        P_value = design_object.L[i] / A
+        A = math.pi * design_object.D[i]/1000 ** 2 / 4
+        P_value = design_object.L[i]/1000 / A
         P.append(P_value)
 
     if L_h_sub_type == "Hexagon head":
@@ -88,7 +88,7 @@ def calculate_fastener_compliance(L_h_sub_type, L_eng_sub_type, design_object):
     delta_b = []
     for i in range(len(design_object.D2_list)):
 
-        delta_b_value = 1 / design_object.Eb * ((L_h_sub[i] / math.pi * (1.8*design_object.D2_list[i]) ** 2 / 4) + np.sum(P) + L_eng_sub[i] / math.pi * design_object.D[-1] ** 2 / 4) + L_n_sub[i] / (design_object.En * math.pi * (1.8*design_object.D2_list[i]) ** 2 / 4)
+        delta_b_value = 1 / design_object.Eb * (((L_h_sub[i]/1000) / math.pi * (1.8*design_object.D2_list[i]/1000) ** 2 / 4) + np.sum(P) + (L_eng_sub[i]/1000) / math.pi * (design_object.D[-1]/1000) ** 2 / 4) + (L_n_sub[i]/1000) / (design_object.En * math.pi * (1.8*design_object.D2_list[i]/1000) ** 2 / 4)
         delta_b.append(delta_b_value)
     return delta_b, L_eng_sub,L_n_sub,L_h_sub
 
