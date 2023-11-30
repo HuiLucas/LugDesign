@@ -292,7 +292,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
         design_array.append(DesignClass.DesignInstance(h=1000*best_configuration[0][3], t1=1000*best_configuration[0][1], t2=10, t3=2, D1=1000*best_configuration[0][2], \
                                                            w=2*1000*best_configuration[0][0], material=material, n_fast=4, length=200, \
                                                            offset=20,flange_height=80,hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
-                                                           D2_list=[10, 5, 9, 8], yieldstrength=sigma_y,N_lugs=design_object.N_lugs,N_Flanges=design_object.N_Flanges)) #convert meters to millimeters
+                                                           D2_list=[10, 5, 9, 8], yieldstrength=sigma_y,N_lugs=design_object.N_lugs,N_Flanges=design_object.N_Flanges, Dist_between_lugs=design_object.Dist_between_lugs*1000)) #convert meters to millimeters
 
     print(material_best_configuration_dictionnary)
     return design_array
