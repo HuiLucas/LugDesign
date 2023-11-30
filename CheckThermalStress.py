@@ -47,5 +47,4 @@ def thermal_stress_calculation(design_object, lower_temp , ref_temp , phi_list ,
     # units of thermal coefficient should be in micro(10^-6) and elasitic modulus in mega (10^9)
     thermal_force = np_d2_list ** 2 / 4 * temp_diff * abs(material_fastener_coeff-material_wall_coeff) * (1-phi_list) * material_fastener_stiffness *1000
     return thermal_force
-def calculate
 
