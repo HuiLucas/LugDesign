@@ -59,5 +59,5 @@ def check_pullthrough(design_object): #checks pullout shear, if smaller than max
 
 print(check_pullthrough(debug_design_1))
 
-# diameter head and shank diameter ratio is 1.8
+# diameter head and shank diameter ratio is 1.8,
 #print(calculate_centroid(debug_design_1),check_pull_through(debug_design_1) )
