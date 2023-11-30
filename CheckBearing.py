@@ -4,16 +4,6 @@
 # at a time; the function can be run again to get advices for the other holes.
 
 
-
-
-
-
-
-
-
-
-
-
 import DesignClass as dc
 import numpy as np
 debug_design_2 = dc.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=40, material="metal", n_fast=4, \
