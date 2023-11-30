@@ -42,8 +42,10 @@ def thermal_stress_calculation(design_object, upper_temp , lower_temp, ref_temp 
     print(material_fastener_coeff , "fast"),print(material_wall_coeff , "wall")
     thermal_force_upper = (np_d2_list/1000) ** 2 / 4 * 3 * temp_diff_upper * (material_fastener_coeff - material_wall_coeff) * (1-np_phi_list) * material_fastener_stiffness * 1000
     thermal_force_lower = (np_d2_list/1000) ** 2 / 4 * 3 * temp_diff_lower * (material_fastener_coeff - material_wall_coeff) * (1-np_phi_list) * material_fastener_stiffness * 1000 * -1
-
-    return thermal_force_upper , thermal_force_lower
+    if np.min(thermal_force_lower) > 0:
+        return thermal_force_lower
+    else:
+        return thermal_force_upper
 
 print(InputVariables.materials_fasteners)
 print(thermal_stress_calculation(debug_design_2,150,-90,15,[0.04,0.04,0.04,0.04],InputVariables.materials_fasteners, InputVariables.materials_lug ,'Aluminium 7075','2014-T6(DF-L)'))
