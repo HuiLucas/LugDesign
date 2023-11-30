@@ -38,14 +38,15 @@ def Visualize(design_object, move_y=0):
             design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
             design_object.D1/2).cutThruAll().translate(
             (0, design_object.w / 2 - design_object.offset, 0)))
-    result = result.union(
-        cq.Workplane("XZ").box(design_object.w, design_object.flange_height + filletrad, design_object.t1,
-                               centered=[True, False, True]).edges(
-            "|Y").fillet(filletrad - 0.01).translate((0, 0, +design_object.t2 / 2 - filletrad)).center(0,
-                                                                                                       -filletrad + design_object.t2 / 2).rect(
-            design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
-            design_object.D1/2).cutThruAll().translate(
-            (0, design_object.w / 2 - design_object.offset - design_object.h, 0)))
+    if design_object.N_Flanges == 2:
+        result = result.union(
+            cq.Workplane("XZ").box(design_object.w, design_object.flange_height + filletrad, design_object.t1,
+                                   centered=[True, False, True]).edges(
+                "|Y").fillet(filletrad - 0.01).translate((0, 0, +design_object.t2 / 2 - filletrad)).center(0,
+                                                                                                           -filletrad + design_object.t2 / 2).rect(
+                design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
+                design_object.D1/2).cutThruAll().translate(
+                (0, design_object.w / 2 - design_object.offset - design_object.h, 0)))
     if design_object.N_lugs == 2:
         result = result.union(result.translate((0,move_y, 0)))
     # Export
@@ -82,9 +83,9 @@ def Visualize2(design_object):
     if design_object.N_lugs == 2:
         Visualize(design_object, move_y=design_object.Dist_between_lugs)
 
-debug_design4 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
-                                            length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
-                                           D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=2,N_Flanges=2)
-debug_design4.Dist_between_lugs = 300
-Visualize2(debug_design4)
+# debug_design4 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
+#                                             length=200, offset=20,flange_height=80, \
+#                                             hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
+#                                            D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=2,N_Flanges=1)
+# debug_design4.Dist_between_lugs = 300
+# Visualize2(debug_design4)

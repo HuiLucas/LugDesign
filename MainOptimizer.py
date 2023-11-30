@@ -21,6 +21,6 @@ print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offs
 out1.bottomplatewidth = out1.w
 out2 = SelectFastenerConfiguration.Optimize_holes(out1, False)
 #PostProcessorAndVisualizer.Visualize(initial_design)
-PostProcessorAndVisualizer.Visualize(out2)
+PostProcessorAndVisualizer.Visualize2(out2)
 
 
