@@ -1,3 +1,4 @@
+from InputVariables import materials_fasteners
 class DesignInstance:
     def __init__(self, h, t1, t2, t3, D1, w, material, n_fast, length, offset, flange_height, hole_coordinate_list, \
                  D2_list, yieldstrength, N_lugs, N_Flanges, Dist_between_lugs=0, bottomplatewidth=100, shearstrength=550):
@@ -31,3 +32,30 @@ class Load:
         self.M_z = M_z
 
 Launch_loads = Load(346.9,346.9,1040.7,653.9,653.9,0)
+
+# Your main file
+
+# Nut type can either be "Hexagonal" , "Cylindrical" and hole type can either be "Nut-Tightened" or "Threaded hole"
+
+class FastenerType:
+    def __init__(self, material_name, nut_type=None, hole_type=None):
+        self.material = None
+        self.youngs_modulus = None
+        self.thermal_coeff = None
+        self.yield_stress = None
+        self.nut_type = nut_type
+        self.hole_type = hole_type
+
+        if material_name:
+            self.set_material(material_name)
+
+    def set_material(self, material_name):
+        for material in materials_fasteners:
+            if material["Material"] == material_name:
+                self.material = material_name
+                self.youngs_modulus = material["Youngs Modulus (GPa)"]
+                self.thermal_coeff = material["Thermal Expansion (10^-6)/K"]
+                self.yield_stress = material["Ultimate Tensile Strength (MPa)"]
+                return
+        print("Material is not in InputVariables/materials_fastener")
+
