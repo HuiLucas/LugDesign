@@ -46,6 +46,16 @@ class FastenerType:
         self.nut_type = nut_type
         self.hole_type = hole_type
 
+        if nut_type not in ["Hexagonal", "Cylindrical"]:
+            print("Nut type can either be 'Hexagonal' or 'Cylindrical'")
+        else:
+            self.nut_type = nut_type
+
+        if hole_type not in ["Nut-Tightened", "Threaded hole"]:
+            print("Hole type can either be 'Nut-Tightened' or 'Threaded hole'")
+        else:
+            self.hole_type = hole_type
+
         if material_name:
             self.set_material(material_name)
 
