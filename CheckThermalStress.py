@@ -26,13 +26,13 @@ debug_design_2 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=40
                                             hole_coordinate_list=[(20, 10), (20, 30), (60, 10), (60, 30)], \
                                            D2_list=[6, 6, 6, 6], yieldstrength=83,N_lugs=1,N_Flanges=2)
 
-def thermal_stress_calculation(design_object, upper_temp , lower_temp, ref_temp , phi_list , materials_fastener_dictionary, materials_lug_dictionary , material_fastener , material_wall):
+def thermal_stress_calculation(design_object, upper_temp , lower_temp, ref_temp , phi_list , materials_fastener_dictionary, materials_lug_dictionary , material_fastener , material_plate):
     temp_diff_upper = upper_temp - ref_temp
     temp_diff_lower = ref_temp - lower_temp
     np_d2_list = np.array(design_object.D2_list)
     np_phi_list = np.array(phi_list)
     for materials in materials_lug_dictionary:
-        if materials.get("material") == material_wall:
+        if materials.get("material") == material_plate:
             material_wall_coeff = materials.get('thermal_expansion_coefficient')
     for materials in materials_fastener_dictionary:
         if materials.get("Material") == material_fastener:
