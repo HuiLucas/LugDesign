@@ -29,7 +29,7 @@ def get_youngs_modulus_lug(material_name):
 # debug_design.D = [10, 5, 9, 8]  # shank diamete
 
 ### Im gonna try to redo a bit of the code.
-fastener_debug = DesignClass.FastenerType("316 Stainless Steel","Hexagonal","Nut-Tightened")
+fastener_debug = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
 
 def get_fastener_dimensions(FastenerType,DesignInstance):
     np_D2list = np.array(DesignInstance.D2_list)
@@ -39,21 +39,21 @@ def get_fastener_dimensions(FastenerType,DesignInstance):
         height_head = (np_D2list * 0.4)
 
     if FastenerType.hole_type == "Threaded hole":
-        shank_length = (np_D2list * 0.33)
+        engaged_shank_length = (np_D2list * 0.33)
     elif FastenerType.hole_type == "Nut-Tightened":
-        shank_length = (np_D2list * 0.4)
+        engaged_shank_length = (np_D2list * 0.4)
     #this could be the height of the nut or of the threaded insert thus the general name locking device height
     locking_device_height = (np_D2list * 0.4)
-    return [height_head , shank_length , locking_device_height]
+    return [height_head , engaged_shank_length , locking_device_height]
 
 def calculate_delta_a(DesignInstance, plate_material , wall_material):
     Df_I = np.array(DesignInstance.D2_list)
     Df_O = 1.8 * Df_I
     thickness = [DesignInstance.t2,DesignInstance.t3]
-    Eb = [get_youngs_modulus_lug(plate_material), get_youngs_modulus_lug(wall_material)]
+    E = [get_youngs_modulus_lug(plate_material), get_youngs_modulus_lug(wall_material)]
     delta_a = []
     for i in range(2):
-        delta_a_new = (4 * thickness[i]) / (Eb[i] * 10 ** 9 * np.pi * (Df_O ** 2 - Df_I ** 2))
+        delta_a_new = (4 * thickness[i]) / (E[i] * 10 ** 9 * np.pi * (Df_O ** 2 - Df_I ** 2))
         delta_a.append(delta_a_new)
 
     """delta_a_max = []
@@ -70,13 +70,14 @@ print(calculate_delta_a(debug_design, "7075-T6(DF-LT)","7075-T6(DF-LT)"))
 
 def calculate_deta_b(FastenerType,DesignInstance):
     np_D2_list = np.array(DesignInstance.D2_list)
-    nominal_area = (1.8 * np_D2_list) ** 2 / 4 # maximal area of the fastener
+    nominal_area = (1.8 * np_D2_list) ** 2 / 4 # maximal area of the fastener (bolt and head area --> assumption)
     shank_area = (np_D2_list - 1) ** 2 / 4 # minimum area of fastener
     head_height = get_fastener_dimensions(FastenerType,DesignInstance)[0]
-    shank_length = get_fastener_dimensions(FastenerType, DesignInstance)[1]
-    engaged_bolt_height = get_fastener_dimensions(FastenerType, DesignInstance)[2]
+    engaged_shank_length = get_fastener_dimensions(FastenerType, DesignInstance)[1]
+    bolt_height = get_fastener_dimensions(FastenerType, DesignInstance)[2]
+    shank_length = DesignInstance.t2 + DesignInstance.t3
     E_b = FastenerType.youngs_modulus * 10 ** 9
-    delta_b = (1/E_b)*((head_height/nominal_area)+((shank_length + engaged_bolt_height)/shank_area) + engaged_bolt_height/nominal_area)
+    delta_b = (1/E_b)*((head_height/nominal_area)+((shank_length + engaged_shank_length)/shank_area) + bolt_height/nominal_area)
     return delta_b
 
 
