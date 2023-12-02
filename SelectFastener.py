@@ -152,16 +152,18 @@ def print_material_info(material_name):
 
 # print_material_info(selected_material_fastener)
 
-selected_material_fastener = "Titanium (Grade 5)"
-debug_design.L = [debug_design.t2+debug_design.t3 for i in range(len(debug_design.D2_list))]
-debug_design.D = debug_design.D2_list
-debug_design.Ea = get_youngs_modulus("Aluminium 7075") * 10 ** 9
-debug_design.L_h_sub_type = "Hexagon head"
-debug_design.L_eng_sub_type = "Nut-Tightened"
-debug_design.Eb = get_youngs_modulus(selected_material_fastener) * 10 ** 9
-debug_design.En = get_youngs_modulus(selected_material_fastener) * 10 ** 9
-debug_design.delta_a = calculate_attached_parts_compliance(debug_design)
-debug_design.delta_b = calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[0]
-debug_design.phi = calculate_force_ratio(debug_design)
-debug_design.fastener_dimensions = fastener_dimensions(debug_design)
-debug_design.L_shank = fastener_length_check(debug_design)
+def select_fastener(design_object):
+    selected_material_fastener = "Titanium (Grade 5)"
+    design_object.L = [design_object.t2+design_object.t3 for i in range(len(design_object.D2_list))]
+    design_object.D = design_object.D2_list
+    design_object.Ea = get_youngs_modulus("Aluminium 7075") * 10 ** 9
+    design_object.L_h_sub_type = "Hexagon head"
+    design_object.L_eng_sub_type = "Nut-Tightened"
+    design_object.Eb = get_youngs_modulus(selected_material_fastener) * 10 ** 9
+    design_object.En = get_youngs_modulus(selected_material_fastener) * 10 ** 9
+    design_object.delta_a = calculate_attached_parts_compliance(design_object)
+    design_object.delta_b = calculate_fastener_compliance(design_object.L_h_sub_type, design_object.L_eng_sub_type, design_object)[0]
+    design_object.phi = calculate_force_ratio(design_object)
+    design_object.fastener_dimensions = fastener_dimensions(design_object)
+    design_object.L_shank = fastener_length_check(design_object)
+select_fastener(debug_design)
