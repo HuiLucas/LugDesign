@@ -45,9 +45,9 @@ def get_in_plane_loads(design_object, load_object):
     elif centroid_x == design_object.length/2 and centroid_z < design_object.bottomplatewidth/2:
         M_y =  load_object.F_x * r_to_cg
     elif centroid_x > design_object.length / 2 and centroid_z == design_object.bottomplatewidth / 2:
-        M_y = - load_object.F_x * r_to_cg
+        M_y = - load_object.F_z * r_to_cg
     elif centroid_x < design_object.length / 2 and centroid_z == design_object.bottomplatewidth / 2:
-        M_y =  load_object.F_x * r_to_cg
+        M_y =  load_object.F_z * r_to_cg
     elif centroid_x < design_object.length / 2 and centroid_z < design_object.bottomplatewidth / 2:
         theta = np.arctan(np.absolute((centroid_z - design_object.bottomplatewidth / 2) / (centroid_x - design_object.length / 2)))
         M_y =  (load_object.F_z * np.cos(theta) + load_object.F_x * np.sin(theta)) * r_to_cg
