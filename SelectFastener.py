@@ -1,46 +1,19 @@
 # This software component will select the fastener based on WP4.10.
-import math
 import numpy as np
 import DesignClass
+debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=2, t3=4, D1=10, w=80, material="metal", n_fast=4,length=200, offset=20, flange_height=80, hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[9, 4, 6, 8], yieldstrength=83, N_lugs=1, N_Flanges=1)
+import InputVariables
 
-debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=4, t3=2, D1=10, w=80, material="metal", n_fast=4,length=200, offset=20, flange_height=80, hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[10, 10, 10, 10], yieldstrength=83, N_lugs=1, N_Flanges=1)
 
 
-
-materials = [
-    {"Material": "316 Stainless Steel", "Youngs Modulus (GPa)": 190, "Density (kg/m^3)": 8070,
-     "Thermal Expansion (10^-6)/K": 18, "Ultimate Tensile Strength (MPa)": 620,
-     "Elastic Limit(Mpa)": 170, "Resistance Factors": "Excellent"},
-
-    {"Material": "18-8 SS", "Youngs Modulus (GPa)": 193, "Density (kg/m^3)": 7930,
-     "Thermal Expansion (10^-6)/K": 17.8, "Ultimate Tensile Strength (MPa)":  620,
-     "Elastic Limit(Mpa)":  310, "Resistance Factors": "Respectable but not for salty environments"},
-
-    {"Material": "Carbon Steel", "Youngs Modulus (GPa)": 200, "Density (kg/m^3)": 7870,
-     "Thermal Expansion (10^-6)/K": 11.5, "Ultimate Tensile Strength (MPa)": 540, "Elastic Limit(Mpa)": 415,
-     "Resistance Factors": "Excellent"},
-
-    {"Material": "Titanium (Grade 5)", "Youngs Modulus (GPa)": 113.8, "Density (kg/m^3)": 4430,
-     "Thermal Expansion (10^-6)/K": 8.6, "Ultimate Tensile Strength (MPa)": 950, "Elastic Limit(Mpa)": 880,
-     "Resistance Factors": "Excellent for corrosion but poor with wear"},
-
-    {"Material": "Brass (Yellow)", "Youngs Modulus (GPa)": 76, "Density (kg/m^3)": 8740,
-     "Thermal Expansion (10^-6)/K": 21, "Ultimate Tensile Strength (MPa)": 260, "Elastic Limit(Mpa)": 90,
-     "Resistance Factors": "Good corrosion resistance"},
-
-    {"Material": "Aluminium 7075", "Youngs Modulus (GPa)": 71.7, "Density (kg/m^3)": 2810,
-     "Thermal Expansion (10^-6)/K": 25.2, "Ultimate Tensile Strength (MPa)": 572, "Elastic Limit(Mpa)": 503,
-     "Resistance Factors": "Moderate"}
-]
-
-def get_youngs_modulus(material_name):
-    for material in materials:
-        if material["Material"] == material_name:
-            if isinstance(material["Youngs Modulus (GPa)"], tuple):
+def get_youngs_modulus_lug(material_name):
+    for material in InputVariables.materials_lug:
+        if material["material"] == material_name:
+            if isinstance(material["elastic module"], tuple):
                 # If the Young's Modulus is given as a range, you can return the average
-                return sum(material["Youngs Modulus (GPa)"]) / len(material["Youngs Modulus (GPa)"])
+                return sum(material["elastic module"]) / len(material["Youngs Modulus (GPa)"])
             else:
-                return material["Youngs Modulus (GPa)"]
+                return material["elastic module"]
     # If the material name is not found
     return None
 
@@ -48,15 +21,87 @@ def get_youngs_modulus(material_name):
 
 
 # debug_design.Ea = get_youngs_modulus("Aluminium 7075") * 10 ** 9
-# debug_design.L_h_sub_type = "Hexagon head"
+# debug_design.L_h_sub_type = "Hexagonal"
 # debug_design.L_eng_sub_type = "Nut-Tightened"
 # debug_design.Eb = get_youngs_modulus(selected_material_fastener) * 10 ** 9
 # debug_design.En = get_youngs_modulus(selected_material_fastener) * 10 ** 9
 # debug_design.L = [1, 2,2, 1]  # shank length
 # debug_design.D = [10, 5, 9, 8]  # shank diameter
 
+### Im gonna try to redo a bit of the code.
+fastener_debug = DesignClass.FastenerType("316 Stainless Steel","Hexagonal","Nut-Tightened")
 
-def calculate_attached_parts_compliance(design_object):
+def get_fastener_dimensions(FastenerType,DesignInstance):
+    np_D2list = np.array(DesignInstance.D2_list)
+    if FastenerType.nut_type == "Hexagonal":
+        height_head = (np_D2list * 0.5)
+    elif FastenerType.nut_type == "Cylindrical":
+        height_head = (np_D2list * 0.4)
+
+    if FastenerType.hole_type == "Threaded hole":
+        shank_length = (np_D2list * 0.33)
+    elif FastenerType.hole_type == "Nut-Tightened":
+        shank_length = (np_D2list * 0.4)
+    #this could be the height of the nut or of the threaded insert thus the general name locking device height
+    locking_device_height = (np_D2list * 0.4)
+    return [height_head , shank_length , locking_device_height]
+
+def calculate_delta_a(DesignInstance, plate_material , wall_material):
+    Df_I = np.array(DesignInstance.D2_list)
+    Df_O = 1.8 * Df_I
+    thickness = [DesignInstance.t2,DesignInstance.t3]
+    Eb = [get_youngs_modulus_lug(plate_material), get_youngs_modulus_lug(wall_material)]
+    delta_a = []
+    for i in range(2):
+        delta_a_new = (4 * thickness[i]) / (Eb[i] * 10 ** 9 * np.pi * (Df_O ** 2 - Df_I ** 2))
+        delta_a.append(delta_a_new)
+
+    """delta_a_max = []
+    
+    for i in range(len(Df_O)):
+        if delta_a[0][i] > delta_a[1][i]:
+            delta_a_max.append(delta_a[0][i])
+        else:
+            delta_a_max.append(delta_a[1][i])"""
+
+    return delta_a
+
+print(calculate_delta_a(debug_design, "7075-T6(DF-LT)","7075-T6(DF-LT)"))
+
+def calculate_deta_b(FastenerType,DesignInstance):
+    np_D2_list = np.array(DesignInstance.D2_list)
+    nominal_area = (1.8 * np_D2_list) ** 2 / 4 # maximal area of the fastener
+    shank_area = (np_D2_list - 1) ** 2 / 4 # minimum area of fastener
+    head_height = get_fastener_dimensions(FastenerType,DesignInstance)[0]
+    shank_length = get_fastener_dimensions(FastenerType, DesignInstance)[1]
+    engaged_bolt_height = get_fastener_dimensions(FastenerType, DesignInstance)[2]
+    E_b = FastenerType.youngs_modulus * 10 ** 9
+    delta_b = (1/E_b)*((head_height/nominal_area)+((shank_length + engaged_bolt_height)/shank_area) + engaged_bolt_height/nominal_area)
+    return delta_b
+
+
+print(calculate_deta_b(fastener_debug,debug_design))
+
+
+def calculate_force_ratio(FastenerType, DesignInstance , plate_material , wall_material):
+    force_ratio = []
+    delta_a = calculate_delta_a(DesignInstance,plate_material,wall_material)
+    delta_b = calculate_deta_b(FastenerType, DesignInstance)
+    for i in range(2):
+        force_ratio_element = list(delta_a[i]/(delta_a[i]+delta_b))
+        force_ratio.append(force_ratio_element)
+    #check which compliance is limiting
+    if force_ratio[0] > force_ratio[1]:
+        return force_ratio[1] , "vehicle wall/fastener compliance is limiting"
+    else:
+        return force_ratio[0] , "back plate/fastener compliance is limiting"
+
+    return force_ratio[0]
+
+print(calculate_force_ratio(fastener_debug,debug_design,"7075-T6(DF-LT)","7075-T6(DF-LT)"))
+
+
+""" def calculate_attached_parts_compliance(design_object):
     delta_a = []
     t = design_object.t2 + design_object.t3
     for i in range(len(design_object.D2_list)):
@@ -75,9 +120,9 @@ def calculate_fastener_compliance(L_h_sub_type, L_eng_sub_type, design_object):
         P_value = design_object.L[i]/1000 / A
         P.append(P_value)
 
-    if L_h_sub_type == "Hexagon head":
+    if L_h_sub_type == "Hexagonal":
         L_h_sub = [0.5*i for i in design_object.D2_list]
-    elif L_h_sub_type == "Cylindrical head":
+    elif L_h_sub_type == "Cylindrical":
         L_h_sub = [0.4*i for i in design_object.D2_list]
     if L_eng_sub_type == "Nut-Tightened":
         L_eng_sub = [0.4*i for i in design_object.D2_list]
@@ -166,4 +211,4 @@ def select_fastener(design_object):
     design_object.phi = calculate_force_ratio(design_object)
     design_object.fastener_dimensions = fastener_dimensions(design_object)
     design_object.L_shank = fastener_length_check(design_object)
-select_fastener(debug_design)
+select_fastener(debug_design) """
