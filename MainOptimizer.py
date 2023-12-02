@@ -63,7 +63,7 @@ print(check2, counter2, out1.t2)
 print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
 
 out1.bottomplatewidth = out1.w
-out2 = SelectFastenerConfiguration.Optimize_holes(out1, False)
+out2 = SelectFastenerConfiguration.Optimize_holes(out1, False) #strange behaviour
 
 #selectfastener
 

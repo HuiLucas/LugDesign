@@ -44,16 +44,16 @@ def get_youngs_modulus(material_name):
     # If the material name is not found
     return None
 
-selected_material_fastener = "Titanium (Grade 5)"
 
 
-debug_design.Ea = get_youngs_modulus("Aluminium 7075") * 10 ** 9
-debug_design.L_h_sub_type = "Hexagon head"
-debug_design.L_eng_sub_type = "Nut-Tightened"
-debug_design.Eb = get_youngs_modulus(selected_material_fastener) * 10 ** 9
-debug_design.En = get_youngs_modulus(selected_material_fastener) * 10 ** 9
-debug_design.L = [1, 2,2, 1]  # shank length
-debug_design.D = [10, 5, 9, 8]  # shank diameter
+
+# debug_design.Ea = get_youngs_modulus("Aluminium 7075") * 10 ** 9
+# debug_design.L_h_sub_type = "Hexagon head"
+# debug_design.L_eng_sub_type = "Nut-Tightened"
+# debug_design.Eb = get_youngs_modulus(selected_material_fastener) * 10 ** 9
+# debug_design.En = get_youngs_modulus(selected_material_fastener) * 10 ** 9
+# debug_design.L = [1, 2,2, 1]  # shank length
+# debug_design.D = [10, 5, 9, 8]  # shank diameter
 
 
 def calculate_attached_parts_compliance(design_object):
@@ -70,6 +70,7 @@ def calculate_fastener_compliance(L_h_sub_type, L_eng_sub_type, design_object):
     P = []
 
     for i in range(len(design_object.L)):
+        print(design_object.D, design_object.L)
         A = math.pi * design_object.D[i]/1000 ** 2 / 4
         P_value = design_object.L[i]/1000 / A
         P.append(P_value)
@@ -93,22 +94,22 @@ def calculate_fastener_compliance(L_h_sub_type, L_eng_sub_type, design_object):
     return delta_b, L_eng_sub,L_n_sub,L_h_sub
 
 
-def calculate_force_ratio():
+def calculate_force_ratio(design_object):
     phi = []
-    for i in range(len(delta_a)):
-        phi_value = delta_a[i] / (delta_a[i] + delta_b[i])
+    for i in range(len(design_object.delta_a)):
+        phi_value = design_object.delta_a[i] / (design_object.delta_a[i] + design_object.delta_b[i])
         phi.append(phi_value)
     return phi
 
+#
+# debug_design.delta_a = calculate_attached_parts_compliance(debug_design)
+# debug_design.delta_b = calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[0]
+# debug_design.phi = calculate_force_ratio()
 
-delta_a = calculate_attached_parts_compliance(debug_design)
-delta_b = calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[0]
-phi = calculate_force_ratio()
 
-
-print(f"Compliance of attached parts (delta_a): {delta_a}")
-print(f"Compliance of fastener (delta_b): {delta_b}")
-print(f"Force Ratio (phi): {phi}")
+# print(f"Compliance of attached parts (delta_a): {debug_design.delta_a}")
+# print(f"Compliance of fastener (delta_b): {debug_design.delta_b}")
+# print(f"Force Ratio (phi): {debug_design.phi}")
 
 def fastener_dimensions(design_object):
     fastener_diameter_L1= design_object.D2_list
@@ -121,17 +122,19 @@ def fastener_dimensions(design_object):
 
     return fastener_diameter_L1, fastener_diameter_L2, fastener_diameter_L3, fastener_diameter_Head
 
-print(f"fastener_diameter_shank_L1, fastener_diameter_shank_L2, fastener_diameter_shank_L3, fastener_diameter_Head: {fastener_dimensions(debug_design)}")
-print(f"L_h_sub, L_eng_sub, L_n_sub : {calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[1],calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[2],calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[2]}")
+# print(f"fastener_diameter_shank_L1, fastener_diameter_shank_L2, fastener_diameter_shank_L3, fastener_diameter_Head: {fastener_dimensions(debug_design)}")
+# print(f"L_h_sub, L_eng_sub, L_n_sub : {calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[1],calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[2],calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[2]}")
 
 def fastener_length_check(design_object):
     if np.sum(design_object.L) > design_object.t2 + design_object.t3 - 1 and np.sum(design_object.L) < design_object.t2 + design_object.t3 + 1 and design_object.L[0] == design_object.L[-1]:
         L_shank_1_2_3 = design_object.L
-    else: print("Error, the length of the shank does not match the thickness of the plate.")
+    else:
+        print("Error, the length of the shank does not match the thickness of the plate.")
+        return "Error, the length of the shank does not match the thickness of the plate."
 
     return L_shank_1_2_3
-
-print(f"L_shank_1_2_3:{fastener_length_check(debug_design)}")
+#
+# print(f"L_shank_1_2_3:{fastener_length_check(debug_design)}")
 
 def print_material_info(material_name):
     for material in materials:
@@ -147,4 +150,18 @@ def print_material_info(material_name):
     # If the material name is not found
     print(f"Material '{material_name}' not found.")
 
-print_material_info(selected_material_fastener)
+# print_material_info(selected_material_fastener)
+
+selected_material_fastener = "Titanium (Grade 5)"
+debug_design.L = [debug_design.t2+debug_design.t3 for i in range(len(debug_design.D2_list))]
+debug_design.D = debug_design.D2_list
+debug_design.Ea = get_youngs_modulus("Aluminium 7075") * 10 ** 9
+debug_design.L_h_sub_type = "Hexagon head"
+debug_design.L_eng_sub_type = "Nut-Tightened"
+debug_design.Eb = get_youngs_modulus(selected_material_fastener) * 10 ** 9
+debug_design.En = get_youngs_modulus(selected_material_fastener) * 10 ** 9
+debug_design.delta_a = calculate_attached_parts_compliance(debug_design)
+debug_design.delta_b = calculate_fastener_compliance(debug_design.L_h_sub_type, debug_design.L_eng_sub_type, debug_design)[0]
+debug_design.phi = calculate_force_ratio(debug_design)
+debug_design.fastener_dimensions = fastener_dimensions(debug_design)
+debug_design.L_shank = fastener_length_check(debug_design)
