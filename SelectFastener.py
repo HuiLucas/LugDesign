@@ -26,7 +26,7 @@ def get_youngs_modulus_lug(material_name):
 # debug_design.Eb = get_youngs_modulus(selected_material_fastener) * 10 ** 9
 # debug_design.En = get_youngs_modulus(selected_material_fastener) * 10 ** 9
 # debug_design.L = [1, 2,2, 1]  # shank length
-# debug_design.D = [10, 5, 9, 8]  # shank diameter
+# debug_design.D = [10, 5, 9, 8]  # shank diamete
 
 ### Im gonna try to redo a bit of the code.
 fastener_debug = DesignClass.FastenerType("316 Stainless Steel","Hexagonal","Nut-Tightened")
