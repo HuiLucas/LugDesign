@@ -3,64 +3,75 @@
 # as well as the index i that corresponds to the hole that this advice applies to. Only one advice about one hole needs to be returned
 # at a time; the function can be run again to get advices for the other holes.
 
-
-
 # This software component will check the given input design for Pull Through Failure.
 import DesignClass
 import numpy as np
 
-debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=0.2, t3=0.2, D1=10, w=80, material="metal", n_fast=4, \
-                                            length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(10, 100), (80, 10), (100, 10), (30, 100)], \
-                                            D2_list=[10, 6, 6, 10], yieldstrength=83,shearstrength=550,N_lugs=1,N_Flanges=2)
+debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=0.2, t3=0.2, D1=10, w=50, material="metal", n_fast=4,
+                                            length=200, offset=20, flange_height=80, bottomplatewidth=90,
+                                            hole_coordinate_list=[(10, 10), (10, 80), (190, 10), (190, 80)],
+                                            D2_list=[10, 10, 10, 10], yieldstrength=83,shearstrength=550,N_lugs=1,N_Flanges=2)
 debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
-def calculate_centroid1(design_object): #calculates centroid of fasteners
-    np_D2_list = np.array(design_object.D2_list)
-    np_hole_coordinate_list = np.array(design_object.hole_coordinate_list)
-    holes_area = np.pi * 0.25 * np_D2_list ** 2
-    weighted_sum_z = np.sum(np_hole_coordinate_list[: , 1]* holes_area)
-    weighted_sum_x = np.sum(np_hole_coordinate_list[:, 0] * holes_area)
-    centroid_x = weighted_sum_x / np.sum(holes_area)
-    centroid_z = weighted_sum_z / np.sum(holes_area)
-    return (centroid_x,centroid_z)
 
-def fast_pull_force(design_object, load_object):  #Calculates the total force on each fastener (counting two components, firstly the
-    # direct force from the y-direction and also the extra force (either in tension or compression) due to the distance
-    # between the respective fastener and the c.g. of the fasteners)
 
-    n_fast=len(design_object.hole_coordinate_list)
-    F_y = load_object.F_y #433.60
-    M_x = load_object.M_x #100000#817.34
-    Sum_A_r2 = 0
-    F_yi = []
-    centroid=calculate_centroid1(design_object)
-    for i in range (len(design_object.hole_coordinate_list)):
-        r_i=design_object.hole_coordinate_list[i][1]-centroid[1]
-        Sum_A_r2+=(np.pi*0.25*design_object.D2_list[i]**2)*(r_i**2)  #in mm^4
-    for i in range (len(design_object.hole_coordinate_list)):
-        r_i = design_object.hole_coordinate_list[i][1] - centroid[1]
-        F_yi.append((F_y/n_fast)+((M_x*1000)*r_i*np.pi*0.25*design_object.D2_list[i]**(2))/(Sum_A_r2))
-    return F_yi
-
-def check_pullthrough(design_object, load_object2): #checks pullout shear, if smaller than max we can decrease thickness,
+def check_pullthrough(design_object, load_object): #checks pullout shear, if smaller than max we can decrease thickness,
     #if bigger we have to increase it, the function returns values of the Dinner for wich shear is bigger than shearmax
     #Dfo is the outer diameter of the bolt.
-    Fyi=fast_pull_force(design_object, load_object2)
-    #print(Fyi)
+    n_fast = len(design_object.D2_list)
+    F_x = load_object.F_x
+    F_y = load_object.F_y  # 433.60
+    F_z = load_object.F_z
+    M_x = load_object.M_x + F_z * 0.001 * (design_object.flange_height - design_object.bottomplatewidth / 2)  # M_x(817.34) plus moment from F_z
+    M_z = F_x * 0.001 * (design_object.flange_height - design_object.w / 2)
+    Sum_A_rz2 = 0
+    Sum_A_rx2 = 0
+    F_yi = []
+    F_y_Mx = []
+    F_y_Mz = []
+    F_y_load = F_y / n_fast
+    # just direct load F_y:
+    for i in range(len(design_object.D2_list)):
+        F_yi.append(F_y_load)
+    # contribution from M_x:
+    for i in range(len(design_object.D2_list)):
+        rz_i = design_object.hole_coordinate_list[i][1] - design_object.bottomplatewidth/2
+        Sum_A_rz2 += (np.pi * 0.25 * design_object.D2_list[i] ** 2) * (rz_i ** 2)  # in mm^4
+    for i in range(len(design_object.D2_list)):
+        rz_i = design_object.hole_coordinate_list[i][1] - design_object.bottomplatewidth/2
+        F_y_Mx.append((M_x * 1000 * rz_i * np.pi * 0.25 * design_object.D2_list[i] ** 2) / Sum_A_rz2)
+    # contribution from M_z:
+    for i in range(len(design_object.D2_list)):
+        rx_i = design_object.hole_coordinate_list[i][0] - design_object.length/2
+        Sum_A_rx2 += (np.pi * 0.25 * design_object.D2_list[i] ** 2) * (rx_i ** 2)  # in mm^4
+    for i in range(len(design_object.D2_list)):
+        rx_i = design_object.hole_coordinate_list[i][0] - design_object.length/2
+        F_y_Mz.append((M_z * 1000 * rx_i * np.pi * 0.25 * design_object.D2_list[i] ** 2) / Sum_A_rx2)
+    # adding all three components:
+    for i in range(len(design_object.D2_list)):
+        F_yi[i] += F_y_Mx[i] + F_y_Mz[i]
+
+    # checking for failure:
     for i in range(len(design_object.D2_list)):
         Dfi = design_object.D2_list[i]
         Dfo = 1.8 * Dfi
-        shear = Fyi[i] / (np.pi * (Dfo/1000) * ((design_object.t2)/1000))
-        shear2 = Fyi[i] / (np.pi * (Dfo / 1000) * ((design_object.t3) / 1000))
-        sigma_y = Fyi[i]/(np.pi *(1/4) * ((Dfo/1000)**2-(Dfi/1000)**2))
-        shearmax = design_object.shearstrength*10**(6) #np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
-        if not shear < shearmax:
-            return [False , "increase_thickness"]
+        shear = F_yi[i] / (np.pi * (Dfo/1000) * (design_object.t2/1000))
+        shear2 = F_yi[i] / (np.pi * (Dfo / 1000) * (design_object.t3 / 1000))
+        sigma_y = F_yi[i]/(np.pi / 4 * ((Dfo/1000)**2-(Dfi/1000)**2))
+        shearmax = design_object.shearstrength*10**6 #np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
+
+        if not abs(shear) < abs(shearmax):
+            if abs(F_y_Mx[i]) > abs(F_y_Mz[i]):
+                if design_object.hole_coordinate_list[i][1] < design_object.bottomplatewidth/2:
+                    return [False, "decrease z", i]
+                else:
+                    return [False, "increase z", i]
+            else:
+                return [False, "increase t2"]
         if not shear2 < shearmax:
-            return [False, "increase_t3"]
+            return [False, "increase t3"]
     return [True]
 
 print(check_pullthrough(debug_design_1, debug_loads))
 
-# diameter head and shank diameter ratio is 1.8,,
+# diameter head and shank diameter ratio is 1.8
 #print(calculate_centroid(debug_design_1),check_pull_through(debug_design_1) )
