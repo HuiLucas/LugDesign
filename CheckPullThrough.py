@@ -15,8 +15,7 @@ debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
 
 def check_pullthrough(design_object, load_object): #checks pullout shear, if smaller than max we can decrease thickness,
-    #if bigger we have to increase it, the function returns values of the Dinner for wich shear is bigger than shearmax
-    #Dfo is the outer diameter of the bolt.
+
     n_fast = len(design_object.D2_list)
     F_x = load_object.F_x
     F_y = load_object.F_y  # 433.60
