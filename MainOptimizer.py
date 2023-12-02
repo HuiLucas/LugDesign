@@ -52,9 +52,50 @@ while check2 == False and counter2 < 500:
     counter2 += 1
 print(check2, counter2, out1.t2)
 
-# check3 = thermal check, thermal_loads = from thermal check
-# checklist = [check1, check2, check3]
-# while not checklist == [True, True, True]:
+
+
+
+checklist = [False, False]
+
+# checklist = [check1, check2]
+counter3 = 0
+while not checklist == [True, True] and counter3<100:
+    SelectFastener.select_fastener(out1)
+    thermal_loads = CheckThermalStress.thermal_stress_calculation(out1, 150, -90, 15, out1.phi,
+                                                                  InputVariables.materials_fasteners,
+                                                                  InputVariables.materials_lug,
+                                                                  material_fastener='Aluminium 7075',
+                                                                  material_wall=out1.material)
+    check1 = False
+    if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+        check1 = True
+    counter1 = 0
+    print(check1, counter1, out1.t2)
+    while check1 == False and counter1 < 500:
+        out1.t2 += 0.1
+        if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+            check1 = True
+        counter1 += 1
+    print(check1, counter1, out1.t2)
+    # check2 = checkpullthrough, follow advice from result
+
+    check2 = False
+    counter2 = 0
+    print(check2, counter2, out1.t2)
+    if not CheckPullThrough.check_pullthrough(out1, loads_with_SF) == [False, "increase_thickness"]:
+        check2 = True
+    print(check2, counter2, out1.t2)
+    while check2 == False and counter2 < 500:
+        out1.t2 += 0.1
+        if not CheckPullThrough.check_pullthrough(out1, loads_with_SF) == [False, "increase_thickness"]:
+            print("now")
+            check2 = True
+        counter2 += 1
+    print(check2, counter2, out1.t2)
+    checklist = [check1, check2]
+    counter3 += 1
+
+# while not checklist == [True, True]:
 # check1 = checkbearing with thermal_loads, follow advice
 # check2 = checkpullthrough, follow advice
 # check3 = thermal check, thermal_loads = result from thermal check
