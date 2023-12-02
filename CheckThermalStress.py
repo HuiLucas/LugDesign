@@ -48,5 +48,5 @@ def thermal_stress_calculation(design_object, upper_temp , lower_temp, ref_temp 
         return thermal_force_upper
 
 print(InputVariables.materials_fasteners)
-print(thermal_stress_calculation(debug_design_2,150,-90,15,[0.04,0.04,0.04,0.04],InputVariables.materials_fasteners, InputVariables.materials_lug ,'Aluminium 7075','2014-T6(DF-L)'))
+print("this", thermal_stress_calculation(debug_design_2,150,-90,15,[0.04,0.04,0.04,0.04],InputVariables.materials_fasteners, InputVariables.materials_lug ,'Aluminium 7075','2014-T6(DF-L)'))
 

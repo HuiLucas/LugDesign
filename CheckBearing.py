@@ -6,7 +6,7 @@
 
 import DesignClass as dc
 import numpy as np
-debug_design_2 = dc.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=40, material="metal", n_fast=4, \
+debug_design_2 = dc.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=40, material="metal", n_fast=4, \
                                             length=80, offset=20,flange_height=80, \
                                             hole_coordinate_list=[(20, 10), (20, 30), (60, 10), (60, 30)], \
                                            D2_list=[6, 6, 6, 6], yieldstrength=83,N_lugs=1,N_Flanges=2)
@@ -110,5 +110,24 @@ def check_bearing_stress(design_object, load_object2,thermal_force):
         return "Bearing Stress Check Failed, increase the thickness of the backplate "
 
 print(check_bearing_stress(debug_design_2, debug_loads,[1533.2328,    383.3082,   1241.918568,  981.268992]))
-
-
+#
+# print(debug_design_2.t2)
+# check1 = False
+# print(check_bearing_stress(debug_design_2, debug_loads, [0, 0, 0,
+#                                                                0]))
+# if not check_bearing_stress(debug_design_2, debug_loads, [0, 0, 0,
+#                                                                0]) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+#     check1 = True
+# counter1 = 0
+# print(check1)
+# while check1 == False and counter1 < 50:
+#     debug_design_2.t2 += 0.2
+#     if not check_bearing_stress(debug_design_2, debug_loads,[0,0,0,0]) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+#         check1=True
+#     else:
+#         print("gonna increase")
+#     counter1 += 1
+#
+# print(debug_design_2.t2, counter1)
+#
+#
