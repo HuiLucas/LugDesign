@@ -7,9 +7,9 @@
 import DesignClass
 import numpy as np
 
-debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=0.2, t3=0.5, D1=10, w=50, material="metal", n_fast=4,
-                                            length=100, offset=20, flange_height=60, bottomplatewidth=160,
-                                            hole_coordinate_list=[(10, 10), (10, 150), (90, 10), (90, 150)],
+debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=0.2, t3=0.2, D1=10, w=50, material="metal", n_fast=4,
+                                            length=100, offset=20, flange_height=60, bottomplatewidth=100,
+                                            hole_coordinate_list=[(10, 10), (10, 90), (90, 10), (90, 90)],
                                             D2_list=[5, 5, 5, 5], yieldstrength=83,shearstrength=550,N_lugs=1,N_Flanges=2)
 debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
