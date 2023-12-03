@@ -10,7 +10,7 @@ from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 
 
-def Visualize(design_object, move_y=0):
+def Visualize(design_object, index, move_y=0):
     for i in range(len(design_object.hole_coordinate_list)):
         a = design_object.hole_coordinate_list[i][0]
         design_object.hole_coordinate_list[i] = (
@@ -53,9 +53,9 @@ def Visualize(design_object, move_y=0):
     if design_object.N_lugs == 2:
         result = result.union(result.translate((0,move_y, 0)))
     # Export
-    cq.exporters.export(result, "result.stl")
-    cq.exporters.export(result.section(), "result.dxf")
-    cq.exporters.export(result, "result.step")
+    cq.exporters.export(result, f"result{index}.stl")
+    cq.exporters.export(result.section(), f"result{index}.dxf")
+    cq.exporters.export(result, f"result{index}.step")
 
     # Create a new plot
     figure = pyplot.figure()
@@ -81,10 +81,10 @@ def Visualize(design_object, move_y=0):
     # Show the plot to the screen
     pyplot.show()
 
-def Visualize2(design_object):
+def Visualize2(design_object, index):
     #Visualize(design_object)
     if design_object.N_lugs == 2:
-        Visualize(design_object, move_y=design_object.Dist_between_lugs)
+        Visualize(design_object,index=index, move_y=design_object.Dist_between_lugs)
 
 # debug_design4 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
 #                                             length=200, offset=20,flange_height=80, \

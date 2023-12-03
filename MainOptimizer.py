@@ -7,7 +7,11 @@ import CheckBearing, CheckThermalStress, CheckPullThrough, GlobalLoadsCalculator
 import numpy as np
 import SelectFastenerConfiguration
 
+# TBD
 #!!!!!!!!!!!!! For CheckPullThrough: shearstrength is now set for one material, but needs to be done for other materials as well
+#!!!!!!!!!!!!! optimize dist_between_lugs (is now set at the beginning, and never changed).
+# !!!!!!!!!!! Optimize (?) D2holes. Is now set at the beginning, and does not change troughout the process. However, it was
+# chosen to change the thickness t2 instead of the diameters of the holes, but maybe it is still possible to do both?
 
 initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
@@ -19,94 +23,32 @@ else:
     initial_design.offset = (initial_design.length - initial_design.t1)/2
 loads_with_SF = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
-# make for loop to go through every material
-out1 = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVariables.Material, \
+fastener_array =[]
+design_array2 = []
+design_array = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVariables.Material, \
                                                                  InputVariables.sigma_yield,InputVariables.Density,\
-                                                                 initial_design, loads_with_SF, False)[0]
-print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
+                                                                 initial_design, loads_with_SF, False)
+for designindex in range(len(design_array)):
+    out1 = design_array[designindex]
+    print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
 
 
-#check1 = checkbearing without thermal loads, follow advice from result
+    #check1 = checkbearing without thermal loads, follow advice from result
 
-check1 = False
-if not CheckBearing.check_bearing_stress(out1, loads_with_SF, [0, 0, 0,
-                                                               0]) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
-    check1 = True
-counter1 = 0
-print(check1, counter1, out1.t2)
-while check1 == False and counter1 < 500:
-    out1.t2 += 0.1
-    if not CheckBearing.check_bearing_stress(out1, loads_with_SF,[0,0,0,0]) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
-        check1=True
-    counter1 +=1
-print(check1, counter1, out1.t2)
-#check2 = checkpullthrough, follow advice from result
-
-check2 = False
-counter2 = 0
-print(check2, counter2, out1.t2)
-if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[0] == True:
-    check2 = True
-print(check2, counter2, out1.t2)
-while check2 == False and counter2 < 500:
-    #print(out1.hole_coordinate_list)
-    print(CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1])
-    if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease z":
-        for ix in range(len(out1.hole_coordinate_list)):
-            out1.hole_coordinate_list[ix] = (
-                out1.hole_coordinate_list[ix][0],
-                0.5 * out1.bottomplatewidth + (out1.hole_coordinate_list[ix][1] - 0.5 * out1.bottomplatewidth) * 0.98)
-    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase z":
-        for ix in range(len(out1.hole_coordinate_list)):
-            out1.hole_coordinate_list[ix] = (
-                out1.hole_coordinate_list[ix][0],
-                0.5 * out1.bottomplatewidth + (out1.hole_coordinate_list[ix][1] - 0.5 * out1.bottomplatewidth) * 1.02)
-    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase x":
-        for ix in range(len(out1.hole_coordinate_list)):
-            out1.hole_coordinate_list[ix] = (
-                0.5 * out1.length + (out1.hole_coordinate_list[ix][0] - 0.5 * out1.length) * 1.02,
-                out1.hole_coordinate_list[ix][1])
-    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease x":
-        for ix in range(len(out1.hole_coordinate_list)):
-            out1.hole_coordinate_list[ix] = (
-                0.5 * out1.length + (out1.hole_coordinate_list[ix][0] - 0.5 * out1.length) * 0.98,
-                out1.hole_coordinate_list[ix][1])
-    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t2":
-        out1.t2 += 0.1
-    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t3":
-        out1.t3 += 0.1
-    else:
-        check2 = True
-
-    counter2 += 1
-print(check2, counter2, out1.t2)
-
-
-
-
-checklist = [False, False]
-
-# checklist = [check1, check2]
-counter3 = 0
-while not checklist == [True, True] and counter3<100:
-    fasteners = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
-    philist = SelectFastener.calculate_force_ratio(fasteners, out1,out1.material,"7075-T6(DF-LT)")[0]
-    thermal_loads = CheckThermalStress.thermal_stress_calculation(out1, 150, -90, 15, philist
-                                                                  ,material_fastener=fasteners.material,
-                                                                  material_plate=out1.material)[0]
     check1 = False
-    if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+    if not CheckBearing.check_bearing_stress(out1, loads_with_SF, [0, 0, 0,
+                                                                   0]) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
         check1 = True
     counter1 = 0
     print(check1, counter1, out1.t2)
     while check1 == False and counter1 < 500:
         out1.t2 += 0.1
-        if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
-            check1 = True
-        counter1 += 1
+        if not CheckBearing.check_bearing_stress(out1, loads_with_SF,[0,0,0,0]) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+            check1=True
+        counter1 +=1
     print(check1, counter1, out1.t2)
+    #check2 = checkpullthrough, follow advice from result
 
-    # check2 = checkpullthrough, follow advice from result
     check2 = False
     counter2 = 0
     print(check2, counter2, out1.t2)
@@ -114,22 +56,28 @@ while not checklist == [True, True] and counter3<100:
         check2 = True
     print(check2, counter2, out1.t2)
     while check2 == False and counter2 < 500:
+        #print(out1.hole_coordinate_list)
+        print(CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1])
         if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease z":
             for ix in range(len(out1.hole_coordinate_list)):
                 out1.hole_coordinate_list[ix] = (
-                out1.hole_coordinate_list[ix][0], 0.5*out1.bottomplatewidth+(out1.hole_coordinate_list[ix][1] -0.5*out1.bottomplatewidth)* 0.98)
+                    out1.hole_coordinate_list[ix][0],
+                    0.5 * out1.bottomplatewidth + (out1.hole_coordinate_list[ix][1] - 0.5 * out1.bottomplatewidth) * 0.98)
         elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase z":
             for ix in range(len(out1.hole_coordinate_list)):
                 out1.hole_coordinate_list[ix] = (
-                out1.hole_coordinate_list[ix][0],0.5*out1.bottomplatewidth+(out1.hole_coordinate_list[ix][1] -0.5*out1.bottomplatewidth)* 1.02)
+                    out1.hole_coordinate_list[ix][0],
+                    0.5 * out1.bottomplatewidth + (out1.hole_coordinate_list[ix][1] - 0.5 * out1.bottomplatewidth) * 1.02)
         elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase x":
             for ix in range(len(out1.hole_coordinate_list)):
                 out1.hole_coordinate_list[ix] = (
-                0.5*out1.length + (out1.hole_coordinate_list[ix][0]-0.5*out1.length) * 1.02, out1.hole_coordinate_list[ix][1])
+                    0.5 * out1.length + (out1.hole_coordinate_list[ix][0] - 0.5 * out1.length) * 1.02,
+                    out1.hole_coordinate_list[ix][1])
         elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease x":
             for ix in range(len(out1.hole_coordinate_list)):
                 out1.hole_coordinate_list[ix] = (
-                0.5*out1.length + (out1.hole_coordinate_list[ix][0]-0.5*out1.length) * 0.98, out1.hole_coordinate_list[ix][1])
+                    0.5 * out1.length + (out1.hole_coordinate_list[ix][0] - 0.5 * out1.length) * 0.98,
+                    out1.hole_coordinate_list[ix][1])
         elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t2":
             out1.t2 += 0.1
         elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t3":
@@ -139,32 +87,98 @@ while not checklist == [True, True] and counter3<100:
 
         counter2 += 1
     print(check2, counter2, out1.t2)
-    checklist = [check1, check2]
-    counter3 += 1
 
 
 
-print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs, out1.bottomplatewidth)
-print(out1.hole_coordinate_list)
-#PostProcessorAndVisualizer.Visualize2(out1)
-changez = out1.bottomplatewidth - out1.w
-out1.bottomplatewidth = out1.w
-for j in range(len(out1.hole_coordinate_list)):
-    deltaZ = changez*0.5
-    out1.hole_coordinate_list[j] = (out1.hole_coordinate_list[j][0], out1.hole_coordinate_list[j][1]+deltaZ)
-#PostProcessorAndVisualizer.Visualize2(out1)
-print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs, out1.bottomplatewidth)
-print("this", out1.hole_coordinate_list)
-out1 = SelectFastenerConfiguration.Optimize_holes(out1, False)
+
+    checklist = [False, False]
+
+    # checklist = [check1, check2]
+    counter3 = 0
+    while not checklist == [True, True] and counter3<100:
+        out1.fasteners = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
+        philist = SelectFastener.calculate_force_ratio(out1.fasteners, out1,out1.material,"7075-T6(DF-LT)")[0]
+        thermal_loads = CheckThermalStress.thermal_stress_calculation(out1, 150, -90, 15, philist
+                                                                      ,material_fastener=out1.fasteners.material,
+                                                                      material_plate=out1.material)[0]
+        check1 = False
+        if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+            check1 = True
+        counter1 = 0
+        print(check1, counter1, out1.t2)
+        while check1 == False and counter1 < 500:
+            out1.t2 += 0.1
+            if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+                check1 = True
+            counter1 += 1
+        print(check1, counter1, out1.t2)
+
+        # check2 = checkpullthrough, follow advice from result
+        check2 = False
+        counter2 = 0
+        print(check2, counter2, out1.t2)
+        if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[0] == True:
+            check2 = True
+        print(check2, counter2, out1.t2)
+        while check2 == False and counter2 < 500:
+            if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease z":
+                for ix in range(len(out1.hole_coordinate_list)):
+                    out1.hole_coordinate_list[ix] = (
+                    out1.hole_coordinate_list[ix][0], 0.5*out1.bottomplatewidth+(out1.hole_coordinate_list[ix][1] -0.5*out1.bottomplatewidth)* 0.98)
+            elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase z":
+                for ix in range(len(out1.hole_coordinate_list)):
+                    out1.hole_coordinate_list[ix] = (
+                    out1.hole_coordinate_list[ix][0],0.5*out1.bottomplatewidth+(out1.hole_coordinate_list[ix][1] -0.5*out1.bottomplatewidth)* 1.02)
+            elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase x":
+                for ix in range(len(out1.hole_coordinate_list)):
+                    out1.hole_coordinate_list[ix] = (
+                    0.5*out1.length + (out1.hole_coordinate_list[ix][0]-0.5*out1.length) * 1.02, out1.hole_coordinate_list[ix][1])
+            elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease x":
+                for ix in range(len(out1.hole_coordinate_list)):
+                    out1.hole_coordinate_list[ix] = (
+                    0.5*out1.length + (out1.hole_coordinate_list[ix][0]-0.5*out1.length) * 0.98, out1.hole_coordinate_list[ix][1])
+            elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t2":
+                out1.t2 += 0.1
+            elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t3":
+                out1.t3 += 0.1
+            else:
+                check2 = True
+
+            counter2 += 1
+        print(check2, counter2, out1.t2)
+        checklist = [check1, check2]
+        counter3 += 1
 
 
 
-#PostProcessorAndVisualizer.Visualize(initial_design)
-print(out1.hole_coordinate_list)
-PostProcessorAndVisualizer.Visualize2(out1)
+    print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs, out1.bottomplatewidth)
+    print(out1.hole_coordinate_list)
+    #PostProcessorAndVisualizer.Visualize2(out1)
+    changez = out1.bottomplatewidth - out1.w
+    out1.bottomplatewidth = out1.w
+    for j in range(len(out1.hole_coordinate_list)):
+        deltaZ = changez*0.5
+        out1.hole_coordinate_list[j] = (out1.hole_coordinate_list[j][0], out1.hole_coordinate_list[j][1]+deltaZ)
+    #PostProcessorAndVisualizer.Visualize2(out1)
+    print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs, out1.bottomplatewidth)
+    print("this", out1.hole_coordinate_list)
+    out1 = SelectFastenerConfiguration.Optimize_holes(out1, False)
 
-print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
-print(checklist)
+
+
+    #PostProcessorAndVisualizer.Visualize(initial_design)
+    print(out1.hole_coordinate_list)
+    PostProcessorAndVisualizer.Visualize2(out1, designindex)
+
+    print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
+    out1.checklist = checklist
+    print(checklist)
+    design_array2.append(out1)
+    print(designindex)
 
 # trade-off stuff
-
+for design in design_array2:
+    print(f"{design.material}")
+    print(f"checklist: {design.checklist}, h: {design.h}, t1: {design.t1}, t2: {design.t2}, t3: {design.t3}, D1: {design.D1}, w: {design.w}, length: {design.length}, offset: {design.offset}, flange height: {design.flange_height}, yieldstrength: {design.yieldstrength}, material: {design.material}, Dist_between_lugs: {design.Dist_between_lugs}, N_lugs: {design.N_lugs}, N_Flanges: {design.N_Flanges}, hole coords: {design.hole_coordinate_list}, n_fast: {design.n_fast}, D2holes: {design.D2_list}, bottomplatewidth: {design.bottomplatewidth}, shearstrength: {design.shearstrength}")
+    print(f"nut type: {design.fasteners.nut_type}, hole type: {design.fasteners.hole_type}, material: {design.fasteners.material}")
+    print("")

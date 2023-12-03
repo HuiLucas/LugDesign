@@ -15,6 +15,7 @@ class DesignInstance:
         self.offset = offset
         self.flange_height = flange_height
         self.hole_coordinate_list = hole_coordinate_list
+        self.n_fast = len(hole_coordinate_list)
         self.D2_list=D2_list
         self.yieldstrength=yieldstrength
         self.N_lugs = N_lugs
