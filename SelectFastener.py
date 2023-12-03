@@ -101,6 +101,22 @@ def calculate_force_ratio(FastenerType, DesignInstance , plate_material , wall_m
 
 print(calculate_force_ratio(fastener_debug,debug_design,"7075-T6(DF-LT)","7075-T6(DF-LT)"))
 
+def print_material_info(material_name):
+    for material in InputVariables.materials_fasteners:
+        if material["Material"] == material_name:
+            print(f"Material: {material['Material']}")
+            print(f"Young's Modulus (GPa): {material['Youngs Modulus (GPa)']}")
+            print(f"Density (kg/m^3): {material['Density (kg/m^3)']}")
+            print(f"Thermal Expansion (10^-6)/K: {material['Thermal Expansion (10^-6)/K']}")
+            print(f"Ultimate Tensile Strength (MPa): {material['Ultimate Tensile Strength (MPa)']}")
+            print(f"Elastic Limit(Mpa): {material['Elastic Limit(Mpa)']}")
+            print(f"Resistance Factors: {material['Resistance Factors']}")
+            return
+    # If the material name is not found
+    print(f"Material '{material_name}' not found.")
+print_material_info(material_name="Titanium (Grade 5)")
+
+
 
 """ def calculate_attached_parts_compliance(design_object):
     delta_a = []
