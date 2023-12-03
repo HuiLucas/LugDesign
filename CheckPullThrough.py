@@ -7,10 +7,10 @@
 import DesignClass
 import numpy as np
 
-debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=0.2, t3=0.2, D1=10, w=50, material="metal", n_fast=4,
-                                            length=200, offset=20, flange_height=80, bottomplatewidth=90,
-                                            hole_coordinate_list=[(10, 10), (10, 80), (190, 10), (190, 80)],
-                                            D2_list=[10, 10, 10, 10], yieldstrength=83,shearstrength=550,N_lugs=1,N_Flanges=2)
+debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=0.2, t3=0.5, D1=10, w=50, material="metal", n_fast=4,
+                                            length=100, offset=20, flange_height=60, bottomplatewidth=160,
+                                            hole_coordinate_list=[(10, 10), (10, 150), (90, 10), (90, 150)],
+                                            D2_list=[5, 5, 5, 5], yieldstrength=83,shearstrength=550,N_lugs=1,N_Flanges=2)
 debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
 
@@ -59,13 +59,21 @@ def check_pullthrough(design_object, load_object): #checks pullout shear, if sma
         shearmax = design_object.shearstrength*10**6 #np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
 
         if not abs(shear) < abs(shearmax):
-            if abs(F_y_Mx[i]) > abs(F_y_Mz[i]):
+            if (F_x*design_object.flange_height/(M_x+F_z*design_object.flange_height)) < design_object.hole_coordinate_list[i][0]/design_object.hole_coordinate_list[i][1]:
                 if design_object.hole_coordinate_list[i][1] < design_object.bottomplatewidth/2:
-                    return [False, "decrease z", i]
-                else:
+                    if  design_object.hole_coordinate_list[i][1] - 2 * design_object.D2_list[i] > 0:
+                        return [False, "decrease z", i]
+                if design_object.hole_coordinate_list[i][1] > design_object.bottomplatewidth/2:
                     return [False, "increase z", i]
-            else:
+            elif abs(F_y_Mx[i]) < abs(F_y_Mz[i]):
                 return [False, "increase t2"]
+            else:
+                if design_object.hole_coordinate_list[i][0] > design_object.length / 2:
+                    return [False, "increase x", i]
+                if design_object.hole_coordinate_list[i][0] < design_object.length / 2:
+                    if (design_object.hole_coordinate_list[i][0] + design_object.D2_list[i] / 2) < design_object.length/2 - design_object.h/2:
+                        if design_object.hole_coordinate_list[i][0] - 2 * design_object.D2_list[i] > 0:
+                            return [False, "decrease x", i]
         if not shear2 < shearmax:
             return [False, "increase t3"]
     return [True]
