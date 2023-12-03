@@ -7,11 +7,12 @@ import CheckBearing, CheckThermalStress, CheckPullThrough, GlobalLoadsCalculator
 import numpy as np
 import SelectFastenerConfiguration
 
-# TBD
-#!!!!!!!!!!!!! For CheckPullThrough: shearstrength is now set for one material, but needs to be done for other materials as well
-#!!!!!!!!!!!!! optimize dist_between_lugs (is now set at the beginning, and never changed).
-# !!!!!!!!!!! Optimize (?) D2holes. Is now set at the beginning, and does not change troughout the process. However, it was
+# !!!!!!!!!!!! TBD:
+# !!!!!!!!!!!! For CheckPullThrough: shearstrength is now set for one material, but needs to be done for other materials as well
+# !!!!!!!!!!!! optimize dist_between_lugs (is now set at the beginning, and never changed).
+# !!!!!!!!!!!! Optimize (?) D2_holes. Is now set at the beginning, and does not change troughout the process. However, it was
 # chosen to change the thickness t2 instead of the diameters of the holes, but maybe it is still possible to do both?
+# !!!!!!!!!!!! Check EVERYTHING, make sure no mistakes in calculations. Look for mistakes in the code. Confirm results by performing checks on the resulting designs by hand.
 
 initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
