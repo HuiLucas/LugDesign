@@ -1,5 +1,6 @@
 # This file will change the design based on the part checks. It will start from an initial design, then perform all
 # the checks as written in the other software components, and improve the design if possible with iterations.
+import copy
 
 import CheckBearing, CheckThermalStress, CheckPullThrough, GlobalLoadsCalculator, InputVariables, \
     PostProcessorAndVisualizer, SelectFastener, TradeOffComperator, \
@@ -14,11 +15,17 @@ import SelectFastenerConfiguration
 # chosen to change the thickness t2 instead of the diameters of the holes, but maybe it is still possible to do both?
 # !!!!!!!!!!!! Check EVERYTHING, make sure no mistakes in calculations. Look for mistakes in the code. Confirm results by performing checks on the resulting designs by hand.
 # !!!!!!!!!!!! Run with high_accuracy = True (once)
+# !!!!!!!!!!!! Finish comparison between materials (WP4.13)
 
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Do not change:
 initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
-                                            length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(70, 35), (70, 65), (130, 35), (130, 65)], \
+                                            length=10, offset=20,flange_height=80, \
+                                            hole_coordinate_list=[(3, 35), (3, 65), (7, 35), (7, 65)], \
                                            D2_list=[10, 10, 10, 10], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
+# ----------------------------------------------------------------------------------------------------------------------
+
 if initial_design.N_Flanges ==2:
     initial_design.offset = (initial_design.length - initial_design.t1 - initial_design.h)/2
 else:
@@ -32,7 +39,7 @@ design_array = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(
                                                                  initial_design, loads_with_SF, False)
 
 for designindex in range(len(design_array)):
-    out1 = design_array[designindex]
+    out1 = copy.deepcopy(design_array[designindex])
     print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
 
 
@@ -58,6 +65,7 @@ for designindex in range(len(design_array)):
     if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[0] == True:
         check2 = True
     print(check2, counter2, out1.t2)
+    print("here2", out1.hole_coordinate_list)
     while check2 == False and counter2 < 500:
         #print(out1.hole_coordinate_list)
         print(CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1])
@@ -115,6 +123,7 @@ for designindex in range(len(design_array)):
                 check1 = True
             counter1 += 1
         print(check1, counter1, out1.t2)
+        print("here", out1.hole_coordinate_list)
 
         # check2 = checkpullthrough, follow advice from result
         check2 = False
@@ -161,7 +170,7 @@ for designindex in range(len(design_array)):
     out1.bottomplatewidth = out1.w
     for j in range(len(out1.hole_coordinate_list)):
         deltaZ = changez*0.5
-        out1.hole_coordinate_list[j] = (out1.hole_coordinate_list[j][0], out1.hole_coordinate_list[j][1]+deltaZ)
+        out1.hole_coordinate_list[j] = (out1.hole_coordinate_list[j][0], out1.hole_coordinate_list[j][1]-deltaZ)
     #PostProcessorAndVisualizer.Visualize2(out1)
     print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs, out1.bottomplatewidth)
     print("this", out1.hole_coordinate_list)
@@ -171,17 +180,16 @@ for designindex in range(len(design_array)):
 
     #PostProcessorAndVisualizer.Visualize(initial_design)
     print(out1.hole_coordinate_list)
-    PostProcessorAndVisualizer.Visualize2(out1, designindex)
+    #PostProcessorAndVisualizer.Visualize2(out1, designindex)
 
     print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
     out1.checklist = checklist
     print(checklist)
     design_array2.append(out1)
     print(designindex)
+    print(out1.hole_coordinate_list)
 
+for designindex in range(len(design_array2)):
+    PostProcessorAndVisualizer.Visualize2(design_array2[designindex], designindex)
 # trade-off stuff
-for design in design_array2:
-    print(f"{design.material}")
-    print(f"checklist: {design.checklist}, h: {design.h}, t1: {design.t1}, t2: {design.t2}, t3: {design.t3}, D1: {design.D1}, w: {design.w}, length: {design.length}, offset: {design.offset}, flange height: {design.flange_height}, yieldstrength: {design.yieldstrength}, material: {design.material}, Dist_between_lugs: {design.Dist_between_lugs}, N_lugs: {design.N_lugs}, N_Flanges: {design.N_Flanges}, hole coords: {design.hole_coordinate_list}, n_fast: {design.n_fast}, D2holes: {design.D2_list}, bottomplatewidth: {design.bottomplatewidth}, shearstrength: {design.shearstrength}")
-    print(f"nut type: {design.fasteners.nut_type}, hole type: {design.fasteners.hole_type}, material: {design.fasteners.material}")
-    print("")
+TradeOffComperator.TradeOff(design_array2)

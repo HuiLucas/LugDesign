@@ -28,13 +28,16 @@ def fastener_spacing_check(design_object):
 
     #for loop checks wether the holes are within the margin of 2 * D2 from edges. For every hole
     for i in range(len(np_D2_list)):
-        if not np_hole_coordinate_list[i,0] > 2 * np_D2_list[i] or design_object.length - np_hole_coordinate_list[i,0] > 2 * np_D2_list[i]:
+        if np_hole_coordinate_list[i,0] <= 2 * np_D2_list[i] or design_object.length - np_hole_coordinate_list[i,0] <= 2 * np_D2_list[i]:
+            #print("LengthMarginErr")
             if np_hole_coordinate_list[i,0] - 2 * np_D2_list[i] <= 0:
                 #print(np_hole_coordinate_list[i,0], np_D2_list[i])
+                #print("LengthMarginErr1")
                 return False , i , np_hole_coordinate_list[i,0] - 2 * np_D2_list[i], "LengthMarginError"
             elif design_object.length - np_hole_coordinate_list[i,0] - 2 * np_D2_list[i] <=0:
+                #print("LengthMarginErr2")
                 return False , i , design_object.length - np_hole_coordinate_list[i,0]- 2 * np_D2_list[i] , "LengthMarginError"
-        if not np_hole_coordinate_list[i,1]  >= 2 * np_D2_list[i] or design_object.bottomplatewidth - np_hole_coordinate_list[i,0] >= 2 * np_D2_list[i]:
+        if np_hole_coordinate_list[i,1]  < 2 * np_D2_list[i] or design_object.bottomplatewidth - np_hole_coordinate_list[i,1] < 2 * np_D2_list[i]:
             if np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <= 0:
                 return False , i , np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] , "WidthMarginError"
             elif design_object.bottomplatewidth - np_hole_coordinate_list[i,1] - 2 * np_D2_list[i] <=0:
@@ -67,9 +70,10 @@ def Optimize_holes(design_object, recursive):
         #print(new_object.length)
         return Optimize_holes(new_object, True)
     elif fastener_spacing_check(new_object)[3] == "WidthMarginError" and new_object.bottomplatewidth < 400:
+        #print("WidthMarginError")
         new_object.bottomplatewidth += 1
         for i in range(len(new_object.hole_coordinate_list)):
-            new_object.hole_coordinate_list[i] = (new_object.hole_coordinate_list[i][0], new_object.hole_coordinate_list[i][1])
+            new_object.hole_coordinate_list[i] = (new_object.hole_coordinate_list[i][0], new_object.hole_coordinate_list[i][1]+0.5)
         #print(new_object.bottomplatewidth, new_object.hole_coordinate_list[0])
         #print(fastener_spacing_check(new_object))
         return Optimize_holes(new_object, True)
