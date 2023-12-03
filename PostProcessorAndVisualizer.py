@@ -82,7 +82,7 @@ def Visualize(design_object, move_y=0):
     pyplot.show()
 
 def Visualize2(design_object):
-    Visualize(design_object)
+    #Visualize(design_object)
     if design_object.N_lugs == 2:
         Visualize(design_object, move_y=design_object.Dist_between_lugs)
 
@@ -92,3 +92,9 @@ def Visualize2(design_object):
 #                                            D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=2,N_Flanges=1)
 # debug_design4.Dist_between_lugs = 300
 # Visualize2(debug_design4)
+
+# #debug_design4 = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=40, material="metal", n_fast=4, \
+#                                             length=80, offset=20,flange_height=80, \
+#                                             hole_coordinate_list=[(21, 20.5), (81, 20.5), (41, 20.5), (61, 20.5)], \
+#                                            D2_list=[6, 6, 6, 6], yieldstrength=83,N_lugs=2,N_Flanges=2, Dist_between_lugs=300)
+# #Visualize2(debug_design4)

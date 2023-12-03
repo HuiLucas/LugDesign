@@ -11,7 +11,7 @@ import SelectFastenerConfiguration
 
 initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(20, 10), (180, 30), (160, 20), (30, 30)], \
+                                            hole_coordinate_list=[(10, 10), (10, 10), (10, 10), (10, 10)], \
                                            D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=2,N_Flanges=2)
 loads_with_SF = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
@@ -60,12 +60,10 @@ checklist = [False, False]
 # checklist = [check1, check2]
 counter3 = 0
 while not checklist == [True, True] and counter3<100:
-    SelectFastener.select_fastener(out1)
-    thermal_loads = CheckThermalStress.thermal_stress_calculation(out1, 150, -90, 15, out1.phi,
-                                                                  InputVariables.materials_fasteners,
-                                                                  InputVariables.materials_lug,
-                                                                  material_fastener='Aluminium 7075',
-                                                                  material_wall=out1.material)
+    #SelectFastener.select_fastener(out1)
+    thermal_loads = CheckThermalStress.thermal_stress_calculation(out1, 150, -90, 15, [0.04,0.04,0.04,0.04] #out1.phi, #!!!!! when fastener is selected use this
+                                                                  ,material_fastener='Titanium (Grade 5)',
+                                                                  material_plate=out1.material)[0]
     check1 = False
     if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
         check1 = True
@@ -104,12 +102,13 @@ while not checklist == [True, True] and counter3<100:
 print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
 
 out1.bottomplatewidth = out1.w
-out2 = SelectFastenerConfiguration.Optimize_holes(out1, False) #strange behaviour
+out1 = SelectFastenerConfiguration.Optimize_holes(out1, False) #strange behaviour
 
 #selectfastener
 
 #PostProcessorAndVisualizer.Visualize(initial_design)
-PostProcessorAndVisualizer.Visualize2(out2)
+print(out1.hole_coordinate_list)
+PostProcessorAndVisualizer.Visualize2(out1)
 
 print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
 
