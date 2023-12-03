@@ -137,9 +137,9 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
     N_lugs = design_object.N_lugs
     N_Flanges = design_object.N_Flanges
     if high_accuracy == True:
-        [i_step, j_step, k_step,l_step, Material_List] = [20, 5, 20, 50, Material_In2]
+        [i_step, j_step, k_step,l_step, Material_List, tolerance] = [20, 5, 20, 50, Material_In2, 0.001]
     else:
-        [i_step, j_step, k_step, l_step, Material_List] = [40, 10, 40, 100, Material_In2[0:1]]
+        [i_step, j_step, k_step, l_step, Material_List, tolerance] = [40, 10, 40, 100, Material_In2[0:1],0.01]
     if design_object.Dist_between_lugs == 0:
         design_object.Dist_between_lugs = 0.5
         distance = design_object.Dist_between_lugs
@@ -266,7 +266,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
 
                         # Call the minimize function (Turning of display makes it WAY faster as printing takes a lot of memory)
                         result = minimize(objective_function, initial_guess, method=method, constraints=constraints,
-                                          options={'disp': False}, tol=0.01)
+                                          options={'disp': False}, tol=tolerance)
 
                         # Print the result
                         if result.success == True and 0.01 <= result.fun <= 0.9:
