@@ -144,10 +144,17 @@ while not checklist == [True, True] and counter3<100:
 
 
 
-print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
+print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs, out1.bottomplatewidth)
 print(out1.hole_coordinate_list)
 #PostProcessorAndVisualizer.Visualize2(out1)
+changez = out1.bottomplatewidth - out1.w
 out1.bottomplatewidth = out1.w
+for j in range(len(out1.hole_coordinate_list)):
+    deltaZ = changez*0.5
+    out1.hole_coordinate_list[j] = (out1.hole_coordinate_list[j][0], out1.hole_coordinate_list[j][1]+deltaZ)
+#PostProcessorAndVisualizer.Visualize2(out1)
+print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs, out1.bottomplatewidth)
+print("this", out1.hole_coordinate_list)
 out1 = SelectFastenerConfiguration.Optimize_holes(out1, False)
 
 
