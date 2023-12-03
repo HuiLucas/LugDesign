@@ -13,6 +13,7 @@ import SelectFastenerConfiguration
 # !!!!!!!!!!!! Optimize (?) D2_holes. Is now set at the beginning, and does not change troughout the process. However, it was
 # chosen to change the thickness t2 instead of the diameters of the holes, but maybe it is still possible to do both?
 # !!!!!!!!!!!! Check EVERYTHING, make sure no mistakes in calculations. Look for mistakes in the code. Confirm results by performing checks on the resulting designs by hand.
+# !!!!!!!!!!!! Run with high_accuracy = True (once)
 
 initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
@@ -29,6 +30,7 @@ design_array2 = []
 design_array = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVariables.Material, \
                                                                  InputVariables.sigma_yield,InputVariables.Density,\
                                                                  initial_design, loads_with_SF, False)
+
 for designindex in range(len(design_array)):
     out1 = design_array[designindex]
     print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
