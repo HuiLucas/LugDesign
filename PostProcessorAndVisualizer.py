@@ -8,13 +8,14 @@ import DesignClass
 from stl import mesh
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
-
+import copy
 
 def Visualize(design_object, index, move_y=0):
-    for i in range(len(design_object.hole_coordinate_list)):
-        a = design_object.hole_coordinate_list[i][0]
-        design_object.hole_coordinate_list[i] = (
-        design_object.hole_coordinate_list[i][1] - design_object.bottomplatewidth / 2, a - design_object.length / 2)
+    design_object.hole_coordinate_list2=copy.deepcopy(design_object.hole_coordinate_list)
+    for i in range(len(design_object.hole_coordinate_list2)):
+        a = design_object.hole_coordinate_list2[i][0]
+        design_object.hole_coordinate_list2[i] = (
+        design_object.hole_coordinate_list2[i][1] - design_object.bottomplatewidth / 2, a - design_object.length / 2)
         # make the base
     result = (
         cq.Workplane("XY")
@@ -22,7 +23,7 @@ def Visualize(design_object, index, move_y=0):
     )
 
     for i in range(len(design_object.D2_list)):
-        result = result.workplaneFromTagged("noholes").pushPoints(design_object.hole_coordinate_list[i:i + 1]).hole(
+        result = result.workplaneFromTagged("noholes").pushPoints(design_object.hole_coordinate_list2[i:i + 1]).hole(
             design_object.D2_list[i])
 
     if design_object.w <= design_object.flange_height:
@@ -85,6 +86,8 @@ def Visualize2(design_object, index):
     #Visualize(design_object)
     if design_object.N_lugs == 2:
         Visualize(design_object,index=index, move_y=design_object.Dist_between_lugs)
+    else:
+        Visualize(design_object, move_y=0)
 
 # debug_design4 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
 #                                             length=200, offset=20,flange_height=80, \
