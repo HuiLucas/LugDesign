@@ -75,8 +75,8 @@ while not checklist == [True, True] and counter3<100:
             check1 = True
         counter1 += 1
     print(check1, counter1, out1.t2)
-    # check2 = checkpullthrough, follow advice from result
 
+    # check2 = checkpullthrough, follow advice from result
     check2 = False
     counter2 = 0
     print(check2, counter2, out1.t2)
@@ -93,25 +93,21 @@ while not checklist == [True, True] and counter3<100:
     checklist = [check1, check2]
     counter3 += 1
 
-# while not checklist == [True, True]:
-# check1 = checkbearing with thermal_loads, follow advice
-# check2 = checkpullthrough, follow advice
-# check3 = thermal check, thermal_loads = result from thermal check
-# checklist =,[check1, check2,check3]
+
 
 print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
 
 out1.bottomplatewidth = out1.w
-out1 = SelectFastenerConfiguration.Optimize_holes(out1, False) #strange behaviour
+out1 = SelectFastenerConfiguration.Optimize_holes(out1, False)
 
-#selectfastener
+
 
 #PostProcessorAndVisualizer.Visualize(initial_design)
 print(out1.hole_coordinate_list)
 PostProcessorAndVisualizer.Visualize2(out1)
 
 print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
-
+print(checklist)
 
 # trade-off stuff
 

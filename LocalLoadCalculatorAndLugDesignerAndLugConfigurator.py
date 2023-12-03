@@ -165,7 +165,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
             e = i * 10 ** (-3)
             for j in range(1, 50, j_step):
                 t = j * 10 ** (-3)
-                print("Progress:",round((i/500+j/500)*100/1.062,1), "Material:", material, flush=True)
+                print(f"Progress: {round((i/500+j/500)*100/1.062,1)}% of Material: {material}", flush=True)
                 for k in range(10, 500, k_step):
                     D = k * 10 ** (-3)
                     for l in range(10, 900, l_step):
