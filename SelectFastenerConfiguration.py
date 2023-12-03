@@ -63,7 +63,7 @@ def Optimize_holes(design_object, recursive):
         #print("LengthMarginError")
         new_object.length += 1
         for i in range(len(new_object.hole_coordinate_list)):
-            new_object.hole_coordinate_list[i] = (new_object.hole_coordinate_list[i][0]+1, new_object.hole_coordinate_list[i][1])
+            new_object.hole_coordinate_list[i] = (new_object.hole_coordinate_list[i][0]+0.5, new_object.hole_coordinate_list[i][1])
         #print(new_object.length)
         return Optimize_holes(new_object, True)
     elif fastener_spacing_check(new_object)[3] == "WidthMarginError" and new_object.bottomplatewidth < 400:

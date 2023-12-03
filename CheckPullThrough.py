@@ -59,24 +59,44 @@ def check_pullthrough(design_object, load_object): #checks pullout shear, if sma
         shearmax = design_object.shearstrength*10**6 #np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
 
         if not abs(shear) < abs(shearmax):
-            if (F_x*design_object.flange_height/(M_x+F_z*design_object.flange_height)) < design_object.hole_coordinate_list[i][0]/design_object.hole_coordinate_list[i][1]:
-                if design_object.hole_coordinate_list[i][1] < design_object.bottomplatewidth/2:
-                    if  design_object.hole_coordinate_list[i][1] - 2 * design_object.D2_list[i] > 0:
-                        return [False, "decrease z", i]
-                if design_object.hole_coordinate_list[i][1] > design_object.bottomplatewidth/2:
-                    return [False, "increase z", i]
-            elif abs(F_y_Mx[i]) < abs(F_y_Mz[i]):
-                return [False, "increase t2"]
+            xmax = 0
+            xmin = design_object.length
+            for hole in design_object.hole_coordinate_list:
+                if hole[0] > xmax:
+                    xmax = hole[0]
+                if hole[0] < xmin:
+                    xmin = hole[0]
+            DeltaX = xmax-xmin
+            zmax = 0
+            zmin = design_object.bottomplatewidth
+            for hole in design_object.hole_coordinate_list:
+                if hole[1] > zmax:
+                    zmax = hole[1]
+                if hole[1] < zmin:
+                    zmin = hole[1]
+            DeltaZ = zmax - zmin
+            if abs(design_object.hole_coordinate_list[i][0]-0.5*design_object.length) < 0.5*design_object.h*(design_object.N_Flanges-1) * design_object.t1*design_object.N_Flanges*0.5:
+                return [False, "increase x", i]
+            if (F_x*design_object.flange_height/(M_x+F_z*design_object.flange_height)) < DeltaX/DeltaZ:
+                # if design_object.hole_coordinate_list[i][0] < design_object.bottomplatewidth/2:
+                #     if  design_object.hole_coordinate_list[i][1] - 2 * design_object.D2_list[i] > 0:
+                #         return [False, "decrease x", i]
+                # if design_object.hole_coordinate_list[i][1] > design_object.bottomplatewidth/2:
+                return [False, "increase z", i]
             else:
-                if design_object.hole_coordinate_list[i][0] > design_object.length / 2:
-                    return [False, "increase x", i]
-                if design_object.hole_coordinate_list[i][0] < design_object.length / 2:
-                    if (design_object.hole_coordinate_list[i][0] + design_object.D2_list[i] / 2) < design_object.length/2 - design_object.h/2:
-                        if design_object.hole_coordinate_list[i][0] - 2 * design_object.D2_list[i] > 0:
-                            return [False, "decrease x", i]
+                return [False, "increase x", i]
+            # elif abs(F_y_Mx[i]) < abs(F_y_Mz[i]):
+            #     return [False, "increase t2"]
+            # else:
+            #     if design_object.hole_coordinate_list[i][0] > design_object.length / 2:
+            #         return [False, "increase x", i]
+            #     if design_object.hole_coordinate_list[i][0] < design_object.length / 2:
+            #         if (design_object.hole_coordinate_list[i][0] + design_object.D2_list[i] / 2) < design_object.length/2 - design_object.h/2:
+            #             if design_object.hole_coordinate_list[i][0] - 2 * design_object.D2_list[i] > 0:
+            #                 return [False, "decrease x", i]
         if not shear2 < shearmax:
             return [False, "increase t3"]
-    return [True]
+    return [True, "do nothing"]
 
 print(check_pullthrough(debug_design_1, debug_loads))
 

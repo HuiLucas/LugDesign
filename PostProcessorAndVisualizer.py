@@ -40,7 +40,7 @@ def Visualize(design_object, move_y=0):
                                                                                                        -filletrad + design_object.t2 / 2).rect(
             design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
             design_object.D1/2).cutThruAll().translate(
-            (0, design_object.w / 2 - design_object.offset, 0)))
+            (0, (design_object.t1/2+design_object.h/2)*(design_object.N_Flanges-1), 0)))
     if design_object.N_Flanges == 2:
         result = result.union(
             cq.Workplane("XZ").box(design_object.w, design_object.flange_height + filletrad, design_object.t1,
@@ -49,7 +49,7 @@ def Visualize(design_object, move_y=0):
                                                                                                            -filletrad + design_object.t2 / 2).rect(
                 design_object.w, 2 * filletrad).cutThruAll().center(0, design_object.flange_height).circle(
                 design_object.D1/2).cutThruAll().translate(
-                (0, design_object.w / 2 - design_object.offset - design_object.h, 0)))
+                (0, -design_object.t1/2-design_object.h/2, 0)))
     if design_object.N_lugs == 2:
         result = result.union(result.translate((0,move_y, 0)))
     # Export

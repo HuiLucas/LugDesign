@@ -4,15 +4,19 @@
 import CheckBearing, CheckThermalStress, CheckPullThrough, GlobalLoadsCalculator, InputVariables, \
     PostProcessorAndVisualizer, SelectFastener, TradeOffComperator, \
     DesignClass, LocalLoadCalculatorAndLugDesignerAndLugConfigurator
-
+import numpy as np
 import SelectFastenerConfiguration
 
 #!!!!!!!!!!!!! For CheckPullThrough: shearstrength is now set for one material, but needs to be done for other materials as well
 
 initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=200, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(10, 10), (10, 10), (10, 10), (10, 10)], \
-                                           D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=2,N_Flanges=2)
+                                            hole_coordinate_list=[(70, 35), (70, 65), (130, 35), (130, 65)], \
+                                           D2_list=[10, 10, 10, 10], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
+if initial_design.N_Flanges ==2:
+    initial_design.offset = (initial_design.length - initial_design.t1 - initial_design.h)/2
+else:
+    initial_design.offset = (initial_design.length - initial_design.t1)/2
 loads_with_SF = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
 # make for loop to go through every material
@@ -41,14 +45,39 @@ print(check1, counter1, out1.t2)
 check2 = False
 counter2 = 0
 print(check2, counter2, out1.t2)
-if not CheckPullThrough.check_pullthrough(out1, loads_with_SF) == [False , "increase_thickness"]:
+if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[0] == True:
     check2 = True
 print(check2, counter2, out1.t2)
 while check2 == False and counter2 < 500:
-    out1.t2 += 0.1
-    if not CheckPullThrough.check_pullthrough(out1, loads_with_SF) == [False , "increase_thickness"]:
-        print("now")
+    #print(out1.hole_coordinate_list)
+    print(CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1])
+    if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease z":
+        for ix in range(len(out1.hole_coordinate_list)):
+            out1.hole_coordinate_list[ix] = (
+                out1.hole_coordinate_list[ix][0],
+                0.5 * out1.bottomplatewidth + (out1.hole_coordinate_list[ix][1] - 0.5 * out1.bottomplatewidth) * 0.98)
+    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase z":
+        for ix in range(len(out1.hole_coordinate_list)):
+            out1.hole_coordinate_list[ix] = (
+                out1.hole_coordinate_list[ix][0],
+                0.5 * out1.bottomplatewidth + (out1.hole_coordinate_list[ix][1] - 0.5 * out1.bottomplatewidth) * 1.02)
+    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase x":
+        for ix in range(len(out1.hole_coordinate_list)):
+            out1.hole_coordinate_list[ix] = (
+                0.5 * out1.length + (out1.hole_coordinate_list[ix][0] - 0.5 * out1.length) * 1.02,
+                out1.hole_coordinate_list[ix][1])
+    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease x":
+        for ix in range(len(out1.hole_coordinate_list)):
+            out1.hole_coordinate_list[ix] = (
+                0.5 * out1.length + (out1.hole_coordinate_list[ix][0] - 0.5 * out1.length) * 0.98,
+                out1.hole_coordinate_list[ix][1])
+    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t2":
+        out1.t2 += 0.1
+    elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t3":
+        out1.t3 += 0.1
+    else:
         check2 = True
+
     counter2 += 1
 print(check2, counter2, out1.t2)
 
@@ -81,14 +110,33 @@ while not checklist == [True, True] and counter3<100:
     check2 = False
     counter2 = 0
     print(check2, counter2, out1.t2)
-    if not CheckPullThrough.check_pullthrough(out1, loads_with_SF) == [False, "increase_thickness"]:
+    if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[0] == True:
         check2 = True
     print(check2, counter2, out1.t2)
     while check2 == False and counter2 < 500:
-        out1.t2 += 0.1
-        if not CheckPullThrough.check_pullthrough(out1, loads_with_SF) == [False, "increase_thickness"]:
-            print("now")
+        if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease z":
+            for ix in range(len(out1.hole_coordinate_list)):
+                out1.hole_coordinate_list[ix] = (
+                out1.hole_coordinate_list[ix][0], 0.5*out1.bottomplatewidth+(out1.hole_coordinate_list[ix][1] -0.5*out1.bottomplatewidth)* 0.98)
+        elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase z":
+            for ix in range(len(out1.hole_coordinate_list)):
+                out1.hole_coordinate_list[ix] = (
+                out1.hole_coordinate_list[ix][0],0.5*out1.bottomplatewidth+(out1.hole_coordinate_list[ix][1] -0.5*out1.bottomplatewidth)* 1.02)
+        elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase x":
+            for ix in range(len(out1.hole_coordinate_list)):
+                out1.hole_coordinate_list[ix] = (
+                0.5*out1.length + (out1.hole_coordinate_list[ix][0]-0.5*out1.length) * 1.02, out1.hole_coordinate_list[ix][1])
+        elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease x":
+            for ix in range(len(out1.hole_coordinate_list)):
+                out1.hole_coordinate_list[ix] = (
+                0.5*out1.length + (out1.hole_coordinate_list[ix][0]-0.5*out1.length) * 0.98, out1.hole_coordinate_list[ix][1])
+        elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t2":
+            out1.t2 += 0.1
+        elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t3":
+            out1.t3 += 0.1
+        else:
             check2 = True
+
         counter2 += 1
     print(check2, counter2, out1.t2)
     checklist = [check1, check2]
@@ -97,7 +145,8 @@ while not checklist == [True, True] and counter3<100:
 
 
 print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs)
-
+print(out1.hole_coordinate_list)
+#PostProcessorAndVisualizer.Visualize2(out1)
 out1.bottomplatewidth = out1.w
 out1 = SelectFastenerConfiguration.Optimize_holes(out1, False)
 

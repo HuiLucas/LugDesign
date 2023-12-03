@@ -141,7 +141,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
     else:
         [i_step, j_step, k_step, l_step, Material_List, tolerance] = [40, 10, 40, 100, Material_In2[0:1],0.01]
     if design_object.Dist_between_lugs == 0:
-        design_object.Dist_between_lugs = 0.5
+        design_object.Dist_between_lugs = 0.8
         distance = design_object.Dist_between_lugs
     else:
         distance = design_object.Dist_between_lugs
@@ -307,7 +307,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
             best_configuration[0][1] = required_MMOI*12/(2*(best_configuration[0][0])**(1/3))
         design_array.append(DesignClass.DesignInstance(h=1000*best_configuration[0][3], t1=1000*best_configuration[0][1], t2=design_object.t2, t3=design_object.t3, D1=1000*best_configuration[0][2], \
                                                            w=2*1000*best_configuration[0][0], material=material, n_fast=design_object.n_fast, length=design_object.length, \
-                                                           offset=design_object.offset,flange_height=1000*height_flange,hole_coordinate_list=design_object.hole_coordinate_list, \
+                                                           offset=0.5*(design_object.length-1000*best_configuration[0][1]-1000*best_configuration[0][3]*(design_object.N_Flanges-1)),flange_height=1000*height_flange,hole_coordinate_list=design_object.hole_coordinate_list, \
                                                            D2_list=design_object.D2_list, yieldstrength=sigma_y,N_lugs=design_object.N_lugs,N_Flanges=design_object.N_Flanges, Dist_between_lugs=design_object.Dist_between_lugs*1000)) #convert meters to millimeters
 
     print(material_best_configuration_dictionnary)
