@@ -60,9 +60,10 @@ checklist = [False, False]
 # checklist = [check1, check2]
 counter3 = 0
 while not checklist == [True, True] and counter3<100:
-    #SelectFastener.select_fastener(out1)
-    thermal_loads = CheckThermalStress.thermal_stress_calculation(out1, 150, -90, 15, [0.04,0.04,0.04,0.04] #out1.phi, #!!!!! when fastener is selected use this
-                                                                  ,material_fastener='Titanium (Grade 5)',
+    fasteners = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
+    philist = SelectFastener.calculate_force_ratio(fasteners, out1,out1.material,"7075-T6(DF-LT)")[0]
+    thermal_loads = CheckThermalStress.thermal_stress_calculation(out1, 150, -90, 15, philist
+                                                                  ,material_fastener=fasteners.material,
                                                                   material_plate=out1.material)[0]
     check1 = False
     if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":

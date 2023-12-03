@@ -99,7 +99,7 @@ def calculate_force_ratio(FastenerType, DesignInstance , plate_material , wall_m
 
     return force_ratio[0]
 
-print(calculate_force_ratio(fastener_debug,debug_design,"7075-T6(DF-LT)","7075-T6(DF-LT)"))
+print(calculate_force_ratio(fastener_debug,debug_design,"7075-T6(DF-LT)","7075-T6(DF-LT)")[0])
 
 def print_material_info(material_name):
     for material in InputVariables.materials_fasteners:
