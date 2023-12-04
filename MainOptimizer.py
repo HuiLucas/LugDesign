@@ -182,6 +182,7 @@ for designindex in range(len(design_array)):
 
     for m in range(len(out1.D2_list)):
         SelectFastener.check_size_reduction_possibility(out1,m,loads_with_SF)
+    print("why is this:", CheckPullThrough.check_pullthrough(out1,loads_with_SF))
 
     out1 = SelectFastenerConfiguration.Optimize_holes(out1, False)
 
