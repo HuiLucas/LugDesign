@@ -245,6 +245,10 @@ def check_size_reduction_possibility(design_object, i, design_loads):
         design_object2.D2_list[i] = 5.3
     elif design_object2.D2_list[i] == 5.3:
         design_object2.D2_list[i] = 4.3
+    elif design_object2.D2_list[i] ==4.3:
+        design_object2.D2_list[i] = 3.2
+    elif design_object2.D2_list[i] == 3.2:
+        design_object2.D2_list[i] = 2.2
     else:
         return
     design_object2.fasteners = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
@@ -253,13 +257,16 @@ def check_size_reduction_possibility(design_object, i, design_loads):
                                                                  , material_fastener=design_object2.fasteners.material,
                                                                  material_plate=design_object2.material)[0]
     check1a = False
-    if not CheckBearing.check_bearing_stress(design_object2, design_loads,
-                                             thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+    if CheckBearing.check_bearing_stress(design_object2, design_loads,
+                                             thermal_loads) == "Bearing Stress Check Pass":
+        print("reduce hole acc to check1a")
         check1a = True
     check2a = False
     if CheckPullThrough.check_pullthrough(design_object2, design_loads)[0] == True:
+        print("reduce hole acc to check2a")
         check2a = True
     if check2a == True and check1a == True:
+        print("decrease hole size")
         design_object.D2_list[i] = design_object2.D2_list[i]
         design_object.fasteners = design_object2.fasteners
         check_size_reduction_possibility(design_object,i,design_loads)
