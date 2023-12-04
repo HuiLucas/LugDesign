@@ -23,6 +23,7 @@ class DesignInstance:
         self.Dist_between_lugs = Dist_between_lugs
         self.bottomplatewidth = bottomplatewidth
         self.shearstrength = shearstrength
+        self.MS = None
 class Load:
     def __init__(self, F_x, F_y, F_z, M_x, M_y, M_z):
         self.F_x = F_x
