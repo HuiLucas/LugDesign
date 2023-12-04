@@ -10,7 +10,7 @@ import SelectFastenerConfiguration
 
 # !!!!!!!!!!!! TBD:
 # !!!!!!!!!!!! For CheckPullThrough: shearstrength is now set for one material, but needs to be done for other materials as well
-# !!!!!!!!!!!! optimize/calculate dist_between_lugs (is now set at the beginning, and never changed). Maybe set equal to upper limit of what fits on the satellite?
+# Done !!!!!!!!!!!! optimize/calculate dist_between_lugs (is now set at the beginning, and never changed). Maybe set equal to upper limit of what fits on the satellite?
 # !!!!!!!!!!!! Optimize (?) D2_holes. Is now set at the beginning, and does not change troughout the process. However, it was
 # chosen to change the thickness t2 instead of the diameters of the holes, but maybe it is still possible to do both? I was thinking, maybe we could make a function that looks whether it is possible to reduce the size of a given hole (in
 # discrete steps that correspond to  bolt diameters), given an existing design. Then this function could be applied all the way at the end
