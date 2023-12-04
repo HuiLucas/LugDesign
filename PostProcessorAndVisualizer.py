@@ -88,7 +88,7 @@ def Visualize2(design_object, index):
     if design_object.N_lugs == 2:
         Visualize(design_object,index=index, move_y=design_object.Dist_between_lugs)
     else:
-        Visualize(design_object, move_y=0)
+        Visualize(design_object, index=index ,move_y=0)
 
 # debug_design4 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80, material="metal", n_fast=4, \
 #                                             length=200, offset=20,flange_height=80, \

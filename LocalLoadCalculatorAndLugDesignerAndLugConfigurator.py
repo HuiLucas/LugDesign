@@ -222,7 +222,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                         def constraint_inter_flange_distance_max(variables):
                             e, t, D, h = variables
                             return -h+1
-                        if N_lugs == 2:
+                        if N_Flanges == 2:
                             def constraint_zero_h(variables):
                                 e, t, D, h = variables
                                 return h
@@ -234,22 +234,40 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                         def thickness_over_diameter_lower_limit(variables):
                             e,t,D,h = variables
                             return - e/t + 10
-                        constraints = [
-                            {'type': 'ineq', 'fun': volume_constraint},
-                            {'type': 'eq', 'fun': principal_constraint},
-                            {'type': 'ineq', 'fun': constraint_thickness},
-                            {'type': 'ineq', 'fun': constraint_thickness_bigger_zero},
-                            {'type': 'ineq', 'fun': constraint_outer_radius},
-                            {'type': 'ineq', 'fun': constraint_outer_radius_bigger_zero},
-                            {'type': 'ineq', 'fun': constraint_inner_diameter},
-                            {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
-                            {'type': 'ineq', 'fun': constraint_dimension},
-                            {'type': 'ineq', 'fun': constraint_inter_flange_distance},
-                            {'type': 'ineq', 'fun': constraint_inter_flange_distance_max},
-                            {'type': 'ineq', 'fun': moment_x_constraint},
-                            {'type': 'ineq', 'fun': thickness_over_diameter_lower_limit},
-                            {'type': 'ineq', 'fun': constraint_zero_h}
-                        ]
+                        if design_object.N_Flanges ==2:
+                            constraints = [
+                                {'type': 'ineq', 'fun': volume_constraint},
+                                {'type': 'eq', 'fun': principal_constraint},
+                                {'type': 'ineq', 'fun': constraint_thickness},
+                                {'type': 'ineq', 'fun': constraint_thickness_bigger_zero},
+                                {'type': 'ineq', 'fun': constraint_outer_radius},
+                                {'type': 'ineq', 'fun': constraint_outer_radius_bigger_zero},
+                                {'type': 'ineq', 'fun': constraint_inner_diameter},
+                                {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
+                                {'type': 'ineq', 'fun': constraint_dimension},
+                                {'type': 'ineq', 'fun': constraint_inter_flange_distance},
+                                {'type': 'ineq', 'fun': constraint_inter_flange_distance_max},
+                                {'type': 'ineq', 'fun': moment_x_constraint},
+                                {'type': 'ineq', 'fun': thickness_over_diameter_lower_limit},
+                                {'type': 'ineq', 'fun': constraint_zero_h}
+                            ]
+                        else:
+                            constraints = [
+                                {'type': 'ineq', 'fun': volume_constraint},
+                                {'type': 'eq', 'fun': principal_constraint},
+                                {'type': 'ineq', 'fun': constraint_thickness},
+                                {'type': 'ineq', 'fun': constraint_thickness_bigger_zero},
+                                {'type': 'ineq', 'fun': constraint_outer_radius},
+                                {'type': 'ineq', 'fun': constraint_outer_radius_bigger_zero},
+                                {'type': 'ineq', 'fun': constraint_inner_diameter},
+                                {'type': 'ineq', 'fun': constraint_inner_diameter_bigger_zero},
+                                {'type': 'ineq', 'fun': constraint_dimension},
+                                {'type': 'ineq', 'fun': constraint_inter_flange_distance},
+                                {'type': 'ineq', 'fun': constraint_inter_flange_distance_max},
+                                {'type': 'ineq', 'fun': moment_x_constraint},
+                                {'type': 'ineq', 'fun': thickness_over_diameter_lower_limit},
+                                #{'type': 'ineq', 'fun': constraint_zero_h}
+                            ]
 
                         # Choose an optimization method
                         method = 'SLSQP'
