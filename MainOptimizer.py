@@ -10,12 +10,17 @@ import SelectFastenerConfiguration
 
 # !!!!!!!!!!!! TBD:
 # !!!!!!!!!!!! For CheckPullThrough: shearstrength is now set for one material, but needs to be done for other materials as well
-# !!!!!!!!!!!! optimize dist_between_lugs (is now set at the beginning, and never changed).
+# !!!!!!!!!!!! optimize/calculate dist_between_lugs (is now set at the beginning, and never changed). Maybe set equal to upper limit of what fits on the satellite?
 # !!!!!!!!!!!! Optimize (?) D2_holes. Is now set at the beginning, and does not change troughout the process. However, it was
-# chosen to change the thickness t2 instead of the diameters of the holes, but maybe it is still possible to do both?
+# chosen to change the thickness t2 instead of the diameters of the holes, but maybe it is still possible to do both? I was thinking, maybe we could make a function that looks whether it is possible to reduce the size of a given hole (in
+# discrete steps that correspond to  bolt diameters), given an existing design. Then this function could be applied all the way at the end
+# to reduce the size of the the holes that are not limiting. Such a function would need to find out if the design with a smaller reduced hole
+# would still pass the Bearing Check (incl. updated fastener design & thermal loads) and Pull Through Check, and if that is the case, then the size of that hole would actually be decreased.
 # !!!!!!!!!!!! Check EVERYTHING, make sure no mistakes in calculations. Look for mistakes in the code. Confirm results by performing checks on the resulting designs by hand.
-# !!!!!!!!!!!! Run with high_accuracy = True (once)
+# !!!!!!!!!!!! Run with high_accuracy = True (once) to find out if there's strange behaviour
 # !!!!!!!!!!!! Finish comparison between materials (WP4.13)
+# !!!!!!!!!!!! Set constraint that h >= 0 if N_lugs == 2
+# !!!!!!!!!!!! Provide list of Margins of Safety, as in WP4.11
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -188,6 +193,7 @@ for designindex in range(len(design_array)):
     design_array2.append(out1)
     print(designindex)
     print(out1.hole_coordinate_list)
+    out1.mass = out1.N_lugs * (  )
 
 for designindex in range(len(design_array2)):
     PostProcessorAndVisualizer.Visualize2(design_array2[designindex], designindex)
