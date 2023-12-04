@@ -28,7 +28,9 @@ import SelectFastenerConfiguration
 initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.05, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=10, offset=20,flange_height=80, \
                                             hole_coordinate_list=[(3, 35), (3, 65), (7, 35), (7, 65)], \
-                                           D2_list=[8.4, 8.4, 8.4, 8.4], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
+                                           D2_list=[2.2, 2.2, 2.2, 2.2], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
+if initial_design.N_lugs ==2:
+    initial_design.D2_list = [10.5,10.5,10.5,10.5]
 # ----------------------------------------------------------------------------------------------------------------------
 
 if initial_design.N_Flanges ==2:
