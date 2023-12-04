@@ -6,3 +6,5 @@ def TradeOff(design_array2):
         print(f"nut type: {design.fasteners.nut_type}, hole type: {design.fasteners.hole_type}, material: {design.fasteners.material}")
         print(f"mass: {design.mass}")
         print("")
+
+    # add comparison/trade-off here
