@@ -127,7 +127,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
     if high_accuracy == True:
         [i_step, j_step, k_step,l_step, Material_List, tolerance] = [20, 5, 20, 50, Material_In2, 0.001]
     else:
-        [i_step, j_step, k_step, l_step, Material_List, tolerance] = [40, 10, 40, 100, Material_In2,0.01]
+        [i_step, j_step, k_step, l_step, Material_List, tolerance] = [40, 10, 40, 100, Material_In2[0:1],0.01]
     # calculate Dist_between_lugs here:
     design_object.Dist_between_lugs = 1.4
     # design_object.Dist_between_lugs = calculated_Dist_between_lugs
@@ -277,7 +277,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
         if MMOI == 0:
             MMOI = 0.0001
 
-        height_flange = best_configuration[0][0] + 2*sigma_y*MMOI/(best_configuration[0][1]*Fx) #np.sqrt((MMOI*sigma_y*1.1)/Fy)
+        height_flange = best_configuration[0][0] + 2*sigma_y*MMOI/(best_configuration[0][1]*Fy) #np.sqrt((MMOI*sigma_y*1.1)/Fy)
         if height_flange <= 3*best_configuration[0][0]:
             height_flange = 3*best_configuration[0][0]
             #required_MMOI = (Fy * (height_flange - best_configuration[0][0])**2)/(sigma_y*1.1)

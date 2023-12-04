@@ -39,7 +39,7 @@ loads_with_SF = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
 fastener_array =[]
 design_array2 = []
-design_array = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVariables.Material[0:2],   # the [0:1] means that is only uses the first material. To run for all materials remove [0:1]
+design_array = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVariables.Material, \
                                                                  InputVariables.sigma_yield,InputVariables.Density,\
                                                                  initial_design, loads_with_SF, False)
 
