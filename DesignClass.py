@@ -47,6 +47,7 @@ class FastenerType:
         self.yield_stress = None
         self.nut_type = nut_type
         self.hole_type = hole_type
+        self.type_bolt = "unknown"
 
         if nut_type not in ["Hexagonal", "Cylindrical"]:
             print("Nut type can either be 'Hexagonal' or 'Cylindrical'")

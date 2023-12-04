@@ -241,27 +241,38 @@ def check_size_reduction_possibility(design_object, i, design_loads):
     loads2.F_y = 3.97 * design_loads.F_y
     if design_object2.D2_list[i] == 10.5: #https://amesweb.info/screws/Metric-Clearance-Hole-Chart.aspx
         design_object2.D2_list[i] = 8.4
+        typer = "M8"
     elif design_object2.D2_list[i] == 8.4:
         design_object2.D2_list[i] = 6.4
+        typer = "M6"
     elif design_object2.D2_list[i] == 6.4:
         design_object2.D2_list[i] = 5.3
+        typer = "M5"
     elif design_object2.D2_list[i] == 5.3:
         design_object2.D2_list[i] = 4.3
+        typer = "M4"
     elif design_object2.D2_list[i] ==4.3:
         design_object2.D2_list[i] = 3.2
+        typer = "M3"
     elif design_object2.D2_list[i] == 3.2:
         design_object2.D2_list[i] = 2.2
+        typer = "M2"
     elif design_object2.D2_list[i] == 2.2:
         design_object2.D2_list[i] = 1.7
+        typer = "M1.6"
     elif design_object2.D2_list[i] == 1.7:
         design_object2.D2_list[i] = 1.5
+        typer = "M1.4"
     elif design_object2.D2_list[i] == 1.5:
         design_object2.D2_list[i] = 1.3
+        typer = "M1.2"
     elif design_object2.D2_list[i] == 1.3:
         design_object2.D2_list[i] = 1.1
+        typer = "M1"
     else:
         return
     design_object2.fasteners = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
+    design_object2.fasteners.type_bolt = typer
     philist = calculate_force_ratio(design_object2.fasteners, design_object2, design_object2.material, "7075-T6(DF-LT)")[0]
     thermal_loads = CheckThermalStress.thermal_stress_calculation(design_object2, 150, -90, 15, philist
                                                                  , material_fastener=design_object2.fasteners.material,

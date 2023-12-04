@@ -6,11 +6,14 @@
 # This software component will check the given input design for Pull Through Failure.
 import DesignClass
 import numpy as np
-debug_design_2 = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
+
+import InputVariables
+
+debug_design_2 = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="2014-T6(P)", n_fast=4, \
                                             length=10, offset=20,flange_height=80, \
                                             hole_coordinate_list=[(3, 35), (3, 65), (7, 35), (7, 65)], \
                                            D2_list=[10.5, 10.5, 10.5, 10.5], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
-debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=0.2, t3=0.2, D1=10, w=50, material="metal", n_fast=4,
+debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=0.2, t3=0.2, D1=10, w=50, material="2014-T6(P)", n_fast=4,
                                             length=100, offset=20, flange_height=60, bottomplatewidth=100,
                                             hole_coordinate_list=[(10, 10), (10, 90), (90, 10), (90, 90)],
                                             D2_list=[5, 5, 5, 5], yieldstrength=83,shearstrength=550,N_lugs=1,N_Flanges=2)
@@ -18,7 +21,8 @@ debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
 
 def check_pullthrough(design_object, load_object): #checks pullout shear, if smaller than max we can decrease thickness,
-
+    index = InputVariables.Material.index(design_object.material)
+    design_object.shearstrength = InputVariables.shear_strength[index]
     n_fast = len(design_object.D2_list)
     F_x = load_object.F_x
     F_y = load_object.F_y  # 433.60
@@ -109,3 +113,4 @@ print(check_pullthrough(debug_design_1, debug_loads))
 # diameter head and shank diameter ratio is 1.8
 #print(calculate_centroid(debug_design_1),check_pull_through(debug_design_1) )
 print("here",check_pullthrough(debug_design_2,debug_loads))
+print(debug_design_2.shearstrength)
