@@ -273,16 +273,16 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
 
         #Check of the height of the flange limited by the Fy = 433:
         # if stress is exceeding the yield stress = fail
-        MMOI = ((2*best_configuration[0][0])**3 *(best_configuration[0][1]))/12
+        MMOI = ((2*best_configuration[0][0]) *(best_configuration[0][1])**3)/12
         if MMOI == 0:
             MMOI = 0.0001
 
-        height_flange = best_configuration[0][0] + 2*sigma_y*1.1*MMOI/(best_configuration[0][1]*Fx) #np.sqrt((MMOI*sigma_y*1.1)/Fy)
+        height_flange = best_configuration[0][0] + 2*sigma_y*MMOI/(best_configuration[0][1]*Fx) #np.sqrt((MMOI*sigma_y*1.1)/Fy)
         if height_flange <= 3*best_configuration[0][0]:
             height_flange = 3*best_configuration[0][0]
             #required_MMOI = (Fy * (height_flange - best_configuration[0][0])**2)/(sigma_y*1.1)
             #best_configuration[0][1] = required_MMOI*12/(2*(best_configuration[0][0])**(1/3))
-            best_configuration[0][1] = np.sqrt(3*Fx/(sigma_y * 1.1 * 10**6))
+            best_configuration[0][1] = np.sqrt(3*Fx/(sigma_y * 10**6))
         design_array.append(DesignClass.DesignInstance(h=1000*best_configuration[0][3], t1=1000*best_configuration[0][1], t2=design_object.t2, t3=design_object.t3, D1=1000*best_configuration[0][2], \
                                                            w=2*1000*best_configuration[0][0], material=material, n_fast=design_object.n_fast, length=design_object.length, \
                                                            offset=0.5*(design_object.length-1000*best_configuration[0][1]-1000*best_configuration[0][3]*(design_object.N_Flanges-1)),flange_height=1000*height_flange,hole_coordinate_list=design_object.hole_coordinate_list, \

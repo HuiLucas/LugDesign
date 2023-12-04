@@ -39,7 +39,7 @@ loads_with_SF = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
 
 fastener_array =[]
 design_array2 = []
-design_array = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVariables.Material[0:1],   # the [0:1] means that is only uses the first material. To run for all materials remove [0:1]
+design_array = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.Optimize_Lug(InputVariables.Material[0:2],   # the [0:1] means that is only uses the first material. To run for all materials remove [0:1]
                                                                  InputVariables.sigma_yield,InputVariables.Density,\
                                                                  initial_design, loads_with_SF, False)
 
@@ -183,15 +183,20 @@ for designindex in range(len(design_array)):
 
     MS_lug_Appendix_A = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.M_S
     MS_lug_breaking_flange = 0
+    MS_backupwallbearing = "allowable stress is unknown because different method is used"
+    MS_backupwallbearinginclthermal = "allowable stress is unknown because different method is used"
+    MS_backupwallpullthrough = "allowable stress is unknown because different method is used"
+    MS_VehicleWallBearinginclThermal = "allowable stress is unknown because different method is used"
+    MS_VehicleWallPullthrough = "allowable stress is unknown because different method is used"
 
     out1.MS =[]
     out1.MS.append(MS_lug_Appendix_A)
     out1.MS.append(MS_lug_breaking_flange)
-    # out1.MS.append(MS_backupwallbearing)
-    # out1.MS.append(MS_backupwallbearinginclthermal)
-    # out1.MS.append(MS_backupwallpullthrough)
-    # out1.MS.append(MS_VehicleWallBearinginclThermal)
-    # out1.MS.append(MS_VehicleWallPullthrough)
+    out1.MS.append(MS_backupwallbearing)
+    out1.MS.append(MS_backupwallbearinginclthermal)
+    out1.MS.append(MS_backupwallpullthrough)
+    out1.MS.append(MS_VehicleWallBearinginclThermal)
+    out1.MS.append(MS_VehicleWallPullthrough)
 
     #PostProcessorAndVisualizer.Visualize(initial_design)
     print(out1.hole_coordinate_list)
