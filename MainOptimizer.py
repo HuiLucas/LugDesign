@@ -25,10 +25,10 @@ import SelectFastenerConfiguration
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Do not change:
-initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
+initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.05, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=10, offset=20,flange_height=80, \
                                             hole_coordinate_list=[(3, 35), (3, 65), (7, 35), (7, 65)], \
-                                           D2_list=[10.5, 10.5, 10.5, 10.5], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
+                                           D2_list=[8.4, 8.4, 8.4, 8.4], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
 # ----------------------------------------------------------------------------------------------------------------------
 
 if initial_design.N_Flanges ==2:
@@ -56,8 +56,8 @@ for designindex in range(len(design_array)):
         check1 = True
     counter1 = 0
     print(check1, counter1, out1.t2)
-    while check1 == False and counter1 < 500:
-        out1.t2 += 0.1
+    while check1 == False and counter1 < 1000:
+        out1.t2 += 0.05
         if not CheckBearing.check_bearing_stress(out1, loads_with_SF,[0,0,0,0]) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
             check1=True
         counter1 +=1
@@ -71,7 +71,7 @@ for designindex in range(len(design_array)):
         check2 = True
     print(check2, counter2, out1.t2)
     print("here2", out1.hole_coordinate_list)
-    while check2 == False and counter2 < 500:
+    while check2 == False and counter2 < 1000:
         #print(out1.hole_coordinate_list)
         print(CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1])
         if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease z":
@@ -95,7 +95,7 @@ for designindex in range(len(design_array)):
                     0.5 * out1.length + (out1.hole_coordinate_list[ix][0] - 0.5 * out1.length) * 0.98,
                     out1.hole_coordinate_list[ix][1])
         elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t2":
-            out1.t2 += 0.1
+            out1.t2 += 0.05
         elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t3":
             out1.t3 += 0.1
         else:
@@ -111,6 +111,7 @@ for designindex in range(len(design_array)):
 
     # checklist = [check1, check2]
     counter3 = 0
+    firsttime = True
     while not checklist == [True, True] and counter3<100:
         out1.fasteners = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
         philist = SelectFastener.calculate_force_ratio(out1.fasteners, out1,out1.material,"7075-T6(DF-LT)")[0]
@@ -121,42 +122,54 @@ for designindex in range(len(design_array)):
         if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
             check1 = True
         counter1 = 0
+        counter4 = 0
         print(check1, counter1, out1.t2)
-        while check1 == False and counter1 < 500:
-            out1.t2 += 0.1
+        while check1 == False and counter1 < 1000:
+            if firsttime == False:
+                out1.t2 += 0.05
+                print("please work",out1.t2)
+                counter4 +=1
             if not CheckBearing.check_bearing_stress(out1, loads_with_SF, thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
                 check1 = True
             counter1 += 1
         print(check1, counter1, out1.t2)
         print("here", out1.hole_coordinate_list)
 
+        firsttime=False
         # check2 = checkpullthrough, follow advice from result
         check2 = False
         counter2 = 0
-        print(check2, counter2, out1.t2)
+        counter5 = 0
+        print("point1",check2, counter2, out1.t2, out1.hole_coordinate_list)
         if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[0] == True:
             check2 = True
-        print(check2, counter2, out1.t2)
-        while check2 == False and counter2 < 500:
+        print("point2",check2, counter2, out1.t2, out1.hole_coordinate_list)
+        while check2 == False and counter2 < 1000:
             if CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease z":
+                counter5 +=1
                 for ix in range(len(out1.hole_coordinate_list)):
                     out1.hole_coordinate_list[ix] = (
                     out1.hole_coordinate_list[ix][0], 0.5*out1.bottomplatewidth+(out1.hole_coordinate_list[ix][1] -0.5*out1.bottomplatewidth)* 0.98)
             elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase z":
+                counter5 +=1
                 for ix in range(len(out1.hole_coordinate_list)):
                     out1.hole_coordinate_list[ix] = (
                     out1.hole_coordinate_list[ix][0],0.5*out1.bottomplatewidth+(out1.hole_coordinate_list[ix][1] -0.5*out1.bottomplatewidth)* 1.02)
             elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase x":
+                counter5 += 1
                 for ix in range(len(out1.hole_coordinate_list)):
                     out1.hole_coordinate_list[ix] = (
                     0.5*out1.length + (out1.hole_coordinate_list[ix][0]-0.5*out1.length) * 1.02, out1.hole_coordinate_list[ix][1])
             elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "decrease x":
+                counter5 += 1
                 for ix in range(len(out1.hole_coordinate_list)):
                     out1.hole_coordinate_list[ix] = (
                     0.5*out1.length + (out1.hole_coordinate_list[ix][0]-0.5*out1.length) * 0.98, out1.hole_coordinate_list[ix][1])
             elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t2":
-                out1.t2 += 0.1
+                counter5 += 1
+                out1.t2 += 0.05
             elif CheckPullThrough.check_pullthrough(out1, loads_with_SF)[1] == "increase t3":
+                counter5 += 1
                 out1.t3 += 0.1
             else:
                 check2 = True
@@ -165,6 +178,7 @@ for designindex in range(len(design_array)):
         print(check2, counter2, out1.t2)
         checklist = [check1, check2]
         counter3 += 1
+        print("counters", counter1, counter2,counter3,  counter4, counter5)
 
 
 

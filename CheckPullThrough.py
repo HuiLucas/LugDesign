@@ -6,7 +6,10 @@
 # This software component will check the given input design for Pull Through Failure.
 import DesignClass
 import numpy as np
-
+debug_design_2 = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
+                                            length=10, offset=20,flange_height=80, \
+                                            hole_coordinate_list=[(3, 35), (3, 65), (7, 35), (7, 65)], \
+                                           D2_list=[10.5, 10.5, 10.5, 10.5], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
 debug_design_1 = DesignClass.DesignInstance(h=30, t1=5, t2=0.2, t3=0.2, D1=10, w=50, material="metal", n_fast=4,
                                             length=100, offset=20, flange_height=60, bottomplatewidth=100,
                                             hole_coordinate_list=[(10, 10), (10, 90), (90, 10), (90, 90)],
@@ -20,7 +23,7 @@ def check_pullthrough(design_object, load_object): #checks pullout shear, if sma
     F_x = load_object.F_x
     F_y = load_object.F_y  # 433.60
     F_z = load_object.F_z
-    M_x = load_object.M_x + F_z * 0.001 * (design_object.flange_height - design_object.bottomplatewidth / 2)  # M_x(817.34) plus moment from F_z
+    M_x = load_object.M_x + F_z * 0.001 * (design_object.flange_height - design_object.w / 2)  # M_x(817.34) plus moment from F_z
     M_z = F_x * 0.001 * (design_object.flange_height - design_object.w / 2)
     Sum_A_rz2 = 0
     Sum_A_rx2 = 0
@@ -53,10 +56,13 @@ def check_pullthrough(design_object, load_object): #checks pullout shear, if sma
     for i in range(len(design_object.D2_list)):
         Dfi = design_object.D2_list[i]
         Dfo = 1.8 * Dfi
+        #print("Dfo",Dfo)
         shear = F_yi[i] / (np.pi * (Dfo/1000) * (design_object.t2/1000))
         shear2 = F_yi[i] / (np.pi * (Dfo / 1000) * (design_object.t3 / 1000))
+        print("shears",shear2, shear)
         sigma_y = F_yi[i]/(np.pi / 4 * ((Dfo/1000)**2-(Dfi/1000)**2))
         shearmax = design_object.shearstrength*10**6 #np.sqrt((design_object.yieldstrength**2 - sigma_y**2)/3)
+        print("shearmax", shearmax)
 
         if not abs(shear) < abs(shearmax):
             xmax = 0
@@ -102,3 +108,4 @@ print(check_pullthrough(debug_design_1, debug_loads))
 
 # diameter head and shank diameter ratio is 1.8
 #print(calculate_centroid(debug_design_1),check_pull_through(debug_design_1) )
+print("here",check_pullthrough(debug_design_2,debug_loads))

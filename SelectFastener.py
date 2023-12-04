@@ -237,6 +237,8 @@ def print_material_info(material_name):
 
 def check_size_reduction_possibility(design_object, i, design_loads):
     design_object2 = copy.deepcopy(design_object)
+    loads2 = copy.deepcopy(design_loads)
+    loads2.F_y = 3.97 * design_loads.F_y
     if design_object2.D2_list[i] == 10.5: #https://amesweb.info/screws/Metric-Clearance-Hole-Chart.aspx
         design_object2.D2_list[i] = 8.4
     elif design_object2.D2_list[i] == 8.4:
@@ -249,6 +251,8 @@ def check_size_reduction_possibility(design_object, i, design_loads):
         design_object2.D2_list[i] = 3.2
     elif design_object2.D2_list[i] == 3.2:
         design_object2.D2_list[i] = 2.2
+    elif design_object2.D2_list[i] == 2.2:
+        design_object2.D2_list[i] = 1.7
     else:
         return
     design_object2.fasteners = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
@@ -257,12 +261,12 @@ def check_size_reduction_possibility(design_object, i, design_loads):
                                                                  , material_fastener=design_object2.fasteners.material,
                                                                  material_plate=design_object2.material)[0]
     check1a = False
-    if CheckBearing.check_bearing_stress(design_object2, design_loads,
+    if CheckBearing.check_bearing_stress(design_object2, loads2,
                                              thermal_loads) == "Bearing Stress Check Pass":
-        print("reduce hole acc to check1a")
+        print("reduce hole acc to check1a, this one SHOULD be limiting")
         check1a = True
     check2a = False
-    if CheckPullThrough.check_pullthrough(design_object2, design_loads)[0] == True:
+    if CheckPullThrough.check_pullthrough(design_object2, loads2)[0] == True:
         print("reduce hole acc to check2a")
         check2a = True
     if check2a == True and check1a == True:

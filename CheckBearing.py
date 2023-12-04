@@ -6,10 +6,10 @@
 
 import DesignClass as dc
 import numpy as np
-debug_design_2 = dc.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=40, material="metal", n_fast=4, \
-                                            length=80, offset=20,flange_height=80, \
-                                            hole_coordinate_list=[(20, 10), (20, 30), (60, 10), (60, 30)], \
-                                           D2_list=[6, 6, 6, 6], yieldstrength=83,N_lugs=1,N_Flanges=2)
+debug_design_2 = dc.DesignInstance(h=10, t1=0.8862884667966812, t2=2.6499999999999986, t3=2, D1=5, w=19.580136993010818, material="metal", n_fast=4, \
+                                            length=47, offset=-0.44314423339834086,flange_height=29.370205489516227, \
+                                            hole_coordinate_list=[(4.756555492274806, 4.626310958321483), (4.756555492274806, 119.95382603468913), (42.24344450772523, 4.626310958321483), (42.24344450772523, 119.95382603468913)], \
+                                           D2_list=[2.4,2.4,2.4, 2.4], yieldstrength=414,N_lugs=2,N_Flanges=2, Dist_between_lugs=1400, bottomplatewidth=124.58013699301083)
 # debug_design_2.minimum_diameter = 3
 # debug_design_2.maximum_diameter = 5
 # debug_design_2.fastener_rows = 2
