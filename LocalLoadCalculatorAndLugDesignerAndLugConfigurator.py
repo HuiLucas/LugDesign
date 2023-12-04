@@ -127,7 +127,7 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
     if high_accuracy == True:
         [i_step, j_step, k_step,l_step, Material_List, tolerance] = [20, 5, 20, 50, Material_In2, 0.001]
     else:
-        [i_step, j_step, k_step, l_step, Material_List, tolerance] = [40, 10, 40, 100, Material_In2[0:1],0.01]
+        [i_step, j_step, k_step, l_step, Material_List, tolerance] = [40, 10, 40, 100, Material_In2,0.01]
     # calculate Dist_between_lugs here:
     design_object.Dist_between_lugs = 1.4
     # design_object.Dist_between_lugs = calculated_Dist_between_lugs

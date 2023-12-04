@@ -240,7 +240,7 @@ def check_size_reduction_possibility(design_object, i, design_loads):
     loads2 = copy.deepcopy(design_loads)
     loads2.F_y = 3.97 * design_loads.F_y
     if design_object2.D2_list[i] == 10.5: #https://amesweb.info/screws/Metric-Clearance-Hole-Chart.aspx
-        design_object2.D2_list[i] = 8.4
+        design_object2.D2_list[i] = 8.4  #https://fractory.com/metric-bolt-clearance-hole-size-chart/
         typer = "M8"
     elif design_object2.D2_list[i] == 8.4:
         design_object2.D2_list[i] = 6.4

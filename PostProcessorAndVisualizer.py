@@ -55,9 +55,22 @@ def Visualize(design_object, index, move_y=0):
         result = result.union(result.translate((0,move_y, 0)))
     design_object.volume = result.val().Volume()
     # Export
-    cq.exporters.export(result, f"result{index}.stl")
-    cq.exporters.export(result.section(), f"result{index}.dxf")
-    cq.exporters.export(result, f"result{index}.step")
+    if design_object.N_lugs == 2 and design_object.N_Flanges == 2:
+        cq.exporters.export(result, f"result{index}.stl")
+        cq.exporters.export(result.section(), f"result{index}.dxf")
+        cq.exporters.export(result, f"result{index}.step")
+    elif design_object.N_lugs == 2 and design_object.N_Flanges == 1:
+        cq.exporters.export(result, f"result{index}with2lugs1flange.stl")
+        cq.exporters.export(result.section(), f"result{index}with2lugs1flange.dxf")
+        cq.exporters.export(result, f"result{index}with2lugs1flange.step")
+    elif design_object.N_lugs == 1 and design_object.N_Flanges == 2:
+        cq.exporters.export(result, f"result{index}with1lug2flanges.stl")
+        cq.exporters.export(result.section(), f"result{index}with1lug2flanges.dxf")
+        cq.exporters.export(result, f"result{index}with1lug2flanges.step")
+    elif design_object.N_lugs == 1 and design_object.N_Flanges == 1:
+        cq.exporters.export(result, f"result{index}with1lug1flange.stl")
+        cq.exporters.export(result.section(), f"result{index}with1lug1flange.dxf")
+        cq.exporters.export(result, f"result{index}with1lug1flange.step")
 
     # Create a new plot
     figure = pyplot.figure()
