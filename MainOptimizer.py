@@ -193,7 +193,7 @@ for designindex in range(len(design_array)):
     design_array2.append(out1)
     print(designindex)
     print(out1.hole_coordinate_list)
-    out1.mass = out1.N_lugs * (  )
+    #out1.mass = out1.N_lugs * (  )
 
 for designindex in range(len(design_array2)):
     PostProcessorAndVisualizer.Visualize2(design_array2[designindex], designindex)
