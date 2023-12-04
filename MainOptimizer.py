@@ -19,8 +19,8 @@ import SelectFastenerConfiguration
 # !!!!!!!!!!!! Check EVERYTHING, make sure no mistakes in calculations. Look for mistakes in the code. Confirm results by performing checks on the resulting designs by hand.
 # !!!!!!!!!!!! Run with high_accuracy = True (once) to find out if there's strange behaviour
 # !!!!!!!!!!!! Finish comparison between materials (WP4.13)
-# !!!!!!!!!!!! Set constraint that h >= 0 if N_lugs == 2
-# !!!!!!!!!!!! Provide list of Margins of Safety, as in WP4.11
+# Done !!!!!!!!!!!! Set constraint that h >= 0 if N_lugs == 2
+# Done !!!!!!!!!!!! Provide list of Margins of Safety, as in WP4.11
 
 
 # ----------------------------------------------------------------------------------------------------------------------
