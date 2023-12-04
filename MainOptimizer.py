@@ -198,6 +198,10 @@ for designindex in range(len(design_array)):
 for designindex in range(len(design_array2)):
     design_array2[designindex].volume = 0
     PostProcessorAndVisualizer.Visualize2(design_array2[designindex], designindex)
-    design_array2[designindex].mass = design_array2[designindex].volume*InputVariables.Density[InputVariables.Material.index(design_array2[designindex].volume * design_array2[designindex].material)]
+    # print(design_array2[designindex].material)
+    # print(InputVariables.Material.index(design_array2[designindex].material))
+    # print(InputVariables.Density[InputVariables.Material.index(design_array2[designindex].material)], design_array2[designindex].volume)
+    # print(InputVariables.Density[InputVariables.Material.index(design_array2[designindex].material)]*design_array2[designindex].volume)
+    design_array2[designindex].mass = InputVariables.Density[InputVariables.Material.index(design_array2[designindex].material)]*design_array2[designindex].volume
 # trade-off stuff
 TradeOffComperator.TradeOff(design_array2)
