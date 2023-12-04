@@ -253,6 +253,12 @@ def check_size_reduction_possibility(design_object, i, design_loads):
         design_object2.D2_list[i] = 2.2
     elif design_object2.D2_list[i] == 2.2:
         design_object2.D2_list[i] = 1.7
+    elif design_object2.D2_list[i] == 1.7:
+        design_object2.D2_list[i] = 1.5
+    elif design_object2.D2_list[i] == 1.5:
+        design_object2.D2_list[i] = 1.3
+    elif design_object2.D2_list[i] == 1.3:
+        design_object2.D2_list[i] = 1.1
     else:
         return
     design_object2.fasteners = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
