@@ -53,6 +53,7 @@ def Visualize(design_object, index, move_y=0):
                 (0, -design_object.t1/2-design_object.h/2, 0)))
     if design_object.N_lugs == 2:
         result = result.union(result.translate((0,move_y, 0)))
+    design_object.volume = result.val().Volume()
     # Export
     cq.exporters.export(result, f"result{index}.stl")
     cq.exporters.export(result.section(), f"result{index}.dxf")

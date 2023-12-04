@@ -193,9 +193,11 @@ for designindex in range(len(design_array)):
     design_array2.append(out1)
     print(designindex)
     print(out1.hole_coordinate_list)
-    #out1.mass = out1.N_lugs * (  )
+
 
 for designindex in range(len(design_array2)):
+    design_array2[designindex].volume = 0
     PostProcessorAndVisualizer.Visualize2(design_array2[designindex], designindex)
+    design_array2[designindex].mass = design_array2[designindex].volume*InputVariables.Density[InputVariables.Material.index(design_array2[designindex].volume * design_array2[designindex].material)]
 # trade-off stuff
 TradeOffComperator.TradeOff(design_array2)
