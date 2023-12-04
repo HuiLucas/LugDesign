@@ -15,16 +15,6 @@ debug_design3 = DesignClass.DesignInstance(h=30, t1=5, t2=10, t3=2, D1=10, w=80,
                                            D2_list=[10, 5, 9, 8], yieldstrength=83,N_lugs=1,N_Flanges=2)
 
 debug_loads = DesignClass.Load(433.6,433.6,1300.81,817.34,817.34,0)
-
-
-
-
-
-# -------------------------
-# Material List:
-# DF= die forging
-# P = plate
-
 @jit(nopython=True)
 def calculate_ci(i, x):
     if i ==1:
@@ -44,9 +34,7 @@ def calculate_ci(i, x):
     else:
         return 0
 
-
 # Material Functions Lists (Kt)
-
 def calculate_kt(e, D, M, t, Material_In):
     W = 2 * e
     x = W / D
@@ -178,9 +166,6 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
 
                         K_t = calculate_kt(initial_guess[0], initial_guess[1], material, initial_guess[2], Material_In2)
                         K_ty = choose_kby(initial_guess[2], initial_guess[1], initial_guess[0])
-
-
-                        ### ATTENTION: optimise the mass and the yield strength
                         def objective_function(variables, material=material):
                             e, t, D, h= variables
                             volume = calculate_vol(t, e, D)
@@ -237,7 +222,10 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                         def constraint_inter_flange_distance_max(variables):
                             e, t, D, h = variables
                             return -h+1
-
+                        if N_lugs == 2:
+                            def constraint_zero_h(variables):
+                                e, t, D, h = variables
+                                return h
                         def moment_x_constraint(variables):
                             e,t,D,h = variables
                             sigma = (Mx*e)/((t*(2*e)**3)/12)-sigma_y*1.1
@@ -246,8 +234,6 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                         def thickness_over_diameter_lower_limit(variables):
                             e,t,D,h = variables
                             return - e/t + 10
-
-
                         constraints = [
                             {'type': 'ineq', 'fun': volume_constraint},
                             {'type': 'eq', 'fun': principal_constraint},
@@ -261,45 +247,33 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
                             {'type': 'ineq', 'fun': constraint_inter_flange_distance},
                             {'type': 'ineq', 'fun': constraint_inter_flange_distance_max},
                             {'type': 'ineq', 'fun': moment_x_constraint},
-                            {'type': 'ineq', 'fun': thickness_over_diameter_lower_limit}
+                            {'type': 'ineq', 'fun': thickness_over_diameter_lower_limit},
+                            {'type': 'ineq', 'fun': constraint_zero_h}
                         ]
 
                         # Choose an optimization method
                         method = 'SLSQP'
-
                         # Call the minimize function (Turning of display makes it WAY faster as printing takes a lot of memory)
                         result = minimize(objective_function, initial_guess, method=method, constraints=constraints,
                                           options={'disp': False}, tol=tolerance)
 
-                        # Print the result
                         if result.success == True and 0.01 <= result.fun <= 0.9:
                             dictionnary.append([result.x, result.fun])
-                            # print("Optimization converged successfully.")
-                            # print("Optimized variables:", result.x)
-                            # print("Minimum value of the objective function:", result.fun)
                         else:
                             pass
-                            #print("Optimization did not converge. Check the result message for more information.")
-                            #print("Message:", result.message)
-            # Initialize variables to store the best configuration and its mass
             best_configuration = None
             min_mass = float('inf')
             # Iterate through the configurations
             for config in dictionnary:
                 dimensions, mass = config
-
-                # Check if the current mass is smaller than the current minimum
                 if mass < min_mass:
                     min_mass = mass
                     best_configuration = config
-
-
-
             material_best_configuration_dictionnary.append((material,best_configuration))
 
         #Check of the height of the flange limited by the Fy = 433:
         # if stress is exceeding the yield stress = fail
-        MMOI = ((2*best_configuration[0][0]) *(best_configuration[0][1])**3)/12
+        MMOI = ((2*best_configuration[0][0])**3 *(best_configuration[0][1]))/12
         if MMOI == 0:
             MMOI = 0.0001
 
@@ -316,4 +290,3 @@ def Optimize_Lug(Material_In2,Sigma_In,Density_In,design_object, design_loads, h
 
     print(material_best_configuration_dictionnary)
     return design_array
-
