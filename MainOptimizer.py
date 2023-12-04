@@ -11,7 +11,7 @@ import SelectFastenerConfiguration
 # !!!!!!!!!!!! TBD:
 # !!!!!!!!!!!! For CheckPullThrough: shearstrength is now set for one material, but needs to be done for other materials as well
 # Done !!!!!!!!!!!! optimize/calculate dist_between_lugs (is now set at the beginning, and never changed). Maybe set equal to upper limit of what fits on the satellite?
-# !!!!!!!!!!!! Optimize (?) D2_holes. Is now set at the beginning, and does not change troughout the process. However, it was
+# Done !!!!!!!!!!!! Optimize (?) D2_holes. Is now set at the beginning, and does not change troughout the process. However, it was
 # chosen to change the thickness t2 instead of the diameters of the holes, but maybe it is still possible to do both? I was thinking, maybe we could make a function that looks whether it is possible to reduce the size of a given hole (in
 # discrete steps that correspond to  bolt diameters), given an existing design. Then this function could be applied all the way at the end
 # to reduce the size of the the holes that are not limiting. Such a function would need to find out if the design with a smaller reduced hole
@@ -28,7 +28,7 @@ import SelectFastenerConfiguration
 initial_design = DesignClass.DesignInstance(h=30, t1=5, t2=0.1, t3=2, D1=10, w=80, material="metal", n_fast=4, \
                                             length=10, offset=20,flange_height=80, \
                                             hole_coordinate_list=[(3, 35), (3, 65), (7, 35), (7, 65)], \
-                                           D2_list=[10, 10, 10, 10], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
+                                           D2_list=[10.5, 10.5, 10.5, 10.5], yieldstrength=83,N_lugs=2,N_Flanges=2, bottomplatewidth=100)
 # ----------------------------------------------------------------------------------------------------------------------
 
 if initial_design.N_Flanges ==2:
@@ -179,6 +179,10 @@ for designindex in range(len(design_array)):
     #PostProcessorAndVisualizer.Visualize2(out1)
     print(out1.h, out1.t1, out1.t2, out1.t3, out1.D1, out1.w, out1.length, out1.offset, out1.flange_height, out1.yieldstrength, out1.material, out1.Dist_between_lugs, out1.N_lugs, out1.bottomplatewidth)
     print("this", out1.hole_coordinate_list)
+
+    for m in range(len(out1.D2_list)):
+        SelectFastener.check_size_reduction_possibility(out1,m,loads_with_SF)
+
     out1 = SelectFastenerConfiguration.Optimize_holes(out1, False)
 
     MS_lug_Appendix_A = LocalLoadCalculatorAndLugDesignerAndLugConfigurator.M_S

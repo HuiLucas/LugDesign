@@ -1,8 +1,13 @@
 # This software component will select the fastener based on WP4.10.
+import copy
+
 import numpy as np
 import DesignClass
 debug_design = DesignClass.DesignInstance(h=30, t1=5, t2=2, t3=4, D1=10, w=80, material="metal", n_fast=4,length=200, offset=20, flange_height=80, hole_coordinate_list=[(20, 10), (180, 60), (160, 20), (30, 60)], D2_list=[9, 4, 6, 8], yieldstrength=83, N_lugs=1, N_Flanges=1)
 import InputVariables
+import CheckThermalStress
+import CheckBearing
+import CheckPullThrough
 
 
 
@@ -229,3 +234,32 @@ def print_material_info(material_name):
 #     design_object.fastener_dimensions = fastener_dimensions(design_object)
 #     design_object.L_shank = fastener_length_check(design_object)
 # select_fastener(debug_design)
+
+def check_size_reduction_possibility(design_object, i, design_loads):
+    design_object2 = copy.deepcopy(design_object)
+    if design_object2.D2_list[i] == 10.5: #https://amesweb.info/screws/Metric-Clearance-Hole-Chart.aspx
+        design_object2.D2_list[i] = 8.4
+    elif design_object2.D2_list[i] == 8.4:
+        design_object2.D2_list[i] = 6.4
+    elif design_object2.D2_list[i] == 6.4:
+        design_object2.D2_list[i] = 5.3
+    elif design_object2.D2_list[i] == 5.3:
+        design_object2.D2_list[i] = 4.3
+    else:
+        return
+    design_object2.fasteners = DesignClass.FastenerType("Titanium (Grade 5)","Hexagonal","Nut-Tightened")
+    philist = calculate_force_ratio(design_object2.fasteners, design_object2, design_object2.material, "7075-T6(DF-LT)")[0]
+    thermal_loads = CheckThermalStress.thermal_stress_calculation(design_object2, 150, -90, 15, philist
+                                                                 , material_fastener=design_object2.fasteners.material,
+                                                                 material_plate=design_object2.material)[0]
+    check1a = False
+    if not CheckBearing.check_bearing_stress(design_object2, design_loads,
+                                             thermal_loads) == "Bearing Stress Check Failed, increase the thickness of the backplate ":
+        check1a = True
+    check2a = False
+    if CheckPullThrough.check_pullthrough(design_object2, design_loads)[0] == True:
+        check2a = True
+    if check2a == True and check1a == True:
+        design_object.D2_list[i] = design_object2.D2_list[i]
+        design_object.fasteners = design_object2.fasteners
+        check_size_reduction_possibility(design_object,i,design_loads)
