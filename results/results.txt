@@ -1,0 +1,175 @@
+Results all materials low_accuracy 2 flanges 2 lugs:
+
+2014-T6(DF-L)
+checklist: [True, True], h: 10.0, t1: 0.8862884667966812, t2: 0.8000000000000002, t3: 2, D1: 5.000000000000063, w: 19.580136993010818, length: 86, offset: -0.44314423339834086, flange height: 29.370205489516227, yieldstrength: 414, material: 2014-T6(DF-L), Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.765484771053757, 4.662499303272938), (4.765484771053757, 239.9176376897376), (81.23451522894632, 4.662499303272938), (81.23451522894632, 239.9176376897376)], n_fast: 4, D2holes: [1.3, 2.2, 2.2, 1.7], bottomplatewidth: 244.58013699301083, shearstrength: 290
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.6
+mass: 99287662.06886429
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+2014-T6(DF-LT)
+checklist: [True, True], h: 10.0, t1: 0.8862884667966812, t2: 0.8000000000000002, t3: 2, D1: 5.000000000000063, w: 19.580136993010818, length: 86, offset: -0.44314423339834086, flange height: 29.370205489516227, yieldstrength: 414, material: 2014-T6(DF-LT), Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.765484771053757, 4.662499303272938), (4.765484771053757, 239.9176376897376), (81.23451522894632, 4.662499303272938), (81.23451522894632, 239.9176376897376)], n_fast: 4, D2holes: [1.3, 2.2, 2.2, 1.7], bottomplatewidth: 244.58013699301083, shearstrength: 290
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.6
+mass: 99287662.06886429
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+2014-T6(P)
+checklist: [True, True], h: 10.0, t1: 0.8862884667966812, t2: 0.8000000000000002, t3: 2, D1: 5.000000000000063, w: 19.580136993010818, length: 86, offset: -0.44314423339834086, flange height: 29.370205489516227, yieldstrength: 414, material: 2014-T6(P), Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.765484771053757, 4.662499303272938), (4.765484771053757, 239.9176376897376), (81.23451522894632, 4.662499303272938), (81.23451522894632, 239.9176376897376)], n_fast: 4, D2holes: [1.3, 2.2, 2.2, 1.7], bottomplatewidth: 244.58013699301083, shearstrength: 290
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.6
+mass: 99287662.06886429
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+7075-T6(P)
+checklist: [True, True], h: 10.0, t1: 0.8040652179714598, t2: 0.7000000000000001, t3: 2, D1: 5.000000000000063, w: 19.580136993010818, length: 90, offset: -0.40203260898572957, flange height: 29.370205489516227, yieldstrength: 503, material: 7075-T6(P), Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.4252265629204075, 4.462751048093551), (4.4252265629204075, 254.11738594491698), (85.57477343707967, 4.462751048093551), (85.57477343707967, 254.11738594491698)], n_fast: 4, D2holes: [1.1, 1.7, 2.2, 1.3], bottomplatewidth: 258.5801369930108, shearstrength: 331
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 96168888.1724087
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+7075-T6(DF-L)
+checklist: [True, True], h: 10.0, t1: 0.8040652179714598, t2: 0.7000000000000001, t3: 2, D1: 5.000000000000063, w: 19.580136993010818, length: 90, offset: -0.40203260898572957, flange height: 29.370205489516227, yieldstrength: 503, material: 7075-T6(DF-L), Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.4252265629204075, 4.462751048093551), (4.4252265629204075, 254.11738594491698), (85.57477343707967, 4.462751048093551), (85.57477343707967, 254.11738594491698)], n_fast: 4, D2holes: [1.1, 1.7, 2.2, 1.3], bottomplatewidth: 258.5801369930108, shearstrength: 331
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 96168888.1724087
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+7075-T6(DF-LT)
+checklist: [True, True], h: 10.0, t1: 0.8040652179714598, t2: 0.7000000000000001, t3: 2, D1: 5.000000000000063, w: 19.580136993010818, length: 90, offset: -0.40203260898572957, flange height: 29.370205489516227, yieldstrength: 503, material: 7075-T6(DF-LT), Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.4252265629204075, 4.462751048093551), (4.4252265629204075, 254.11738594491698), (85.57477343707967, 4.462751048093551), (85.57477343707967, 254.11738594491698)], n_fast: 4, D2holes: [1.1, 1.7, 2.2, 1.3], bottomplatewidth: 258.5801369930108, shearstrength: 331
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 96168888.1724087
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+4130 Steel
+checklist: [True, True], h: 10.0, t1: 0.8646306765877277, t2: 0.5499999999999999, t3: 2, D1: 5.000000000000063, w: 19.580136993010818, length: 72, offset: -0.43231533829386404, flange height: 29.370205489516227, yieldstrength: 435, material: 4130 Steel, Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.634380435383214, 4.794492090389966), (4.634380435383214, 197.78564490262062), (67.36561956461685, 4.794492090389966), (67.36561956461685, 197.78564490262062)], n_fast: 4, D2holes: [2.2, 2.2, 2.2, 2.2], bottomplatewidth: 202.58013699301083, shearstrength: 345
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: unknown
+mass: 139782056.42006907
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+8630 Steel
+checklist: [True, True], h: 10.0, t1: 0.7689426033669401, t2: 0.44999999999999996, t3: 2, D1: 5.000000000000063, w: 19.580136993010818, length: 87, offset: -0.38447130168346977, flange height: 29.370205489516227, yieldstrength: 550, material: 8630 Steel, Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.500794466474829, 4.8099479194082875), (4.500794466474829, 244.77018907360224), (82.49920553352524, 4.8099479194082875), (82.49920553352524, 244.77018907360224)], n_fast: 4, D2holes: [2.2, 2.2, 2.2, 2.2], bottomplatewidth: 249.58013699301083, shearstrength: 345
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: unknown
+mass: 165717962.66947076
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+2024-T4
+checklist: [True, True], h: 10.0, t1: 1.0018501403422089, t2: 1.0500000000000003, t3: 2, D1: 5.000000000000063, w: 19.580136993010818, length: 70, offset: -0.5009250701711041, flange height: 29.370205489516227, yieldstrength: 324, material: 2024-T4, Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.852345670302977, 4.541532927382534), (4.852345670302977, 190.03860406562802), (65.14765432969709, 4.541532927382534), (65.14765432969709, 190.03860406562802)], n_fast: 4, D2holes: [1.3, 1.7, 2.2, 1.3], bottomplatewidth: 194.58013699301083, shearstrength: 283
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 85196715.77999975
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+356-T6 Aluminium
+checklist: [True, True], h: 10.0, t1: 1.4038906976360699, t2: 2.0500000000000007, t3: 2, D1: 5.000000000000007, w: 34.89061340476899, length: 75, offset: -0.7019453488180352, flange height: 52.33592010715349, yieldstrength: 165, material: 356-T6 Aluminium, Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.867209404972698, 4.551309009461988), (4.867209404972698, 205.33930439530673), (70.13279059502736, 4.551309009461988), (70.13279059502736, 205.33930439530673)], n_fast: 4, D2holes: [1.7, 1.7, 2.2, 2.2], bottomplatewidth: 209.890613404769, shearstrength: 143
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.6
+mass: 197320571.50278512
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+2024-T3
+checklist: [True, True], h: 10.0, t1: 0.9708803714424213, t2: 0.9000000000000002, t3: 2, D1: 10.127721492054462, w: 26.60348190182317, length: 76, offset: -0.4854401857212105, flange height: 39.90522285273475, yieldstrength: 345, material: 2024-T3, Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.714553593072154, 4.899863304130633), (4.714553593072154, 209.70361859769227), (71.28544640692792, 4.899863304130633), (71.28544640692792, 209.70361859769227)], n_fast: 4, D2holes: [1.3, 2.2, 2.2, 1.7], bottomplatewidth: 214.60348190182316, shearstrength: 283
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.6
+mass: 91331569.11922933
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+
+
+
+
+
+
+Results best material high_accuracy 2 flanges 2 lugs:
+
+
+2024-T4
+checklist: [True, True], h: 10.0, t1: 1.0018501403422089, t2: 1.0500000000000003, t3: 2, D1: 5.000000000001312, w: 14.999999999957005, length: 68, offset: -0.5009250701711041, flange height: 22.499999999935504, yieldstrength: 324, material: 2024-T4, Dist_between_lugs: 1400.0, N_lugs: 2, N_Flanges: 2, hole coords: [(4.4434761473558595, 4.570063167505083), (4.4434761473558595, 186.4299368324517), (63.556523852644204, 4.570063167505083), (63.556523852644204, 186.4299368324517)], n_fast: 4, D2holes: [1.3, 1.7, 2.2, 1.3], bottomplatewidth: 190.999999999957, shearstrength: 283
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 79045955.01915425
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+
+
+
+
+
+
+
+Results all materials low_accuracy 1 flange 1 lug:
+
+
+2014-T6(DF-L)
+checklist: [True, True], h: 1000.0000000084424, t1: 1.7725769335933623, t2: 0.8000000000000002, t3: 2, D1: 38.47099685387381, w: 48.47099685234754, length: 92, offset: 4.113711533203319, flange height: 72.70649527852132, yieldstrength: 414, material: 2014-T6(DF-L), Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.613731094178817, 4.411634628793678), (4.613731094178817, 259.05936222355353), (87.38626890582127, 4.411634628793678), (87.38626890582127, 259.05936222355353)], n_fast: 4, D2holes: [1.3, 2.2, 2.2, 1.3], bottomplatewidth: 263.4709968523475, shearstrength: 290
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 64744838.14670571
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+2014-T6(DF-LT)
+checklist: [True, True], h: 999.999999999972, t1: 1.7725769335933623, t2: 0.8000000000000002, t3: 2, D1: 129.63492364897212, w: 139.63492364897007, length: 114, offset: 4.113711533203319, flange height: 209.4523854734551, yieldstrength: 414, material: 2014-T6(DF-LT), Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.512204052633265, 4.506240733282624), (4.512204052633265, 321.1286829156871), (109.48779594736683, 4.506240733282624), (109.48779594736683, 321.1286829156871)], n_fast: 4, D2holes: [1.3, 2.2, 2.2, 1.3], bottomplatewidth: 325.6349236489701, shearstrength: 290
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 152400469.79321215
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+2014-T6(P)
+checklist: [True, True], h: 999.999999999972, t1: 1.7725769335933623, t2: 0.8000000000000002, t3: 2, D1: 129.63492364897212, w: 139.63492364897007, length: 114, offset: 4.113711533203319, flange height: 209.4523854734551, yieldstrength: 414, material: 2014-T6(P), Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.512204052633265, 4.506240733282624), (4.512204052633265, 321.1286829156871), (109.48779594736683, 4.506240733282624), (109.48779594736683, 321.1286829156871)], n_fast: 4, D2holes: [1.3, 2.2, 2.2, 1.3], bottomplatewidth: 325.6349236489701, shearstrength: 290
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 152400469.79321215
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+7075-T6(P)
+checklist: [True, True], h: 1000.0, t1: 1.6081304359429196, t2: 0.7000000000000001, t3: 2, D1: 117.51390746101524, w: 127.51390746101524, length: 121, offset: 4.19593478202854, flange height: 191.27086119152287, yieldstrength: 503, material: 7075-T6(P), Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.799531038286844, 4.549959307220647), (4.799531038286844, 333.9639481537942), (116.20046896171327, 4.549959307220647), (116.20046896171327, 333.9639481537942)], n_fast: 4, D2holes: [1.1, 1.7, 2.2, 1.1], bottomplatewidth: 338.51390746101526, shearstrength: 331
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1
+mass: 133873492.91256306
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+7075-T6(DF-L)
+checklist: [True, True], h: 1000.0, t1: 1.6081304359429196, t2: 0.7000000000000001, t3: 2, D1: 117.51390746101524, w: 127.51390746101524, length: 121, offset: 4.19593478202854, flange height: 191.27086119152287, yieldstrength: 503, material: 7075-T6(DF-L), Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.799531038286844, 4.549959307220647), (4.799531038286844, 333.9639481537942), (116.20046896171327, 4.549959307220647), (116.20046896171327, 333.9639481537942)], n_fast: 4, D2holes: [1.1, 1.7, 2.2, 1.1], bottomplatewidth: 338.51390746101526, shearstrength: 331
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1
+mass: 133873492.91256306
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+7075-T6(DF-LT)
+checklist: [True, True], h: 1000.0, t1: 1.6081304359429196, t2: 0.7000000000000001, t3: 2, D1: 117.51390746101524, w: 127.51390746101524, length: 121, offset: 4.19593478202854, flange height: 191.27086119152287, yieldstrength: 503, material: 7075-T6(DF-LT), Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.799531038286844, 4.549959307220647), (4.799531038286844, 333.9639481537942), (116.20046896171327, 4.549959307220647), (116.20046896171327, 333.9639481537942)], n_fast: 4, D2holes: [1.1, 1.7, 2.2, 1.1], bottomplatewidth: 338.51390746101526, shearstrength: 331
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1
+mass: 133873492.91256306
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+4130 Steel
+checklist: [True, True], h: 1000.0, t1: 1.7292613531754555, t2: 0.5499999999999999, t3: 2, D1: 117.51390746101524, w: 127.51390746101524, length: 95, offset: 4.135369323412272, flange height: 191.27086119152287, yieldstrength: 435, material: 4130 Steel, Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.441725830383639, 4.433089933127519), (4.441725830383639, 259.0808175278874), (90.55827416961645, 4.433089933127519), (90.55827416961645, 259.0808175278874)], n_fast: 4, D2holes: [2.2, 2.2, 2.2, 2.2], bottomplatewidth: 263.51390746101526, shearstrength: 345
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: unknown
+mass: 268193660.25179547
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+8630 Steel
+checklist: [True, True], h: 1000.0, t1: 1.5378852067338802, t2: 0.44999999999999996, t3: 2, D1: 117.51390746101524, w: 127.51390746101524, length: 114, offset: 4.23105739663306, flange height: 191.27086119152287, yieldstrength: 550, material: 8630 Steel, Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.512204052633265, 4.445732639305206), (4.512204052633265, 321.06817482170965), (109.48779594736683, 4.445732639305206), (109.48779594736683, 321.06817482170965)], n_fast: 4, D2holes: [2.2, 2.2, 2.2, 2.2], bottomplatewidth: 325.51390746101526, shearstrength: 345
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: unknown
+mass: 273481609.05420107
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+2024-T4
+checklist: [True, True], h: 1000.0, t1: 2.0037002806844177, t2: 1.0500000000000003, t3: 2, D1: 117.51390746101524, w: 127.51390746101524, length: 90, offset: 3.998149859657791, flange height: 191.27086119152287, yieldstrength: 324, material: 2024-T4, Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.4252265629204075, 4.877230741868544), (4.4252265629204075, 249.6366767191464), (85.57477343707967, 4.877230741868544), (85.57477343707967, 249.6366767191464)], n_fast: 4, D2holes: [1.3, 1.7, 2.2, 1.3], bottomplatewidth: 254.51390746101524, shearstrength: 283
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 132564926.00208604
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+356-T6 Aluminium
+checklist: [True, True], h: 1000.0, t1: 2.8077813952721398, t2: 2.0500000000000007, t3: 2, D1: 117.51390746101524, w: 127.51390746101524, length: 94, offset: 3.59610930236393, flange height: 191.27086119152287, yieldstrength: 165, material: 356-T6 Aluminium, Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.786005716062391, 4.433089933127519), (4.786005716062391, 259.0808175278874), (89.2139942839377, 4.433089933127519), (89.2139942839377, 259.0808175278874)], n_fast: 4, D2holes: [1.3, 1.7, 2.2, 1.3], bottomplatewidth: 263.51390746101526, shearstrength: 143
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 223991333.08694366
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+2024-T3
+checklist: [True, True], h: 1000.0, t1: 1.9417607428848427, t2: 0.9000000000000002, t3: 2, D1: 117.51390746101524, w: 127.51390746101524, length: 97, offset: 4.029119628557579, flange height: 191.27086119152287, yieldstrength: 345, material: 2024-T3, Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.580560346991312, 4.789205835713361), (4.580560346991312, 269.7247016253016), (92.41943965300877, 4.789205835713361), (92.41943965300877, 269.7247016253016)], n_fast: 4, D2holes: [1.3, 2.2, 2.2, 1.3], bottomplatewidth: 274.51390746101526, shearstrength: 283
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 130292470.01577365
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+
+
+
+
+
+Results best material high_accuracy 1 flange 1 lug:
+
+
+2014-T6(DF-L)
+checklist: [True, True], h: 999.9999999999701, t1: 1.7725769335933623, t2: 0.8000000000000002, t3: 2, D1: 35.53545682113268, w: 45.53545682113216, length: 92, offset: 4.113711533203319, flange height: 68.30318523169824, yieldstrength: 414, material: 2014-T6(DF-L), Dist_between_lugs: 1400.0, N_lugs: 1, N_Flanges: 1, hole coords: [(4.613731094178817, 4.440410962154218), (4.613731094178817, 254.09504585897764), (87.38626890582127, 4.440410962154218), (87.38626890582127, 254.09504585897764)], n_fast: 4, D2holes: [1.3, 2.2, 2.2, 1.3], bottomplatewidth: 258.53545682113213, shearstrength: 290
+nut type: Hexagonal, hole type: Nut-Tightened, material: Titanium (Grade 5), bolt type: M1.2
+mass: 62667010.76593549
+MS: [0, 0, 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used', 'allowable stress is unknown because different method is used']
+
+
+
